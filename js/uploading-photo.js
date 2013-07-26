@@ -100,12 +100,13 @@ $(function() {
 
 			e.stopPropagation();
 			e.preventDefault();
+
 			file = e.dataTransfer.files[0];
 			if (! file || ! isImage(file.type)) return;
 			if (file.type === 'image/png') {
 				fixTransparentPNG();
 			}
-			
+
 			setTip();
 		}
 	});
@@ -129,4 +130,7 @@ $(function() {
 	$(window).scroll(function(e) {
 		$('body').scrollTop(0);
 	});
+
+	var de = document.documentElement;
+	resizeBy(300 - de.clientWidth, 150 - de.clientHeight);
 });
