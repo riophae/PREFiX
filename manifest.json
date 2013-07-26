@@ -1,0 +1,33 @@
+{
+	"background": {
+		"scripts": [
+			"js/lib/jquery-min.js",
+			"js/lib/underscore-min.js",
+			"js/lib/ripple.js",
+			"js/lib/ripple.helpers.js",
+			"js/lib/ripple.api.js",
+			"js/lib/avalon.js",
+			"js/common.js",
+			"js/bg.js"
+		]
+	},
+	"browser_action": {
+		"default_icon": "icons/19.png",
+		"default_popup": "popup.html",
+		"default_title": "PREFiX"
+	},
+	"content_security_policy": "default_src 'self'; object-src 'self'; script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com",
+	"description": "\u7b80\u6d01\u3001\u6613\u7528\u7684\u996d\u5426\u5ba2\u6237\u7aef.",
+	"icons": {
+		"256": "icons/256.png",
+		"48": "icons/48.png",
+		"19": "icons/19.png",
+		"16": "icons/16.png"
+	},
+	"manifest_version": 2,
+	"name": "PREFiX",
+	"options_page": "options.html",
+	"permissions": [ "tabs", "contextMenus", "notifications", "http://*.fanfou.com/*" ],
+	"version": "0.1.0",
+	"minimum_chrome_version": "28"
+}

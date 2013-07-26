@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>PREFiX</title>
+  <link rel="stylesheet" href="css/popup.css"/>
+  <script src="js/lib/jquery-min.js"></script>
+  <script src="js/lib/at.js"></script>
+  <script src="js/lib/underscore-min.js"></script>
+  <script src="js/lib/at.js"></script>
+  <script src="js/lib/avalon.js"></script>
+  <script src="js/lib/ripple.js"></script>
+  <script src="js/lib/ripple.helpers.js"></script>
+  <script src="js/lib/ripple.api.js"></script>
+  <script src="js/lib/others.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/popup.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div id="notification"></div>
+    <div id="picture-overlay">
+      <img id="picture" src="" />
+    </div>
+  	<div id="context-timeline">
+  		<ul ms-controller="context-timeline" ms-each-status="statuses">
+  			<li class="fix">
+          <div class="avatar">
+            <a ms-alt="username"><img ms-src="status.user.profile_image_url" /></a>
+          </div>
+          <div class="content">
+            <div class="info">
+              <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
+              <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
+            </div>
+            <div class="status-content" ms-html="status.text"></div>
+            <div class="photo" ms-if="!! status.photo">
+              <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+            </div>
+          </div>
+  			</li>
+  		</ul>
+  	</div>
+    <div id="header">
+      <div id="top-bar">
+        <h1 title="点击回到顶部或刷新">PREFiX</h1>
+        <ul id="navigation-bar" ms-controller="navigation">
+          <li class="home-timeline" title="首页" ms-click="showHomeTimeline"></li>
+          <li class="mentions" title="提到我的" ms-click="showMentions"><span class="count"></span></li>
+          <li class="privatemsgs" title="私信" ms-click="showPrivateMsgs"><span class="count"></span></li>
+        </ul>
+      </div>
+      <div id="compose-bar" ms-controller="composebar-textarea">
+        <textarea class="content" title="Ctrl-Enter 或双击提交" ms-keyup="onkeyup" ms-dblclick="ondblclick" ms-duplex="text"></textarea>
+        <span id="uploading-photo" title="上传照片"></span>
+      </div>
+    </div>
+    <div id="main">
+      <div id="title">
+        <h2></h2>
+      </div>
+      <div id="stream">
+        <ul id="home-timeline" class="status-list fix" ms-controller="home-timeline" ms-each-status="statuses">
+          <li ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
+            <div class="status fix">
+              <div class="action-icons">
+                <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
+                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
+                <a ms-click="repost" class="repost" title="转发"></a>
+                <a ms-click="toggleFavourite" ms-class-favourited="status.favorited" class="favourite" title="收藏"></a>
+              </div>
+              <div class="avatar">
+                <a ms-alt="username"><img ms-src="status.user.profile_image_url" /></a>
+              </div>
+              <div class="content">
+                <div class="info">
+                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
+                  <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
+                </div>
+                <div class="status-content" ms-html="status.text"></div>
+                <div class="photo" ms-if="!! status.photo">
+                  <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+                </div>
+              </div>
+              <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
+                <span ms-click="showContextTimeline" title="查看上下文消息"></span>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <ul id="mentions" class="status-list fix" ms-controller="mentions" ms-each-status="statuses">
+          <li ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
+            <div class="status fix">
+              <div class="action-icons">
+                <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
+                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
+                <a ms-click="repost" class="repost" title="转发"></a>
+                <a ms-click="toggleFavourite" ms-class-favourited="status.favorited" class="favourite" title="收藏"></a>
+              </div>
+              <div class="avatar">
+                <a ms-alt="username"><img ms-src="status.user.profile_image_url" /></a>
+              </div>
+              <div class="content">
+                <div class="info">
+                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
+                  <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
+                </div>
+                <div class="status-content" ms-html="status.text"></div>
+                <div class="photo" ms-if="!! status.photo">
+                  <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+                </div>
+              </div>
+              <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
+                <span ms-click="showContextTimeline" title="查看上下文消息"></span>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <ul id="privatemsgs" class="status-list fix" ms-controller="privatemsgs" ms-each-message="messages">
+          <li>
+            <div class="status fix">
+              <div class="action-icons">
+                <a ms-click="remove" class="remove" title="删除"></a>
+                <a ms-click="reply" class="reply" title="回复"></a>
+              </div>
+              <div class="avatar">
+                <a ms-alt="username"><img ms-src="message.sender.profile_image_url" /></a>
+              </div>
+              <div class="content">
+                <div class="info">
+                  <a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name"></a>
+                  <span class="timestamp-client" ms-html="message.relativeTime"></span>
+                </div>
+                <div class="status-content" ms-html="message.text"></div>
+                <div ms-if="!! message.in_reply_to" ms-html="message.in_reply_to && message.in_reply_to.text" class="in-reply-to-message"></div>
+              </div>
+            </div>
+          </li>
+        </ul>
+    		<div id="loading">
+    			<ul>
+    				<li></li><li></li><li></li><li></li><li></li>
+    			</ul>
+    		</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
