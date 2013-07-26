@@ -102,13 +102,26 @@ $(function() {
 			e.preventDefault();
 
 			file = e.dataTransfer.files[0];
-			if (! file || ! isImage(file.type)) return;
+			if (! file || ! isImage(file.type))
+				return file = null;
 			if (file.type === 'image/png') {
 				fixTransparentPNG();
 			}
 
 			setTip();
 		}
+	});
+
+	var $file = $('#file');
+
+	$file.on('change', function(e) {
+		file = $file[0].files[0];
+		if (! file || ! isImage(file.type))
+			return file = null;
+		if (file.type === 'image/png') {
+			fixTransparentPNG();
+		}
+		setTip();
 	});
 
 	var $status = $('#status');

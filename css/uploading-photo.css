@@ -22,7 +22,7 @@ body, div, textarea {
 	height: 25px;
 	line-height: 25px;
 	background: #eee;
-	box-shadow: 
+	box-shadow:
 		0 -1px 0 #f5f5f5 inset,
 		0 0 5px #333;
 }
@@ -32,6 +32,12 @@ body, div, textarea {
 #tip {
 	padding-left: 24px;
 	background: url('/images/drop-file.png') 6px 0 no-repeat;
+}
+#file {
+	position: absolute;
+	left: 0;
+	top: 0;
+	opacity: 0;
 }
 #text {
 	position: absolute;
