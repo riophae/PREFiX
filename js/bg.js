@@ -106,6 +106,7 @@ function update() {
 }
 
 function loadFriends() {
+	var friends = {};
 	[ 'Friends', 'Followers' ].forEach(function(type) {
 		(function get(page) {
 			PREFiX.user['getLatestLogged' + type]({
@@ -118,6 +119,10 @@ function loadFriends() {
 							name: user.name,
 							string: user.id + ' ' + user.name
 						};
+					}).filter(function(user) {
+						if (friends[user.name]) return false;
+						friends[user.name] = true;
+						return true;
 					});
 					PREFiX.friends.push.apply(PREFiX.friends, data);
 					get(page + 1);
