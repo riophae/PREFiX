@@ -392,7 +392,7 @@ function showContextTimeline(e) {
 }
 
 var nav_model = avalon.define('navigation', function(vm) {
-	vm.current = '';
+	vm.current = PREFiX.current;
 	vm.showHomeTimeline = function(e) {
 		if (loading) return;
 		PREFiX.current = vm.current = 'tl_model';
@@ -409,7 +409,7 @@ var nav_model = avalon.define('navigation', function(vm) {
 		privatemsgs_model.initialize();
 	}
 	vm.$watch('current', function(new_value, old_value) {
-		if (new_value != 'privatemsgs_model') {
+		if (old_value == 'privatemsgs_model') {
 			composebar_model.type = '';
 		}
 		window[old_value] && window[old_value].unload();
