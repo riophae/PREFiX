@@ -61,13 +61,13 @@
       </div>
       <div id="stream">
         <ul id="home-timeline" class="status-list fix" ms-controller="home-timeline" ms-each-status="statuses">
-          <li ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
+          <li ms-class="my-status: status.is_self" ms-class="protected: status.user.protected">
             <div class="status fix">
               <div class="action-icons">
                 <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
                 <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
                 <a ms-click="repost" class="repost" title="转发"></a>
-                <a ms-click="toggleFavourite" ms-class-favourited="status.favorited" class="favourite" title="收藏"></a>
+                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" title="收藏"></a>
               </div>
               <div class="avatar">
                 <a ms-alt="username"><img ms-src="status.user.profile_image_url" /></a>
@@ -89,13 +89,13 @@
           </li>
         </ul>
         <ul id="mentions" class="status-list fix" ms-controller="mentions" ms-each-status="statuses">
-          <li ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
+          <li ms-class="my-status: status.is_self" ms-class="protected: status.user.protected">
             <div class="status fix">
               <div class="action-icons">
                 <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
                 <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
                 <a ms-click="repost" class="repost" title="转发"></a>
-                <a ms-click="toggleFavourite" ms-class-favourited="status.favorited" class="favourite" title="收藏"></a>
+                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" title="收藏"></a>
               </div>
               <div class="avatar">
                 <a ms-alt="username"><img ms-src="status.user.profile_image_url" /></a>
