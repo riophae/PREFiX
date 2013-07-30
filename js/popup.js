@@ -342,7 +342,8 @@ function generateMethod(type) {
 					at_users[result[2]] = true;
 				}
 			}
-			var value = '@' + status.user.name + ' ' + Object.keys(at_users).map(function(user) {
+			var prefix = '@' + status.user.name + ' ';
+			var value = prefix + Object.keys(at_users).map(function(user) {
 				return user == status.user.name ? '' : ('@' + user + ' ');
 			}).join('');
 		} else {
@@ -351,8 +352,12 @@ function generateMethod(type) {
 		}
 		composebar_model.text = value;
 		$textarea.focus();
-		$textarea[0].selectionStart = $textarea[0].selectionEnd = 
-			type === 'reply' ? value.length : 0;
+		if (type === 'reply') {
+			$textarea[0].selectionStart = prefix.length;
+			$textarea[0].selectionEnd = value.length;
+		} else {
+			$textarea[0].selectionStart = $textarea[0].selectionEnd = 0;
+		}
 	}
 }
 
