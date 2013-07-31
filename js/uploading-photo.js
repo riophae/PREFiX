@@ -54,7 +54,8 @@ $(function() {
 		fr.readAsDataURL(file);
 	}
 	function setTip() {
-		$('#tip').text(file.name + ' (' + computeSize(file.size) + ')');
+		var tip = file.name + ' (' + computeSize(file.size) + ')';
+		$('#tip').text(tip).prop('title', tip);
 	}
 	function submit() {
 		if (! file) return;

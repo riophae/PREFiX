@@ -31,7 +31,13 @@ body, div, textarea {
 }
 #tip {
 	padding-left: 24px;
-	background: url('/images/drop-file.png') 6px 0 no-repeat;
+	background: url('/images/drop-file.png') 6px center no-repeat;
+	line-height: 25px;
+	height: 25px;
+	width: 240px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: inline-block;
 }
 #file {
 	position: absolute;
