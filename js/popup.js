@@ -214,8 +214,6 @@ function initMainUI() {
 		$textarea.focus();
 	}
 
-	updateRelativeTime();
-	
 	setInterval(updateRelativeTime, 15000);
 	setInterval(checkCount, 100);
 }
@@ -546,6 +544,7 @@ tl_model.initialize = function() {
 	}, function() {
 		tl_model.statuses = tl.statuses;		
 		$main.scrollTop(PREFiX.homeTimeline.scrollTop);
+		updateRelativeTime();
 	});
 
 	this.interval = setInterval(function update() {
@@ -618,6 +617,7 @@ mentions_model.initialize = function() {
 	var mentions = PREFiX.mentions;
 	mentions_model.statuses = mentions.statuses;
 	$main.scrollTop(mentions.scrollTop);
+	updateRelativeTime();
 	update();
 
 	this.interval = setInterval(check, 100);
@@ -701,6 +701,7 @@ privatemsgs_model.initialize = function() {
 	var privatemsgs = PREFiX.privatemsgs;
 	privatemsgs_model.messages = privatemsgs.messages;
 	$main.scrollTop(privatemsgs.scrollTop);
+	updateRelativeTime();
 	update();
 
 	this.interval = setInterval(check, 100);
