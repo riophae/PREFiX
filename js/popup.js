@@ -213,6 +213,8 @@ function initMainUI() {
 	if (PREFiX.compose.text) {
 		$textarea.focus();
 	}
+
+	updateRelativeTime();
 	
 	setInterval(updateRelativeTime, 15000);
 	setInterval(checkCount, 100);
