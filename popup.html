@@ -61,7 +61,7 @@
       </div>
       <div id="stream">
         <ul id="home-timeline" class="status-list fix" ms-controller="home-timeline" ms-each-status="statuses">
-          <li ms-class="my-status: status.is_self" ms-class="protected: status.user.protected">
+          <li ms-class="my-status: status.is_self" ms-class-="protected: status.user.protected">
             <div class="status fix">
               <div class="action-icons">
                 <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
@@ -89,7 +89,7 @@
           </li>
         </ul>
         <ul id="mentions" class="status-list fix" ms-controller="mentions" ms-each-status="statuses">
-          <li ms-class="my-status: status.is_self" ms-class="protected: status.user.protected">
+          <li ms-class="my-status: status.is_self" ms-class-="protected: status.user.protected">
             <div class="status fix">
               <div class="action-icons">
                 <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
