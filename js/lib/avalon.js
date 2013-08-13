@@ -230,22 +230,19 @@
 
     var VMODELS = avalon.vmodels = avalon.models = {}
 
-    function isArraylike(obj) {
-        var length = obj.length,
-                type = getType(obj)
-
-        if (avalon.isWindow(obj)) {
-            return false
+//只让节点集合，纯数组，arguments与拥有非负整数的length属性的纯JS对象通过
+    function isArrayLike(obj) {
+        if (obj && typeof obj === "object") {
+            var n = obj.length, str = serialize.call(obj)
+            if (/Array|NodeList|Arguments|CSSRuleList/.test(str)) {
+                return true
+            } else if (str === "[object Object]" && (+n === n && !(n % 1) && n >= 0)) {
+                return true//由于ecma262v5能修改对象属性的enumerable，因此不能用propertyIsEnumerable来判定了
+            }
         }
-
-        if (obj.nodeType === 1 && length) {
-            return true
-        }
-
-        return type === "array" || type !== "function" &&
-                (length === 0 ||
-                        typeof length === "number" && length > 0 && (length - 1) in obj)
+        return false
     }
+
 
     function generateID() {
         //生成UUID http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -254,7 +251,7 @@
 
     function forEach(obj, fn) {
         if (obj) { //不能传个null, undefined进来
-            var isArray = isArraylike(obj),
+            var isArray = isArrayLike(obj),
                     i = 0
             if (isArray) {
                 for (var n = obj.length; i < n; i++) {
@@ -1687,7 +1684,6 @@
                 }
 
             } else if (method === "class") {
-                log("ms-class-xxx='expr'已经不提倡使用，请改用新风格：https://github.com/RubyLouvre/avalon/issues/34")
                 watchView(data.value, vmodels, data, function(val, elem) {
                     avalon(elem).toggleClass(oldStyle, !!val)
                 })
@@ -1747,7 +1743,8 @@
                 element.value = neo
             }
         }
-        if (/^(password|textarea|text)$/.test(type)) {
+        //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input
+        if (/^(password|textarea|text|url|email|date|month|time|week|number)$/.test(type)) {
             var event = element.attributes["data-event"] || {}
             event = event.value
             if (event === "change") {
@@ -1825,10 +1822,12 @@
             }
         }
         god.bind("change", updateModel)
-        Publish[expose] = updateView
-        updateView.element = element
-        updateView()
-        delete Publish[expose]
+        avalon.nextTick(function() {
+            Publish[expose] = updateView
+            updateView.element = element
+            updateView()
+            delete Publish[expose]
+        })
     }
     modelBinding.TEXTAREA = modelBinding.INPUT
     //========================= event binding ====================
