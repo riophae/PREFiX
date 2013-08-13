@@ -212,6 +212,8 @@ function initMainUI() {
 	composebar_model.text = PREFiX.compose.text;
 	if (PREFiX.compose.text) {
 		$textarea.focus();
+		var pos = composebar_model.text.length;
+		$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
 	}
 
 	setInterval(updateRelativeTime, 15000);
