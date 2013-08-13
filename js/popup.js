@@ -607,6 +607,7 @@ mentions_model.initialize = function() {
 		}).next(function(statuses) {
 			if (mentions_model.statuses.length) {
 				insertKeepScrollTop(function() {
+					console.log(statuses);
 					mentions_model.statuses.unshift.apply(mentions_model.statuses, fixStatusList(statuses));
 				});
 			} else {
