@@ -27,7 +27,7 @@
 	"manifest_version": 2,
 	"name": "PREFiX",
 	"options_page": "options.html",
-	"permissions": [ "tabs", "contextMenus", "notifications", "http://*.fanfou.com/*" ],
+	"permissions": [ "tabs", "contextMenus", "notifications", "http://*.fanfou.com/*", "http://is.gd/*" ],
 	"version": "0.1.0",
 	"minimum_chrome_version": "28"
 }

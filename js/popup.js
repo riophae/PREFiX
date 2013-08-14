@@ -472,6 +472,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 				});
 			} else {
 				shorten().next(function() {
+					data.status = vm.text;
 					r.postStatus(data).next(function() {
 						showNotification('发表成功!');
 						vm.text = '';
