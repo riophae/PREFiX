@@ -85,3 +85,21 @@ function fixStatusList(statuses) {
 	});
 }
 
+function push(list, statuses) {
+	statuses = statuses.filter(function(status) {
+		return ! list.some(function(s) {
+			return s.id === status.id;
+		});
+	})
+	list.push.apply(list, fixStatusList(statuses));
+}
+
+function unshift(list, statuses) {
+	statuses = statuses.filter(function(status) {
+		return ! list.some(function(s) {
+			return s.id === status.id;
+		});
+	})
+	list.unshift.apply(list, fixStatusList(statuses));
+}
+

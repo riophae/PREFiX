@@ -259,15 +259,11 @@ function checkCount() {
 
 function appendStatuses(statuses) {
 	var model = getCurrent();
-	model.statuses.push.apply(model.statuses, fixStatusList(statuses));
-}
-
-function prependStatuses(statuses) {
-	tl_model.statuses.unshift.apply(tl_model.statuses, fixStatusList(statuses));
+	push(model.statuses, statuses);
 }
 
 function bufferStatuses(statuses) {
-	PREFiX.homeTimeline.buffered.push.apply(PREFiX.homeTimeline.buffered, fixStatusList(statuses));
+	push(PREFiX.homeTimeline.buffered, statuses);
 }
 
 function insertKeepScrollTop(insert) {
@@ -304,7 +300,7 @@ function loadOldder() {
 			lock: loadOldder
 		}).next(function(messages) {
 			loading = false;
-			privatemsgs_model.messages.push.apply(privatemsgs_model.messages, fixStatusList(messages));
+			push(privatemsgs_model.messages, messages);
 		});
 	}
 }
@@ -385,7 +381,7 @@ function showContextTimeline(e) {
 	$('#context-timeline ul').html('');
 	if (status.repost_status) {
 		var statuses = fixStatusList([status.repost_status, status]).reverse();
-		context_tl_model.statuses.push.apply(context_tl_model.statuses, statuses);
+		push(context_tl_model.statuses, statuses);
 	} else {
 		$('#context-timeline').addClass('loading');
 		r.getContextTimeline({ 
@@ -393,7 +389,7 @@ function showContextTimeline(e) {
 		}).next(function(statuses) {
 			statuses = fixStatusList(statuses).reverse();
 			$('#context-timeline').removeClass('loading');
-			context_tl_model.statuses.push.apply(context_tl_model.statuses, statuses);
+			push(context_tl_model.statuses, statuses);
 		});
 	}
 }
@@ -556,7 +552,7 @@ tl_model.initialize = function() {
 		var buffered = tl.buffered;
 		tl.buffered = [];
 		insertKeepScrollTop(function() {
-			prependStatuses(buffered);
+			unshift(tl_model.statuses, buffered);
 		});
 	}, 16);
 }
@@ -608,8 +604,7 @@ mentions_model.initialize = function() {
 		}).next(function(statuses) {
 			if (mentions_model.statuses.length) {
 				insertKeepScrollTop(function() {
-					console.log(statuses);
-					mentions_model.statuses.unshift.apply(mentions_model.statuses, fixStatusList(statuses));
+					unshift(mentions_model.statuses, statuses);
 				});
 			} else {
 				mentions_model.statuses = fixStatusList(statuses);
@@ -693,7 +688,7 @@ privatemsgs_model.initialize = function() {
 		}).next(function(messages) {
 			if (privatemsgs_model.messages.length) {
 				insertKeepScrollTop(function() {
-					privatemsgs_model.messages.unshift.apply(privatemsgs_model.messages, fixStatusList(messages));
+					unshift(privatemsgs_model.messages, messages);
 				});
 			} else {
 				privatemsgs_model.messages = fixStatusList(messages);	

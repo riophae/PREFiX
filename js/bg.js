@@ -58,8 +58,7 @@ function update() {
 		}).setupAjax({
 			lock: update
 		}).next(function(statuses) {
-			statuses = fixStatusList(statuses);
-			tl.buffered.unshift.apply(tl.buffered, statuses);
+			unshift(tl.buffered, statuses);
 		});
 	}
 	var deferred_notification = PREFiX.user.getNotification().next(function(data) {
