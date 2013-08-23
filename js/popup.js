@@ -622,6 +622,7 @@ mentions_model.initialize = function() {
 				});
 			} else {
 				mentions_model.statuses = fixStatusList(statuses);
+				resetLoadingEffect();
 			}
 			PREFiX.update();
 		});
@@ -706,6 +707,7 @@ privatemsgs_model.initialize = function() {
 				});
 			} else {
 				privatemsgs_model.messages = fixStatusList(messages);	
+				resetLoadingEffect();
 			}
 			PREFiX.update();
 		});
