@@ -245,15 +245,17 @@ function showPicture(img_url) {
 
 function checkCount() {
 	var count = PREFiX.count;
+	var $mentions = $('#navigation-bar .mentions .count');
+	var $privatemsgs = $('#navigation-bar .privatemsgs .count');
 	if (count.mentions) {
-		$('#navigation-bar .mentions .count').text(count.mentions).show();
+		$mentions.text(count.mentions).show();
 	} else {
-		$('#navigation-bar .mentions .count').text('').hide();
+		$mentions.text('').hide();
 	}
 	if (count.direct_messages) {
-		$('#navigation-bar .privatemsgs .count').text(count.direct_messages).show();
+		$privatemsgs.text(count.direct_messages).show();
 	} else {
-		$('#navigation-bar .privatemsgs .count').text('').hide();
+		$privatemsgs.text('').hide();
 	}
 }
 
@@ -715,7 +717,9 @@ var context_tl_model = avalon.define('context-timeline', function(vm) {
 $(function() {
 	avalon.scan();
 	initMainUI();
-	getCurrent().initialize();
+	setTimeout(function() {
+		getCurrent().initialize();
+	}, 100);
 });
 
 onunload = function() {
