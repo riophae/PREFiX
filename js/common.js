@@ -85,21 +85,29 @@ function fixStatusList(statuses) {
 	});
 }
 
-function push(list, statuses) {
-	statuses = statuses.filter(function(status) {
-		return ! list.some(function(s) {
-			return s.id === status.id;
-		});
-	})
-	list.push.apply(list, fixStatusList(statuses));
+function filter(list, statuses) {
+	if (! statuses.length) return statuses;
+	var ids = { };
+	list.forEach(function(s) {
+		ids[s.id] = true;
+	});
+	return statuses.filter(function(status) {
+		return ids[status.id] !== true;
+	});
 }
 
-function unshift(list, statuses) {
-	statuses = statuses.filter(function(status) {
-		return ! list.some(function(s) {
-			return s.id === status.id;
-		});
-	})
-	list.unshift.apply(list, fixStatusList(statuses));
+function push(list, statuses, reverse) {
+	statuses = filter(list, statuses);
+	if (! statuses.length) return;
+	statuses = fixStatusList(statuses);
+	if (reverse) statuses = statuses.reverse();
+	list.push.apply(list, statuses);
 }
 
+function unshift(list, statuses, reverse) {
+	statuses = filter(list, statuses);
+	if (! statuses.length) return;
+	statuses = fixStatusList(statuses);
+	if (reverse) statuses = statuses.reverse();
+	list.unshift.apply(list, statuses);
+}
