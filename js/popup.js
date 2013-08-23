@@ -380,16 +380,15 @@ function showContextTimeline(e) {
 	context_tl_model.statuses = [];
 	$('#context-timeline ul').html('');
 	if (status.repost_status) {
-		var statuses = fixStatusList([status.repost_status, status]).reverse();
-		push(context_tl_model.statuses, statuses);
+		var statuses = [ status.repost_status, status ];
+		push(context_tl_model.statuses, statuses, true);
 	} else {
 		$('#context-timeline').addClass('loading');
 		r.getContextTimeline({ 
 			id: id
 		}).next(function(statuses) {
-			statuses = fixStatusList(statuses).reverse();
 			$('#context-timeline').removeClass('loading');
-			push(context_tl_model.statuses, statuses);
+			push(context_tl_model.statuses, statuses, true);
 		});
 	}
 }
