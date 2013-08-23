@@ -26,7 +26,7 @@
   		<ul ms-controller="context-timeline" ms-each-status="statuses">
   			<li class="fix">
           <div class="avatar">
-            <a ms-alt="username"><img ms-src="status.user.profile_image_url" /></a>
+            <a ms-title="{{status.user.name}} ({{status.user.id}})"><img ms-src="status.user.profile_image_url" /></a>
           </div>
           <div class="content">
             <div class="info">
@@ -70,7 +70,7 @@
                 <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" title="收藏"></a>
               </div>
               <div class="avatar">
-                <a ms-alt="username"><img ms-src="status.user.profile_image_url" /></a>
+                <a ms-title="{{status.user.name}} ({{status.user.id}})"><img ms-src="status.user.profile_image_url" /></a>
               </div>
               <div class="content">
                 <div class="info">
@@ -98,7 +98,7 @@
                 <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" title="收藏"></a>
               </div>
               <div class="avatar">
-                <a ms-alt="username"><img ms-src="status.user.profile_image_url" /></a>
+                <a ms-title="{{status.user.name}} ({{status.user.id}})"><img ms-src="status.user.profile_image_url" /></a>
               </div>
               <div class="content">
                 <div class="info">
@@ -124,7 +124,7 @@
                 <a ms-click="reply" class="reply" title="回复"></a>
               </div>
               <div class="avatar">
-                <a ms-alt="username"><img ms-src="message.sender.profile_image_url" /></a>
+                <a ms-title="{{status.user.name}} ({{status.user.id}})"><img ms-src="message.sender.profile_image_url" /></a>
               </div>
               <div class="content">
                 <div class="info">
