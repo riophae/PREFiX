@@ -216,7 +216,7 @@ function initMainUI() {
 		$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
 	}
 
-	refreshLoading();
+	resetLoadingEffect();
 
 	setInterval(updateRelativeTime, 15000);
 	setInterval(checkCount, 100);
@@ -261,8 +261,11 @@ function checkCount() {
 	}
 }
 
-function refreshLoading() {
-	$('#loading').hide().show();
+function resetLoadingEffect() {
+	$('#loading').hide();
+	setTimeout(function() {
+		$('#loading').show();
+	}, 0);
 }
 
 function appendStatuses(statuses) {
@@ -429,7 +432,7 @@ var nav_model = avalon.define('navigation', function(vm) {
 		$('#navigation-bar li').removeClass('current');
 		$('#stream > ul').removeClass('current');
 		updateRelativeTime();
-		refreshLoading();
+		resetLoadingEffect();
 	});
 });
 
