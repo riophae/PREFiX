@@ -330,6 +330,9 @@ function remove(e) {
 		$(self).parents('li').slideUp(function() {
 			self.$vmodel.$remove();
 		});
+		if (self.$vmodel.status.is_self && PREFiX.count.mentions) {
+			PREFiX.update();
+		}
 	});
 }
 
