@@ -600,6 +600,11 @@
         $li = this.$el.find(".cur");
         this.context.insert(this.context.callbacks("before_insert").call(this.context, $li.data("value"), $li));
         this.context.trigger("inserted", [$li]);
+        var event = new Event('input');
+        var inputor = this.context.$inputor[0];
+        if (inputor) {
+          inputor.dispatchEvent(event);
+        }
         return this.hide();
       };
 
