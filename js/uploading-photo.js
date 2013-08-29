@@ -129,7 +129,7 @@ $(function() {
 
 	$status.on({
 		input: function(e) {
-			var length = $text.val().trim().length;
+			var length = $status.val().trim().length;
 			$status.toggleClass('over', length > 140);
 		},
 		keyup: function(e) {
