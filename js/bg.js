@@ -62,9 +62,11 @@ function update() {
 		});
 	}
 	var deferred_notification = PREFiX.user.getNotification().next(function(data) {
+		PREFiX.previous_count = PREFiX.count;
 		PREFiX.count = data;
 	});
 	Deferred.parallel(deferred_new, deferred_notification).next(function() {
+		var need_notify = false;
 		var title = [ 'PREFiX' ];
 
 		var new_statuses = tl.buffered.filter(function(status) {
@@ -79,6 +81,8 @@ function update() {
 			chrome.browserAction.setBadgeBackgroundColor({
 				color: [ 113, 202, 224, 204 ]
 			});
+			if (PREFiX.count.mentions > PREFiX.previous_count.mentions)
+				need_notify = true;
 		}
 		if (PREFiX.count.direct_messages) {
 			switchTo('privatemsgs_model');
@@ -86,6 +90,8 @@ function update() {
 			chrome.browserAction.setBadgeBackgroundColor({
 				color: [ 211, 0, 4, 204 ]
 			});
+			if (PREFiX.count.mentions > PREFiX.previous_count.mentions)
+				need_notify = true;
 		}
 		var total = PREFiX.count.mentions + PREFiX.count.direct_messages;
 		chrome.browserAction.setBadgeText({
@@ -97,6 +103,7 @@ function update() {
 		chrome.browserAction.setIcon({
 			path: '/icons/19.png'
 		});
+		if (need_notify) playSound();
 	}).error(function(e) {
 		chrome.browserAction.setIcon({
 			path: '/icons/19_gray.png'
@@ -323,6 +330,26 @@ function switchTo(model) {
 	}
 }
 
+var playSound = (function() {
+	var audio = new Audio;
+	audio.src = 'dongdong.mp3';
+	var timeout;
+	var last_played = new Date;
+	last_played.setFullYear(1970);
+	return function() {
+		clearTimeout(timeout);
+		timeout = setTimeout(function() {
+			if (audio.networkState !== 1)
+				return playSound();
+			var now = new Date;
+			if (now - last_played < 15 * 1000)
+				return;
+			last_played = now;
+			audio.play();
+		}, 50);
+	}
+})();
+
 var settings = {
 	current: { },
 	default: {
@@ -361,6 +388,10 @@ var PREFiX = this.PREFiX = {
 		user: ''
 	},
 	count: {
+		mentions: 0,
+		direct_messages: 0
+	},
+	previous_count: {
 		mentions: 0,
 		direct_messages: 0
 	},
