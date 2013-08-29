@@ -149,14 +149,16 @@ function load() {
 	};
 	PREFiX.friends = [],
 	PREFiX.user = Ripple(PREFiX.accessToken);
-	init_interval = setInterval(function() {
+	var init_data = function() {
 		PREFiX.user.getHomeTimeline().next(function(statuses) {
 			if (! PREFiX.homeTimeline.statuses.length) {
 				PREFiX.homeTimeline.statuses = fixStatusList(statuses);
 			}
 			clearInterval(init_interval);
 		});
-	}, 15 * 1000);
+	};
+	init_interval = setInterval(init_data, 15 * 1000);
+	init_data();
 	update();
 	loadFriends();
 }
