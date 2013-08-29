@@ -138,6 +138,8 @@ function loadFriends() {
 	});
 }
 
+var init_interval;
+
 function load() {
 	if (PREFiX.loaded) return;
 	PREFiX.loaded = true;
@@ -147,9 +149,14 @@ function load() {
 	};
 	PREFiX.friends = [],
 	PREFiX.user = Ripple(PREFiX.accessToken);
-	PREFiX.user.getHomeTimeline().next(function(statuses) {
-		PREFiX.homeTimeline.statuses = fixStatusList(statuses);
-	});
+	init_interval = setInterval(function() {
+		PREFiX.user.getHomeTimeline().next(function(statuses) {
+			if (! PREFiX.homeTimeline.statuses.length) {
+				PREFiX.homeTimeline.statuses = fixStatusList(statuses);
+			}
+			clearInterval(init_interval);
+		});
+	}, 15 * 1000);
 	update();
 	loadFriends();
 }
@@ -157,6 +164,7 @@ function load() {
 function unload() {
 	if (! PREFiX.loaded) return;
 	clearInterval(PREFiX.interval);
+	clearInterval(init_interval);
 	PREFiX.loaded = false;
 	PREFiX.user = null;
 	PREFiX.current = 'tl_model';
