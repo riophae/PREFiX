@@ -79,7 +79,7 @@ $(function() {
 		}).next(function() {
 			PREFiX.update();
 			close();
-		});
+		}).error(console.log.bind(console));
 	}
 
 	var bg_win = chrome.extension.getBackgroundPage();
