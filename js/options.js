@@ -10,4 +10,21 @@ $(function() {
 		close();
 	});
 	$('#version').text(PREFiX.version);
+
+	var current = PREFiX.settings.current;
+
+	$('[key]').each(function() {
+		var $item = $(this);
+		var key = $item.attr('key');
+		$item.prop('checked', current[key]);
+	});
+
+	onunload = function(e) {
+		$('[key]').each(function() {
+			var $item = $(this);
+			var key = $item.attr('key');
+			current[key] = $item.prop('checked');
+		});
+		PREFiX.settings.save();
+	}
 });

@@ -20,13 +20,23 @@ body {
 	display: block;
 	position: absolute;
 }
-#account {
+#settings {
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	-webkit-transform: translate(-50%, -50%);
-	width: 100px;
+	width: 350px;
+}
+#account {
 	text-align: center;
+}
+ul {
+	list-style: none;
+}
+input[type="checkbox"] {
+	float: left;
+	margin-top: 2px;
+	margin-right: 8px;
 }
 #about {
 	position: absolute;

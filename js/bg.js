@@ -189,6 +189,7 @@ function unload() {
 }
 
 function initialize() {
+	settings.load();
 
 	if (PREFiX.accessToken) {
 		// 更新账户信息
@@ -323,7 +324,21 @@ function switchTo(model) {
 }
 
 var settings = {
-	current: { }
+	current: { },
+	default: {
+		playSound: true
+	},
+	load: function() {
+		var local_settings = lscache.get('settings') || { };
+		var current = settings.current;
+		for (var key in settings.default) {
+			current[key] = local_settings[key] === undefined ?
+				settings.default[key] : local_settings[key];
+		}
+	},
+	save: function() {
+		lscache.set('settings', settings.current);
+	}
 };
 
 var PREFiX = this.PREFiX = {
@@ -363,6 +378,7 @@ var PREFiX = this.PREFiX = {
 		scrollTop: 0
 	},
 	friends: [],
+	settings: settings,
 	account: lscache.get('account_details'), // 当前账号的数据, 如昵称头像等
 	accessToken: lscache.get('access_token'), // 缓存的 access token, 与饭否服务器联络的凭证
 	user: null // 一个 Ripple 实例, 提供所有 API 接口
