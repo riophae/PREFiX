@@ -1446,14 +1446,15 @@
 			ajax_oncomplete_event.observe([
 				options.oncomplete,
 				function(data, e) {
+					xhr.onreadystatechange = null;
 					// 如果是连接到饭否服务器的请求
 					if (helpers.startsWith(e.url, constants.baseOAuthUrl) ||
 						helpers.startsWith(e.url, config.baseAPIUrl)) {
 						// 读取服务器时间
-						var server_date = new Date(this.getHeader('Date')).getTime();
-						if (server_date) {
+						var server_date = new Date(request.getHeader('Date')).getTime();
+						if (server_date && xhr.localTime) {
 							// 修正服务器与本地的时间差
-							Ripple.OAuth.correctTimestamp(server_date / 1000);
+							Ripple.OAuth.correctTimestamp(server_date / 1000, xhr.localTime);
 						}
 					}
 					// 调用链式回调函数 (Deferred)
@@ -1552,6 +1553,12 @@
 							}
 						}
 					} catch (e) { }
+
+					xhr.onreadystatechange = function(e) {
+						if (xhr.readyState === 3) {
+							xhr.localTime = new Date;
+						}
+					}
 
 					xhr.send(params);
 				} catch (e) {

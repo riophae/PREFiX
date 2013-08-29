@@ -1593,8 +1593,9 @@ OAuth.setProperties(OAuth, {
 		OAuth.correctTimestamp(t);
 	},
 	/** Generate timestamps starting with the given value. */
-	correctTimestamp: function(timestamp) {
-		OAuth.timeCorrectionMsec = (timestamp * 1000) - (new Date()).getTime();
+	correctTimestamp: function(timestamp, now) {
+		now = now || new Date;
+		OAuth.timeCorrectionMsec = (timestamp * 1000) - now.getTime();
 	},
 	/** The difference between the correct time and my clock. */
 	timeCorrectionMsec: 0,
