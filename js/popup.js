@@ -141,7 +141,7 @@ function initMainUI() {
 
 	$main.scroll(_.throttle(function(e) {
 		getCurrent().scrollTop = $main.scrollTop();
-		if ($main.scrollTop() + $main.height() >= $main[0].scrollHeight - $main[0].clientHeight)
+		if ($main.scrollTop() + $main.height() >= $main[0].scrollHeight - ($main[0].clientHeight/2))
 			loadOldder();
 	}, 100));
 
