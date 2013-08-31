@@ -197,7 +197,10 @@ function initMainUI() {
 
 	$('#context-timeline').click(function(e) {
 		if (! $(e.target).is('a') && ! $(e.target).is('img')) {
-			$('body').removeClass('show-context-timeline');
+			$(this).removeClass('focusInFromBottom').addClass('focusOutFromTop');
+			setTimeout(function() {
+				$('body').removeClass('show-context-timeline');
+			}, 150);
 		}
 	});
 	
@@ -392,12 +395,13 @@ function showContextTimeline(e) {
 	var status = this.$vmodel.status;
 	var id = status.id;
 	context_tl_model.statuses = [];
-	$('#context-timeline ul').html('');
+	var $context_tl = $('#context-timeline');
+	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom');
 	if (status.repost_status) {
 		var statuses = [ status.repost_status, status ];
 		push(context_tl_model.statuses, statuses, true);
 	} else {
-		$('#context-timeline').addClass('loading');
+		$context_tl.addClass('loading');
 		r.getContextTimeline({ 
 			id: id
 		}).next(function(statuses) {
