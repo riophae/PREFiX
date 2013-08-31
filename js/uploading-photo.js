@@ -64,6 +64,7 @@ $(function() {
 			status: $status.val().trim()
 		}).setupAjax({
 			lock: $status,
+			timeout: 2 * 60 * 1000,
 			onstart: function(e) {
 				$('#img-droparea').addClass('loading');
 			},
