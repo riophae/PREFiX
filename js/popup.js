@@ -197,7 +197,7 @@ function initMainUI() {
 	});
 
 	$('#picture-overlay').click(function(e) {
-		$('body').removeClass('show-picture');
+		hidePicture();
 	});
 
 	$('#context-timeline').click(function(e) {
@@ -230,10 +230,26 @@ function initMainUI() {
 	setInterval(checkCount, 100);
 }
 
+function computePosition(data) {
+	var left = parseInt(($body[0].clientWidth - data.width) / 2);
+	var top = parseInt(($body[0].clientHeight - data.height) / 2);
+	data.left = Math.max(0, left);
+	data.top = Math.max(0, top);
+	for (var key in data) {
+		data[key] += 'px';
+	}
+	return function(param) {
+		return $.extend(data, param);
+	}
+}
+
 function showPicture(img_url) {
 	var $picture = $('#picture');
 	$body.addClass('show-picture');
-	$picture.prop('src', img_url).hide();
+	$picture.prop('src', img_url).hide().css({
+		'width': '',
+		'height': ''
+	});
 	waitFor(function() {
 		return $picture[0].naturalWidth;
 	}, function() {
@@ -242,14 +258,42 @@ function showPicture(img_url) {
 		}
 		var width = parseInt($picture.css('width'));
 		var height = parseInt($picture.css('height'));
-		var left = ($body[0].clientWidth - width) / 2;
-		var top = ($body[0].clientHeight - height) / 2;
-		left = Math.max(0, left);
-		top = Math.max(0, top);
-		$picture.css({
-			left: left + 'px',
-			top: top + 'px'
-		}).fadeIn();
+		$picture.css(computePosition({
+			width: width / 2,
+			height: height / 2
+		})({
+			opacity: 0,
+			display: 'block'
+		})).animate(computePosition({
+			width: width,
+			height: height
+		})({
+			opacity: 1
+		}));
+		$picture.css('margin-top', (-$body[0].clientWidth / 3) + 'px').animate({
+			'margin-top': '0px'
+		}, {
+			queue: false,
+			easing: 'easeOutBack'
+		});
+	});
+}
+
+function hidePicture() {
+	var $picture = $('#picture');
+	$picture.animate(computePosition({
+		width: parseInt($picture.css('width')) / 2,
+		height: parseInt($picture.css('height')) / 2
+	})({
+		opacity: 0
+	})).animate({
+		'margin-top': (-$body[0].clientWidth / 3) + 'px'
+	}, {
+		queue: false,
+		easing: 'easeInBack',
+		complete: function() {
+			$('body').removeClass('show-picture');
+		}
 	});
 }
 
