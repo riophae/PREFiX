@@ -73,12 +73,15 @@ var getRelativeTime = Ripple.helpers.generateTimeFormater(function(table) {
 
 function fixStatusList(statuses) {
 	statuses.forEach(function(status) {
-		status.source = ({
-			'网页': 'Web',
-			'手机上网': 'Wap',
-			'iPhone版': 'iPhone'
-		})[status.source] || status.source;
-		status.source = status.source.replace('客户端', '');
+		if (status.source && ! status.sourceFixed) {
+			status.source = ({
+				'网页': 'Web',
+				'手机上网': 'Wap',
+				'iPhone版': 'iPhone'
+			})[status.source] || status.source;
+			status.source = status.source.replace('客户端', '');
+			status.sourceFixed = true;
+		}
 		status.relativeTime = getRelativeTime(status.created_at);
 	});
 	return statuses.sort(function(status_a, status_b) {
