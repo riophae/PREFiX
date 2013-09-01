@@ -17,7 +17,7 @@
   <script src="js/popup.js"></script>
 </head>
 <body>
-  <div id="app">
+  <div id="app" class="on-top">
     <div id="notification"></div>
     <div id="picture-overlay">
       <img id="picture" src="" />
@@ -42,8 +42,8 @@
   		</ul>
   	</div>
     <div id="header">
-      <div id="top-bar">
-        <h1 title="点击回到顶部或刷新">PREFiX</h1>
+      <div id="top-bar" class="fix">
+        <h1 title="点击回到顶部或刷新">PREFiX<span id="back-to-top"></span></h1>
         <ul id="navigation-bar" ms-controller="navigation">
           <li class="home-timeline" title="首页" ms-click="showHomeTimeline"></li>
           <li class="mentions" title="提到我的" ms-click="showMentions"><span class="count"></span></li>

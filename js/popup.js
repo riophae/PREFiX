@@ -13,10 +13,12 @@ var url_max_len = 35;
 var url_placeholder = 'http://is.gd/xxxxxx';
 
 var $body;
+var $app;
 var $textarea;
 var $main;
 
 var loading = false;
+var is_on_top = true;
 PREFiX.popupActive = true;
 
 var r = PREFiX.user;
@@ -128,6 +130,7 @@ function createTab(url) {
 
 function initMainUI() {
 	$body = $('body');
+	$app = $('#app');
 
 	$textarea = $('#compose-bar textarea');
 	$textarea.autosize().atwho({
@@ -140,8 +143,10 @@ function initMainUI() {
 	$main = $('#main');
 
 	$main.scroll(_.throttle(function(e) {
-		getCurrent().scrollTop = $main.scrollTop();
-		if ($main.scrollTop() + $main.height() >= $main[0].scrollHeight - ($main[0].clientHeight/2))
+		var scroll_top = $main.scrollTop();
+		getCurrent().scrollTop = scroll_top;
+		$app.toggleClass('on-top', scroll_top === 0);
+		if (scroll_top + $main.height() >= $main[0].scrollHeight - ($main[0].clientHeight/2))
 			loadOldder();
 	}, 100));
 
