@@ -290,7 +290,6 @@ function insertKeepScrollTop(insert) {
 }
 
 function loadOldder() {
-	loading = true;
 	var model = getCurrent();
 	if (model.statuses) {
 		var oldest_status = model.statuses[model.statuses.length - 1];
@@ -299,9 +298,14 @@ function loadOldder() {
 		r[model === tl_model ? 'getHomeTimeline' : 'getMentions']({
 			max_id: id
 		}).setupAjax({
-			lock: loadOldder
+			lock: loadOldder,
+			send: function() {
+				loading = true;
+			},
+			oncomplete: function() {
+				loading = false;
+			}
 		}).next(function(statuses) {
-			loading = false;
 			appendStatuses(statuses)
 		});
 	} else {
@@ -311,9 +315,14 @@ function loadOldder() {
 		r.showInbox({
 			max_id: id
 		}).setupAjax({
-			lock: loadOldder
+			lock: loadOldder,
+			send: function() {
+				loading = true;
+			},
+			oncomplete: function() {
+				loading = false;
+			}
 		}).next(function(messages) {
-			loading = false;
 			push(privatemsgs_model.messages, messages);
 		});
 	}
