@@ -1451,10 +1451,10 @@
 					if (helpers.startsWith(e.url, constants.baseOAuthUrl) ||
 						helpers.startsWith(e.url, config.baseAPIUrl)) {
 						// 读取服务器时间
-						var server_date = new Date(request.getHeader('Date')).getTime();
-						if (server_date && xhr.localTime) {
+						var server_time = this.getHeader('Date');
+						if (server_time && xhr.localTime) {
 							// 修正服务器与本地的时间差
-							Ripple.OAuth.correctTimestamp(server_date / 1000, xhr.localTime);
+							Ripple.OAuth.correctTimestamp((new Date(server_time).getTime()) / 1000, xhr.localTime);
 						}
 					}
 					// 调用链式回调函数 (Deferred)
@@ -1643,7 +1643,7 @@
 
 	/* 读取 Request Header */
 	ajaxPt.getHeader = function(name) {
-		var value;
+		var value = null;
 		try {
 			value = this.xhr.getResponseHeader(name);
 		} catch(e) { }
@@ -1886,7 +1886,7 @@
 	}
 
 	/* 处理 Url */
-	Account.urlProcessor = function(x) {	return x; }
+	Account.urlProcessor = function(x) { return x; }
 
 	var registeredAPIList = [];
 
@@ -1958,7 +1958,8 @@
 				message.parameters = helpers.fastExtend({}, parameters, message.parameters);
 				Ripple.OAuth.SignatureMethod.sign(message, accessor);
 				if (method == 'GET') {
-					message.action += '?' + helpers.param(parameters);
+					var params = helpers.param(parameters);
+					message.action += params ? ('?' + params) : '';
 					ajax_options.params = null;
 					ajax_options.processData = false;
 				}
@@ -1967,7 +1968,8 @@
 				helpers.fastExtend(parameters, message.parameters);
 			}
 
-			headers['Authorization'] = Ripple.OAuth.getAuthorizationHeader('', message.parameters);
+			headers['Authorization'] = Ripple.OAuth.getAuthorizationHeader(action, message.parameters);
+			headers['Cache-Control'] = 'no-cache';
 
 			return ajax(message.action, ajax_options);
 		}

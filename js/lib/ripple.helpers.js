@@ -1563,8 +1563,7 @@ OAuth.setProperties(OAuth, {
 	},
 	/** Construct the value of the Authorization header for an HTTP request. */
 	getAuthorizationHeader: function(realm, parameters) {
-		realm = realm ? 'realm="' + OAuth.percentEncode(realm) + '"' : '';
-		var header = 'OAuth ' + realm;
+		var header = 'OAuth realm="' + realm + '", ';
 		var list = OAuth.getParameterList(parameters);
 		var parameter, name;
 		var toAdd = [];
