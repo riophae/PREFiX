@@ -795,6 +795,9 @@ $(function() {
 	avalon.scan();
 	initMainUI();
 	setTimeout(function() {
+		if (! PREFiX.compose.text) {
+			$textarea.blur();
+		}
 		getCurrent().initialize();
 	}, 100);
 });
