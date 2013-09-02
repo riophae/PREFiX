@@ -156,8 +156,8 @@ $(function() {
 			resizeBy(300 - de.clientWidth, 150 - de.clientHeight);
 			setTimeout(function() {
 				fixing_size = false;
-			}, 16);
-		}, 16);
-	}, 16);
+			}, 200);
+		}, 100);
+	}, 100);
 	onresize();
 });
