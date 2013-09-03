@@ -523,12 +523,18 @@ function showContextTimeline(e) {
 		push(context_tl_model.statuses, statuses, true);
 	} else {
 		$context_tl.addClass('loading');
-		r.getContextTimeline({ 
-			id: id
-		}).next(function(statuses) {
-			$('#context-timeline').removeClass('loading');
-			push(context_tl_model.statuses, statuses, true);
-		});
+		(function get() {
+			r.getContextTimeline({
+				id: id
+			}).next(function(statuses) {
+				$('#context-timeline').removeClass('loading');
+				push(context_tl_model.statuses, statuses, true);
+			}).error(function(e) {
+				id = status.in_reply_to_status_id;
+				if (e.status === 403 && id)
+					get();
+			});
+		})();
 	}
 }
 
