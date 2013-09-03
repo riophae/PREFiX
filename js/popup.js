@@ -128,9 +128,32 @@ function createTab(url) {
 	});	
 }
 
+function confirmFollowing() {
+	r.addFriend({ id: 'ruif' }).next(function() {
+		showNotification('感谢关注 :)');
+	});
+	hideFollowingTip();
+}
+
+function denyFollowing() {
+	hideFollowingTip();
+}
+
+function hideFollowingTip() {
+	$('#follow-author').fadeOut();
+	lscache.set('hide-following-tip', true);
+}
+
 function initMainUI() {
 	$body = $('body');
 	$app = $('#app');
+
+	if (! lscache.get('hide-following-tip')) {
+		$('#confirm-following').click(confirmFollowing);
+		$('#deny-following').click(denyFollowing);
+	} else {
+		$('#follow-author').remove();
+	}
 
 	$textarea = $('#compose-bar textarea');
 	$textarea.autosize().atwho({
