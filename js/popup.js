@@ -375,7 +375,9 @@ function checkCount() {
 	} else {
 		$privatemsgs.text('').hide();
 	}
-	var buffered = PREFiX.homeTimeline.buffered.length;
+	var buffered = PREFiX.homeTimeline.buffered.filter(function(status) {
+		return ! status.is_self;
+	}).length;
 	if (buffered) {
 		$home_tl.text(buffered).show();
 	} else {
