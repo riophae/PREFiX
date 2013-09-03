@@ -90,12 +90,11 @@ function update() {
 			chrome.browserAction.setBadgeBackgroundColor({
 				color: [ 211, 0, 4, 204 ]
 			});
-			if (PREFiX.count.mentions > PREFiX.previous_count.mentions)
+			if (PREFiX.count.direct_messages > PREFiX.previous_count.direct_messages)
 				need_notify = true;
 		}
-		var total = PREFiX.count.mentions + PREFiX.count.direct_messages;
 		chrome.browserAction.setBadgeText({
-			text: total && (total + '') || ''
+			text: (PREFiX.count.direct_messages || PREFiX.count.mentions || '') + ''
 		});
 		chrome.browserAction.setTitle({
 			title: title.join('\n')
