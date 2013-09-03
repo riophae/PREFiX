@@ -362,6 +362,7 @@ function hidePicture() {
 
 function checkCount() {
 	var count = PREFiX.count;
+	var $home_tl = $('#navigation-bar .home-timeline .count');
 	var $mentions = $('#navigation-bar .mentions .count');
 	var $privatemsgs = $('#navigation-bar .privatemsgs .count');
 	if (count.mentions) {
@@ -373,6 +374,12 @@ function checkCount() {
 		$privatemsgs.text(count.direct_messages).show();
 	} else {
 		$privatemsgs.text('').hide();
+	}
+	var buffered = PREFiX.homeTimeline.buffered.length;
+	if (buffered) {
+		$home_tl.text(buffered).show();
+	} else {
+		$home_tl.text('').hide();
 	}
 }
 
