@@ -14,6 +14,7 @@
   <script src="js/lib/ripple.helpers.js"></script>
   <script src="js/lib/ripple.api.js"></script>
   <script src="js/lib/others.js"></script>
+  <script src="js/lyrics.js"></script>
   <script src="js/common.js"></script>
   <script src="js/popup.js"></script>
 </head>
@@ -25,6 +26,9 @@
         <p>您是否想要关注 <a href="https://github.com/riophae/PREFiX" target="_blank">PREFiX</a> 的作者 <a href="http://fanfou.com/ruif" target="_blank">@锐风</a> ?</p>
         <p><a id="confirm-following">是</a> / <a id="deny-following">否</a></p>
       </div>
+    </div>
+    <div id="rating-tip" class="fix">
+      <p>您是否愿意为 PREFiX 评分?<span id="rating-links"><a id="show-rating-page">是</a> / <a id="hide-rating-tip">否</a></span></p>
     </div>
     <div id="notification"></div>
     <div id="picture-overlay">
@@ -59,7 +63,7 @@
         </ul>
       </div>
       <div id="compose-bar" ms-controller="composebar-textarea">
-        <textarea class="content" title="Ctrl-Enter 或双击提交" ms-keyup="onkeyup" ms-dblclick="ondblclick" ms-duplex="text"></textarea>
+        <textarea class="content" title="Ctrl-Enter 或双击提交" ms-keyup="onkeyup" ms-dblclick="ondblclick" ms-focus="onfocus" ms-blur="onblur" ms-duplex="text"></textarea>
         <span id="uploading-photo" title="上传照片"></span>
       </div>
     </div>

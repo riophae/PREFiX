@@ -21,6 +21,8 @@ var loading = false;
 var is_on_top = true;
 PREFiX.popupActive = true;
 
+var lyric;
+
 var r = PREFiX.user;
 
 if (! r) {
@@ -121,10 +123,10 @@ function updateRelativeTime() {
 	});
 }
 
-function createTab(url) {
+function createTab(url, active) {
 	chrome.tabs.create({
 		url: url,
-		active: false
+		active: active === true
 	});	
 }
 
@@ -142,6 +144,36 @@ function denyFollowing() {
 function hideFollowingTip() {
 	$('#follow-author').fadeOut();
 	lscache.set('hide-following-tip', true);
+}
+
+function showRatingPage() {
+	var url = '';
+	createTab(url, true);
+	hideRatingTip();
+}
+
+function showRatingTip() {
+	$('#rating-tip').fadeIn();
+}
+
+function hideRatingTip() {
+	$('#rating-tip').fadeOut();
+	lscache.set('hide-rating-tip', true);
+}
+
+function accumulateTime() {
+	return;
+
+	var time = lscache.get('timer') || 0;
+	time++;
+
+	if (time >= 60) {
+		clearInterval(rating_interval);
+		showRatingTip();
+		lscache.set('hide-rating-tip', true);
+	}
+
+	lscache.set('timer', time);
 }
 
 function initMainUI() {
@@ -251,6 +283,14 @@ function initMainUI() {
 
 	setInterval(updateRelativeTime, 15000);
 	setInterval(checkCount, 100);
+
+	if (! lscache.get('hide-rating-tip')) {
+		var rating_interval = setInterval(accumulateTime, 60000);
+		$('#show-rating-page').click(showRatingPage);
+		$('#hide-rating-tip').click(hideRatingTip);
+	} else {
+		$('#rating-tip').remove();
+	}
 }
 
 function computePosition(data) {
@@ -524,6 +564,13 @@ var nav_model = avalon.define('navigation', function(vm) {
 var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	vm.text = vm.type = vm.id = vm.user = '';
 	vm.submitting = false;
+	vm.onfocus = function(e) {
+		lyric = lyric || getLyric();
+		$textarea.prop('placeholder', lyric);
+	}
+	vm.onblur = function(e) {
+		$textarea.prop('placeholder', '');
+	}
 	vm.ondblclick = function(e) {
 		return vm.onkeyup({
 			ctrlKey: true,
