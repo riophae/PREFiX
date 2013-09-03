@@ -602,7 +602,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 					}).next(function() {
 						showNotification('发表成功!');
 						vm.text = '';
-					}).error(function() {
+					}).error(function(e) {
 						if (e.status && e.response) {
 							showNotification(e.response.error);
 						} else {
