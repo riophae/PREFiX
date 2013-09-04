@@ -95,7 +95,7 @@
                 </div>
               </div>
               <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
-                <span ms-click="showContextTimeline" title="查看上下文消息"></span>
+                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息"></span>
               </div>
             </div>
           </li>
@@ -123,7 +123,7 @@
                 </div>
               </div>
               <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
-                <span ms-click="showContextTimeline" title="查看上下文消息"></span>
+                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息"></span>
               </div>
             </div>
           </li>

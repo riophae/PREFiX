@@ -261,6 +261,12 @@ function initMainUI() {
 			setTimeout(function() {
 				$('body').removeClass('show-context-timeline');
 			}, 150);
+			if (showContextTimeline.ajax) {
+				showContextTimeline.ajax.cancel();
+			}
+			if (showRelatedStatuses.ajax) {
+				showRelatedStatuses.ajax.cancel();
+			}
 		}
 	});
 	
@@ -521,30 +527,54 @@ function toggleFavourite(e) {
 }
 
 function showContextTimeline(e) {
+	e.preventDefault();
 	$body.addClass('show-context-timeline');
-	var status = this.$vmodel.status;
+	var status = this.$vmodel.status.$model;
 	var id = status.id;
 	context_tl_model.statuses = [];
+	var context_statuses = [ status ];
 	var $context_tl = $('#context-timeline');
 	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom');
 	if (status.repost_status) {
-		var statuses = [ status.repost_status, status ];
-		push(context_tl_model.statuses, statuses, true);
-	} else {
-		$context_tl.addClass('loading');
-		(function get() {
-			r.getContextTimeline({
-				id: id
-			}).next(function(statuses) {
-				$('#context-timeline').removeClass('loading');
-				push(context_tl_model.statuses, statuses, true);
-			}).error(function(e) {
-				id = status.in_reply_to_status_id;
-				if (e.status === 403 && id)
-					get();
-			});
-		})();
+		context_statuses.push(status.repost_status);
+		id = status.repost_status.id;
 	}
+	$context_tl.addClass('loading');
+	(function get() {
+		showContextTimeline.ajax = r.getContextTimeline({
+			id: id
+		}).next(function(statuses) {
+			unshift(context_statuses, statuses, true);
+			context_tl_model.statuses = fixStatusList(context_statuses).reverse();
+			$('#context-timeline').removeClass('loading');
+		}).error(function(e) {
+			id = status.in_reply_to_status_id;
+			if (e.status === 403 && id)
+				get();
+		});
+	})();
+}
+
+function showRelatedStatuses(e) {
+	$body.addClass('show-context-timeline');
+	var $context_tl = $('#context-timeline');
+	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom loading');
+	context_tl_model.statuses = [];
+	var status = this.$vmodel.status.$model;
+	(function get() {
+		unshift(context_tl_model.statuses, [ status ]);
+		var id = status.repost_status_id || status.in_reply_to_status_id;
+		if (id) {
+			showRelatedStatuses.ajax = r.showStatus({ id: id }).next(function(s) {
+				status = s;
+				get();
+			}).error(function() {
+				$context_tl.removeClass('loading');
+			});
+		} else {
+			$context_tl.removeClass('loading');
+		}
+	})();
 }
 
 var nav_model = avalon.define('navigation', function(vm) {
