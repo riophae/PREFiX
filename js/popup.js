@@ -379,7 +379,7 @@ function checkCount() {
 		return ! status.is_self;
 	}).length;
 	if (buffered) {
-		$home_tl.text(buffered).show();
+		$home_tl.text(Math.min(buffered, 99)).show();
 	} else {
 		$home_tl.text('').hide();
 	}
