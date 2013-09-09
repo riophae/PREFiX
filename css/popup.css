@@ -593,6 +593,9 @@ textarea {
 .status-list .status-content a {
 	text-decoration: underline !important;
 }
+.photo img {
+	cursor: -webkit-zoom-in;
+}
 .status-list .context {
 	clear: both;
 	margin-bottom: -8px;
