@@ -229,6 +229,9 @@ body.show-context-timeline #context-timeline {
 	color: #fff;
 	text-shadow: 0 0 2px #ccc;
 }
+#picture-overlay::-webkit-scrollbar-track:vertical {
+	margin: 0;
+}
 #picture {
 	position: absolute;
 	max-width: 400px;
