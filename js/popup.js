@@ -713,15 +713,14 @@ var tl_model = avalon.define('home-timeline', function(vm) {
 	
 	vm.statuses = [];
 
-	vm.$watch('statuses', function() {
-		PREFiX.homeTimeline.statuses = tl_model.$model.statuses;
-	});
-
 	vm.scrollTop = 0;
 
 	vm.$watch('scrollTop', function(value) {
 		PREFiX.homeTimeline.scrollTop = value;
 	});
+});
+tl_model.statuses.$watch('length', function() {
+	PREFiX.homeTimeline.statuses = tl_model.$model.statuses;
 });
 tl_model.initialize = function() {
 	$('#navigation-bar .home-timeline').addClass('current');
@@ -764,15 +763,14 @@ var mentions_model = avalon.define('mentions', function(vm) {
 	
 	vm.statuses = [];
 
-	vm.$watch('statuses', function() {
-		PREFiX.mentions.statuses = mentions_model.$model.statuses;
-	});
-
 	vm.scrollTop = 0;
 
 	vm.$watch('scrollTop', function(value) {
 		PREFiX.mentions.scrollTop = value;
 	});
+});
+mentions_model.statuses.$watch('length', function() {
+	PREFiX.mentions.statuses = mentions_model.$model.statuses;
 });
 mentions_model.initialize = function() {
 	$('#navigation-bar .mentions').addClass('current');
@@ -849,15 +847,14 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 
 	vm.messages = [];
 
-	vm.$watch('messages', function() {
-		PREFiX.privatemsgs.messages = privatemsgs_model.$model.messages;
-	});
-
 	vm.scrollTop = 0;
 
 	vm.$watch('scrollTop', function(value) {
 		PREFiX.privatemsgs.scrollTop = value;
 	});
+});
+privatemsgs_model.messages.$watch('length', function() {
+	PREFiX.privatemsgs.messages = privatemsgs_model.$model.messages;
 });
 privatemsgs_model.initialize = function() {
 	$('#navigation-bar .privatemsgs').addClass('current');
