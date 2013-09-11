@@ -248,6 +248,9 @@ body.show-context-timeline #context-timeline {
 	color: #fff;
 	text-shadow: 0 0 2px #ccc;
 }
+#context-timeline::-webkit-scrollbar-track:vertical {
+	margin: 0;
+}
 #context-timeline.loading::after {
 	display: inline-block;
 	position: absolute;
