@@ -1,5 +1,5 @@
 //==================================================
-// avalon 0.95 ，mobile 注意： 只能用于IE10及高版本的标准浏览器
+// avalon 0.96a ，mobile 注意： 只能用于IE10及高版本的标准浏览器
 //==================================================
 (function(DOC) {
     var Publish = {} //将函数曝光到此对象上，方便访问器收集依赖
@@ -341,9 +341,8 @@
     }
 
     kernel.plugins = plugins
-    kernel.compact = true
-    kernel.alias = {}
     kernel.plugins['interpolate'](["{{", "}}"])
+    kernel.alias = {}
     avalon.config = kernel
 
     /*********************************************************************
@@ -1395,8 +1394,7 @@
             return false
         })
     }
-    //取得求值函数及其传参
-
+    //根据一段文本与一堆VM，转换为对应的求值函数及匹配的VM(解释器模式)
     function parseExpr(code, scopes, data, four) {
         if (four === "setget") {
             var fn = Function("a", "b", "if(arguments.length === 2){\n\ta." + code + " = b;\n }else{\n\treturn a." + code + ";\n}")
@@ -1406,8 +1404,7 @@
                     assigns = [],
                     names = [],
                     args = [],
-                    prefix = "",
-                    originCode = code
+                    prefix = ""
             //args 是一个对象数组， names 是将要生成的求值函数的参数
             vars = uniqArray(vars), scopes = uniqArray(scopes, 1)
             for (var i = 0, n = scopes.length; i < n; i++) {
@@ -1456,7 +1453,6 @@
             try {
                 fn = Function.apply(Function, names.concat("'use strict';\n" + prefix + code))
             } catch (e) {
-                log("转换[ " + originCode + " ]时失败")
             }
         }
         try {
@@ -1466,12 +1462,11 @@
             return [fn, args]
         } catch (e) {
             data.remove = false
-            log("执行[ " + originCode + " ]对应的求值函数时失败")
         } finally {
             textBuffer = names = null //释放内存
         }
     }
-
+    avalon.parseExpr = parseExpr
     function watchView(text, scopes, data, callback, tokens) {
         var array, updateView = avalon.noop
         if (!tokens) {
@@ -1532,9 +1527,7 @@
         if (!cacheDisplay[nodeName]) {
             var node = DOC.createElement(nodeName)
             root.appendChild(node)
-
             val = window.getComputedStyle(node, null).display
-
             root.removeChild(node)
             cacheDisplay[nodeName] = val
         }
@@ -1620,7 +1613,7 @@
                     }
                 }
                 if (!elem.$vmodels) {
-                    elem.$vmodel = elem.$scope = vmodels[0]
+                    elem.$vmodel = vmodels[0]
                     elem.$vmodels = vmodels
                 }
                 if (type && typeof callback === "function") {
@@ -1679,7 +1672,7 @@
                         var xhr = new window.XMLHttpRequest
                         xhr.onload = function() {
                             var s = xhr.status
-                            if (s >= 200 && s < 300 || s === 304 ) {
+                            if (s >= 200 && s < 300 || s === 304) {
                                 avalon.innerHTML(elem, xhr.responseText)
                                 avalon.scan(elem, vmodels)
                             }
@@ -1700,7 +1693,7 @@
             }, simple ? null : scanExpr(data.value))
         },
         //这是一个布尔属性绑定的范本，布尔属性插值要求整个都是一个插值表达式，用{{}}包起来
-        //布尔属性在IE下无法取得原来的字符串值，变成一个布尔，因此需要用ng-disabled
+        //布尔属性在IE下无法取得原来的字符串值，变成一个布尔
         "disabled": function(data, vmodels) {
             var name = data.type,
                     propName = name === "readonly" ? "readOnly" : name
@@ -1881,7 +1874,7 @@
     //如果一个input标签添加了model绑定。那么它对应的字段将与元素的value连结在一起
     //字段变，value就变；value变，字段也跟着变。默认是绑定input事件，
     modelBinding.INPUT = function(element, fn, scope, fixType) {
-        if (element.name === void 0) {
+        if (!element.name) {//如果用户没有写name属性，浏览器默认给它一个空字符串
             element.name = generateID()
         }
         var type = element.type,
@@ -2187,7 +2180,7 @@
             this.splice(index, 1) //DOM操作非常重,因此只有非负整数才删除
         }
         array.clear = function() {
-            this.length = dynamic.length = 0 //清空数组
+            this.$model.length = this.length = dynamic.length = 0 //清空数组
             notifySubscribers(this, "clear")
             return this
         }
@@ -2230,6 +2223,7 @@
         return array;
     }
     //========================= each binding ====================
+    var withMapper = {}
     bindingHandlers["each"] = function(data, vmodels) {
         var parent = data.element, list
         var array = parseExpr(data.value, vmodels, data)
@@ -2250,20 +2244,19 @@
         if (Array.isArray(list)) {
             data.mapper = []
             iterator = function(method, pos, el) {
-                eachIterator(method, pos, el, data)
+                eachIterator(method, pos, el, data, iterator.host)
             }
         } else {
-            data.mapper = {}
             data.markstone = {}
             iterator = function(method, pos, el) {
                 withIterator(method, pos, el, data, iterator.host)
             }
-            iterator.host = list
         }
+        iterator.host = list
         list[subscribers].push(iterator)
         iterator("add", list, 0)
     }
-    function eachIterator(method, pos, el, data) {
+    function eachIterator(method, pos, el, data, list) {
         var group = data.group
         var parent = data.element
         var mapper = data.mapper
@@ -2274,7 +2267,7 @@
                 var arr = pos, pos = el, transation = documentFragment.cloneNode(false)
                 for (var i = 0, n = arr.length; i < n; i++) {
                     var ii = i + pos
-                    var proxy = createEachProxy(ii, arr[i], arr, data.param)
+                    var proxy = createEachProxy(ii, arr[i], list, data.param)
                     var tview = data.template.cloneNode(true)
                     mapper.splice(ii, 0, proxy)
                     var base = typeof arr[i] === "object" ? [proxy, arr[i]] : [proxy]
@@ -2293,8 +2286,8 @@
                 removeView(locatedNode, group, el)
                 break
             case "index":
-                for (; el = mapper[pos]; pos++) {
-                    el.$index = pos
+                while (el = mapper[pos]) {
+                    el.$index = pos++
                 }
                 break
             case "clear":
@@ -2302,9 +2295,9 @@
                 avalon.clearChild(parent)
                 break
             case "move":
-                var t = mapper.splice(pos, 1)
+                var t = mapper.splice(pos, 1)[0]
                 if (t) {
-                    mapper.splice(el, 0, t[0])
+                    mapper.splice(el, 0, t)
                     var moveNode = removeView(locatedNode, group)
                     locatedNode = getLocatedNode(parent, group, el)
                     parent.insertBefore(moveNode, locatedNode)
@@ -2327,18 +2320,21 @@
         var ret = []
         switch (method) {
             case "append":
-                var key = object, proxy = createWithProxy(key, val)
-                proxy.$id = proxy.$id.replace("avalon", "with")
-                data.mapper[key] = proxy
-                if (val && val.$model) {
-                    proxy.$events = host.$events
-                    proxy[subscribers] = host[subscribers]
+                var key = object
+                var mapper = withMapper[host.$id] || (withMapper[host.$id] = {})
+                if (!mapper[key]) {
+                    var proxy = createWithProxy(key, val)
+                    mapper[key] = proxy
+                    if (val && val.$model) {
+                        proxy.$events = host.$events
+                        proxy[subscribers] = host[subscribers]
+                    }
+                    host.$watch(key, function(neo) {
+                        proxy.$val = neo
+                    })
                 }
-                host.$watch(key, function(neo) {
-                    data.mapper[key].$val = neo
-                })
                 var tview = data.template.cloneNode(true)
-                scanNodes(tview, [proxy, val].concat(data.vmodels))
+                scanNodes(tview, [mapper[key], val].concat(data.vmodels))
                 if (typeof group !== "number") {
                     data.group = tview.childNodes.length
                 }
@@ -2367,7 +2363,7 @@
                 for (var i = 0, name; name = object[i++]; ) {
                     var node = markstone[name]
                     if (node) {
-                        markstone[name] = data.mapper[name] = 0//移除不再存在的键
+                        markstone[name] = withMapper[host.$id][name] = 0//移除不再存在的键
                         removeNodes.push(node)
                         gatherRemovedNodes(removeNodes, node, group)
                     }
@@ -2626,7 +2622,11 @@
                     tzMin = toInt(match[9] + match[11])
                 }
                 dateSetter.call(date, toInt(match[1]), toInt(match[2]) - 1, toInt(match[3]))
-                timeSetter.call(date, toInt(match[4] || 0) - tzHour, toInt(match[5] || 0) - tzMin, toInt(match[6] || 0), toInt(match[7] || 0))
+                var h = int(match[4] || 0) - tzHour;
+                var m = toInt(match[5] || 0) - tzMin
+                var s = toInt(match[6] || 0);
+                var ms = Math.round(parseFloat('0.' + (match[7] || 0)) * 1000);
+                timeSetter.call(date, h, m, s, ms);
                 return date
             }
             return string
@@ -3073,7 +3073,7 @@
         innerRequire("ready!", fn)
     }
     avalon.config({
-        loader: true
+        loader: false
     })
     avalon.ready(function() {
         avalon.scan(document.body)
