@@ -235,6 +235,7 @@ body.show-context-timeline #context-timeline {
 #picture {
 	position: absolute;
 	max-width: 400px;
+	box-shadow: 0 0 25px #000;
 }
 #context-timeline {
 	z-index: 100;
