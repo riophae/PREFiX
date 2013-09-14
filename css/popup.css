@@ -474,9 +474,10 @@ textarea {
 .status-list li .status {
 	padding: 8px 0;
 	position: relative;
+	overflow: hidden;
 }
 .status-list li .action-icons a {
-	margin-top: -5px;
+	margin-top: -6px;
 	background-repeat: no-repeat;
 	background-position: left top;
 	width: 40px;
@@ -487,7 +488,7 @@ textarea {
 	cursor: pointer;
 }
 .status-list li .action-icons a:active {
-	margin-top: -4px;
+	margin-top: -5px;
 }
 .status-list li .action-icons .remove {
 	left: 0;
