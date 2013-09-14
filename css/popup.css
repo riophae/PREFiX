@@ -477,18 +477,19 @@ textarea {
 	overflow: hidden;
 }
 .status-list li .action-icons a {
-	margin-top: -6px;
+	-webkit-transform: translateY(-2px);
+	transform: translateY(-2px);
 	background-repeat: no-repeat;
 	background-position: left top;
-	width: 40px;
-	height: 40px;
+	width: 36px;
+	height: 34px;
 	position: absolute;
 	top: 0;
 	z-index: 4;
 	cursor: pointer;
 }
 .status-list li .action-icons a:active {
-	margin-top: -5px;
+	margin-top: 1px;
 }
 .status-list li .action-icons .remove {
 	left: 0;
@@ -498,7 +499,7 @@ textarea {
 	background-position: left bottom;
 }
 .status-list li .action-icons .reply {
-	right: 80px;
+	right: 75px;
 	background-image: url('/images/reply.png');
 }
 .status-list li .action-icons .reply:hover {
@@ -508,14 +509,14 @@ textarea {
 	right: 0;
 }
 .status-list li .action-icons .repost {
-	right: 40px;
+	right: 41px;
 	background-image: url('/images/repost.png');
 }
 .status-list li .action-icons .repost:hover {
 	background-position: left bottom;
 }
 .status-list li .action-icons .favourite {
-	right: 0;
+	right: 7px;
 	background-image: url('/images/favourite.png');
 }
 .status-list li .action-icons .favourite:hover {
