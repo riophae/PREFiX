@@ -415,11 +415,12 @@ textarea {
 #uploading-photo {
 	display: block;
 	position: absolute;
-	left: 15px;
-	top: 12px;
+	left: 8px;
+	top: 0;
 	width: 22px;
 	height: 16px;
-	background: url('/images/uploading-photo.png') no-repeat;
+	padding: 12px 7px;
+	background: url('/images/uploading-photo.png') center center no-repeat;
 	cursor: pointer;
 	-webkit-transition: opacity ease-in-out .2s;
 	transition: opacity ease-in-out .2s;
