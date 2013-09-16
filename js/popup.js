@@ -315,7 +315,10 @@ function computePosition(data) {
 function showPicture(img_url) {
 	var $picture = $('#picture');
 	$body.addClass('show-picture');
-	$picture.prop('src', img_url).hide().css({
+	if ($picture.prop('src') != img_url) {
+		$picture.prop('src', img_url);
+	}
+	$picture.hide().css({
 		'width': '',
 		'height': ''
 	});
