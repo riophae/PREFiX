@@ -341,11 +341,11 @@ function showPicture(img_url) {
 			height: height
 		})({
 			opacity: 1
-		}), 200);
+		}), 250);
 		$picture.css('margin-top', (-$body[0].clientWidth / 3) + 'px').animate({
 			'margin-top': '0px'
 		}, {
-			duration: 200,
+			duration: 250,
 			queue: false,
 			easing: 'easeOutBack'
 		});
@@ -362,7 +362,7 @@ function hidePicture() {
 	})).animate({
 		'margin-top': (-$body[0].clientWidth / 3) + 'px'
 	}, {
-		duration: 200,
+		duration: 250,
 		queue: false,
 		easing: 'easeInBack',
 		complete: function() {

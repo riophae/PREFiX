@@ -91,14 +91,14 @@
 .focusOutFromTop {
 	-webkit-transform-origin: top center;
 	transform-origin: top center;
-	-webkit-animation: focusOutFromTop .2s ease-out;
-	animation: focusOutFromTop .2s ease-out;
+	-webkit-animation: focusOutFromTop .25s ease-out;
+	animation: focusOutFromTop .25s ease-out;
 }
 .focusInFromBottom {
 	-webkit-transform-origin: top center;
 	transform-origin: top center;
-	-webkit-animation: focusInFromBottom .2s ease-out;
-	animation: focusInFromBottom .2s ease-out;
+	-webkit-animation: focusInFromBottom .25s ease-out;
+	animation: focusInFromBottom .25s ease-out;
 }
 * {
 	font: 13px "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
