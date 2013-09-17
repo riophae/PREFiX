@@ -23,6 +23,7 @@
     "Boolean Number String Function Array Date RegExp Object Error".replace(rword, function(name) {
         class2type["[object " + name + "]"] = name.toLowerCase()
     })
+    var rchecktype = /^(?:object|array)$/
     var rwindow = /^[object (Window|DOMWindow|global)]$/
 
     function noop() {
@@ -531,7 +532,10 @@
             return val
         }
     }
-    "scrollLeft_pageXOffset,scrollTop_pageYOffset".replace(/(\w+)_(\w+)/g, function(_, method, prop) {
+    avalon.each({
+        scrollLeft: "pageXOffset",
+        scrollTop: "pageYOffset"
+    }, function(method, prop) {
         avalon.fn[method] = function(val) {
             var node = this[0] || {}, win = getWindow(node), top = method === "scrollTop";
             if (!arguments.length) {
@@ -543,9 +547,9 @@
                     node[method] = val;
                 }
             }
-
         }
     })
+
 
     function getWindow(node) {
         return node.window && node.document ? node : node.nodeType === 9 ? node.defaultView : false;
@@ -940,10 +944,10 @@
             if (updated.length) {
                 updated.forEach(function(i) {
                     var valueType = getType(b[i])
-                    if (valueType !== "object" && valueType !== "array") {
-                        a[i] = b[i]
-                    } else {
+                    if (rchecktype.test(valueType)) {
                         updateViewModel(a[i], b[i], valueType)
+                    } else {
+                        a[i] = b[i]
                     }
                 })
             }
@@ -974,7 +978,12 @@
             return a
         }
     }
-
+    var isEqual = function(x, y) {
+        if (x === y) {
+            return x instanceof Date ? x - 0 === y - 0 : !0
+        }
+        return x !== x && y !== y
+    }
     var unwatchOne = oneObject("$id,$skipArray,$watch,$unwatch,$fire,$events,$model,$accessor," + subscribers)
 
     function modelFactory(scope, model, watchMore, oldAccessores) {
@@ -1020,7 +1029,7 @@
                                 setter.call(vmodel, neo)
                                 vmodel.$events[name] = backup
                             }
-                            if (oldArgs !== neo) {  //只检测用户的传参是否与上次是否一致
+                            if (!isEqual(oldArgs, neo)) {  //只检测用户的传参是否与上次是否一致
                                 oldArgs = neo
                                 value = accessor.value = model[name] = getter.call(vmodel)
                                 notifySubscribers(accessor) //通知顶层改变
@@ -1031,7 +1040,7 @@
                                 collectSubscribers(accessor)
                             }
                             neo = accessor.value = model[name] = getter.call(vmodel)
-                            if (value !== neo) {
+                            if (!isEqual(value, neo)) {
                                 oldArgs = void 0
                                 vmodel.$fire && vmodel.$fire(name, neo, value)
                             }
@@ -1046,8 +1055,8 @@
                             if (stopRepeatAssign) {
                                 return //阻止重复赋值
                             }
-                            if (value !== neo) {
-                                if (valueType === "array" || valueType === "object") {
+                            if (!isEqual(value, neo)) {
+                                if (rchecktype.test(valueType)) {
                                     if ("value" in accessor) {//如果已经转换过
                                         value = updateViewModel(value, neo, valueType)
                                     } else {//如果本来就是VM就直接输出，否则要转换
@@ -1199,7 +1208,7 @@
         }
     }
 
-    var rfilters = /[^|]\|\s*(\w+)\s*(\([^)]*\))?/g
+    var rfilters = /\|\s*(\w+)\s*(\([^)]*\))?/g
 
     function scanExpr(str) {
         var tokens = [],
@@ -1229,7 +1238,7 @@
                     if (value.indexOf("|") > 0) { // 抽取过滤器 注意排除短路与
                         value = value.replace(rfilters, function(c, d, e) {
                             leach.push(d + (e || ""))
-                            return c.charAt(0)
+                            return ""
                         })
                     }
                     tokens.push({
@@ -2039,29 +2048,24 @@
 
     function convert(val) {
         var type = getType(val)
-        if (type === "array" || type === "object") {
+        if (rchecktype.test(type)) {
             val = val.$id ? val : modelFactory(val, val)
         }
         return val
     }
 
-    var isEqual = Object.is || function(x, y) { //只要用于处理NaN 与 NaN 比较, chrome19+, firefox22
-        if (x === y) {
-            return x !== 0 || 1 / x === 1 / y;
-        }
-        return x !== x && y !== y;
-    }
-    //To obtain the corresponding index of the VM
-
-    function getVMIndex(a, bbb, start) {
-        for (var i = start, n = bbb.length; i < n; i++) {
-            var b = bbb[i];
-            var check = b && b.v ? b.v : b
-            if (isEqual(a, check)) {
+ //取得el在array的位置
+    function getVMIndex(el, array, start) {
+        for (var i = start, n = array.length; i < n; i++) {
+            var b = array[i]
+            var check = b && b.$model ? b.$model : b
+            if (isEqual(el, check)) {
                 return i
             }
         }
+        return -1
     }
+
 
     function Collection(model) {
         var array = []
@@ -2208,11 +2212,12 @@
         }
         array.set = function(index, val) {
             if (index >= 0 && index < this.length) {
-                if (/array|object/.test(getType(val))) {
+                var valueType = getType(val)
+                if (rchecktype.test(valueType)) {
                     if (val.$model) {
                         val = val.$model
                     }
-                    updateViewModel(this[index], val, Array.isArray(val))
+                    updateViewModel(this[index], val, valueType)
                 } else if (this[index] !== val) {
                     this[index] = val
                     notifySubscribers(this, "set", index, val)
@@ -2253,14 +2258,16 @@
             }
         }
         iterator.host = list
-        list[subscribers].push(iterator)
+        list[subscribers] && list[subscribers].push(iterator)
         iterator("add", list, 0)
     }
     function eachIterator(method, pos, el, data, list) {
         var group = data.group
         var parent = data.element
         var mapper = data.mapper
-        var locatedNode = getLocatedNode(parent, group, pos)
+        if (method == "del" || method == "move") {
+            var locatedNode = getLocatedNode(parent, group, pos)
+        }
         switch (method) {
             case "add":
                 // 为了保证了withIterator的add命令一致，需要对调一下第2，第3参数
@@ -2409,7 +2416,7 @@
     }
     var watchEachOne = oneObject("$index,$remove,$first,$last")
     function createEachProxy(index, item, list, param) {
-        param = param || "$data"
+        param = param || "el"
         var source = {}
         source.$index = index
         source.$view = {}
@@ -2622,7 +2629,7 @@
                     tzMin = toInt(match[9] + match[11])
                 }
                 dateSetter.call(date, toInt(match[1]), toInt(match[2]) - 1, toInt(match[3]))
-                var h = int(match[4] || 0) - tzHour;
+                var h = toInt(match[4] || 0) - tzHour;
                 var m = toInt(match[5] || 0) - tzMin
                 var s = toInt(match[6] || 0);
                 var ms = Math.round(parseFloat('0.' + (match[7] || 0)) * 1000);
