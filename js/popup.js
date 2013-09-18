@@ -231,9 +231,9 @@ function initMainUI() {
 		} else {
 			var current = getCurrent();
 			if (current.statuses) {
-				current.statuses = current.statuses.slice(0, 10);
+				current.statuses = current.statuses.slice(0, 20);
 			} else {
-				current.messages = current.messages.slice(0, 10);
+				current.messages = current.messages.slice(0, 20);
 			}
 			PREFiX.update();
 		}
