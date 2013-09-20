@@ -236,6 +236,7 @@ body.show-context-timeline #context-timeline {
 	position: absolute;
 	max-width: 400px;
 	box-shadow: 0 0 25px #000;
+	cursor: -webkit-zoom-out;
 }
 #context-timeline {
 	z-index: 100;
