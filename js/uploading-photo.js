@@ -59,33 +59,73 @@ $(function() {
 	}
 	function submit() {
 		if (! file) return;
-		PREFiX.user.postPhoto({
-			photo: file,
-			status: $status.val().trim()
-		}).setupAjax({
-			lock: $status,
-			timeout: 2 * 60 * 1000,
-			onstart: function(e) {
-				$('#img-droparea').addClass('loading');
-			},
-			onprogress: function(e) {
-				if (! e.lengthComputable) return;
-				var percent = Math.floor(e.loaded / e.total * 100);
-				document.title = 'PREFiX - 上传照片 (' + percent + '%)';
-			},
-			oncomplete: function(e) {
-				$('#img-droparea').removeClass('loading');
-				document.title = 'PREFiX - 上传照片';
-			}
-		}).next(function() {
-			PREFiX.update();
-			close();
+		shorten().next(function() {
+			PREFiX.user.postPhoto({
+				photo: file,
+				status: $status.val().trim()
+			}).setupAjax({
+				lock: $status,
+				timeout: 2 * 60 * 1000,
+				onstart: function(e) {
+					$('#img-droparea').addClass('loading');
+				},
+				onprogress: function(e) {
+					if (! e.lengthComputable) return;
+					var percent = Math.floor(e.loaded / e.total * 100);
+					document.title = 'PREFiX - 上传照片 (' + percent + '%)';
+				},
+				oncomplete: function(e) {
+					$('#img-droparea').removeClass('loading');
+					document.title = 'PREFiX - 上传照片';
+				}
+			}).next(function() {
+				PREFiX.update();
+				close();
+			});
 		});
+	}
+	function shorten(links, force) {
+		var result = links || $status.val().trim().match(url_re) || [];
+		var dl = [];
+		var ignored = [];
+
+		[].forEach.call(result, function(link) {
+			if (link.length <= url_max_len) {
+				if (! force && link.length > url_placeholder.length) {
+					ignored.push(link);
+					return;
+				}
+				if (! force) return;
+			}
+			var d = Ripple.shorten['is.gd'](link).
+				next(function(short_url) {
+					setContent($status.val().trim().replace(link, short_url));
+				}).
+				error(function(e) {
+					if (e && ! e.status) {
+						ignored.push(link);
+					}
+				});
+			dl.push(d);
+		});
+		dl = Deferred.parallel(dl);
+		dl = dl.next(function() {
+			if ($status.val().trim().length <= 140) return;
+			if (ignored.length) {
+				return shorten(ignored, true);
+			}
+		});
+		return dl;
+	}
+	function setContent(content) {
+		$status.val(content.trim().replace(/\s+/g, ' '));
+		$status.trigger('input');
 	}
 
 	var bg_win = chrome.extension.getBackgroundPage();
 	var PREFiX = bg_win.PREFiX;
 	var Ripple = bg_win.Ripple;
+	var Deferred = bg_win.Deferred;
 	var file;
 
 	var $wrapper = $('#wrapper');
@@ -130,7 +170,7 @@ $(function() {
 
 	$status.on({
 		input: function(e) {
-			var length = $status.val().trim().length;
+			var length = computeLength($status.val());
 			$status.toggleClass('over', length > 140);
 		},
 		keyup: function(e) {
