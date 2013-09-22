@@ -606,7 +606,7 @@ textarea {
 }
 .status-list .status-content a[href^="https"]::before {
 	content: url('/images/protected.png');
-	margin-right: 5px;
+	margin: 0 5px;
 	pointer-events: none;
 }
 .photo img {
