@@ -220,12 +220,7 @@ function initMainUI() {
 		if ($main[0].scrollTop) {
 			goTop(e);
 		} else {
-			var current = getCurrent();
-			if (current.statuses) {
-				current.statuses = current.statuses.slice(0, 20);
-			} else {
-				current.messages = current.messages.slice(0, 20);
-			}
+			cutStream();
 			PREFiX.update();
 		}
 	});
@@ -287,6 +282,15 @@ function initMainUI() {
 		$('#hide-rating-tip').click(hideRatingTip);
 	} else {
 		$('#rating-tip').remove();
+	}
+}
+
+function cutStream() {
+	var current = getCurrent();
+	if (current.statuses) {
+		current.statuses = current.statuses.slice(0, 20);
+	} else {
+		current.messages = current.messages.slice(0, 20);
 	}
 }
 
@@ -912,4 +916,6 @@ $(function() {
 
 onunload = function() {
 	PREFiX.popupActive = false;
+	if (! $main[0].scrollTop)
+		cutStream();
 }
