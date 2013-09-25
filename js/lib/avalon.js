@@ -903,8 +903,9 @@
     function updateViewModel(a, b, valueType) {
         //a为原来的VM， b为新数组或新对象
         if (valueType === "array") {
+            var bb = b.concat()
             a.clear()
-            a.push.apply(a, b)
+            a.push.apply(a, bb)
             return a
         } else {
             var added = [],
@@ -2256,15 +2257,15 @@
     //========================= each binding ====================
     var withMapper = {}
     bindingHandlers["each"] = function(data, vmodels) {
-        var parent = data.element,
+        var elem = data.element,
                 list, updateView
         var array = parseExpr(data.value, vmodels, data)
         if (typeof array === "object") {
             list = array[0].apply(array[0], array[1])
         }
         var view = documentFragment.cloneNode(false)
-        while (parent.firstChild) {
-            view.appendChild(parent.firstChild)
+        while (elem.firstChild) {
+            view.appendChild(elem.firstChild)
         }
         data.template = view
         data.vmodels = vmodels
@@ -2284,6 +2285,7 @@
                 withIterator(method, pos, el, data, updateView.host)
             }
         }
+        updateView.element = elem
         updateView.host = list
         list[subscribers] && list[subscribers].push(updateView)
         updateView("add", list, 0)
@@ -2305,6 +2307,7 @@
                 for (var i = 0, n = arr.length; i < n; i++) {
                     var ii = i + pos
                     var proxy = createEachProxy(ii, arr[i], list, data.param)
+                    proxy.$accessor.$last.get.element = parent
                     var tview = data.template.cloneNode(true)
                     mapper.splice(ii, 0, proxy)
                     var base = typeof arr[i] === "object" ? [proxy, arr[i]] : [proxy]
