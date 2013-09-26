@@ -1,4 +1,40 @@
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
 @-webkit-keyframes loading-animation {
+	0% {
+		-webkit-transform: translateY(0);
+		background: #ddd;
+	}
+	25% {
+		-webkit-transform: translateY(-7px);
+	}
+	50% {
+		-webkit-transform: translateY(0);
+		background: #fff;
+	}
+	75% {
+		-webkit-transform: translateY(7px);
+	}
+	100% {
+		-webkit-transform: translateY(0);
+		background: #ddd;
+	}
+}
+@keyframes loading-animation {
 	0% {
 		-webkit-transform: translateY(0);
 		background: #ddd;
@@ -237,6 +273,25 @@ body.show-context-timeline #context-timeline {
 	max-width: 400px;
 	box-shadow: 0 0 25px #000;
 	cursor: -webkit-zoom-out;
+	cursor: zoom-out;
+}
+#picture-overlay .tip {
+	display: none;
+}
+#picture-overlay.error #picture {
+	display: none !important;
+}
+#picture-overlay.error .tip {
+	position: absolute;
+	z-index: 201;
+	display: inline-block;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	color: #fff;
+	-webkit-animation: fadeIn .4s ease-in-out;
+	animation: fadeIn .4s ease-in-out;
 }
 #context-timeline {
 	z-index: 100;
@@ -611,6 +666,7 @@ textarea {
 }
 .photo img {
 	cursor: -webkit-zoom-in;
+	cursor: zoom-in;
 }
 .status-list .context {
 	clear: both;

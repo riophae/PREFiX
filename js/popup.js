@@ -317,8 +317,15 @@ function showPicture(img_url) {
 		'width': '',
 		'height': ''
 	});
+	var $overlay = $('#picture-overlay');
+	$overlay.removeClass('error');
+	$picture.off().on('error', function(e) {
+		$overlay.addClass('error');
+		canceled = true;
+	});
+	var canceled = false;
 	waitFor(function() {
-		return $picture[0].naturalWidth;
+		return $picture[0].naturalWidth || canceled;
 	}, function() {
 		if ($picture[0].naturalWidth > 400) {
 			$picture.css('width', '400px');
