@@ -113,7 +113,7 @@ Deferred.next_default = function (fun) {
 };
 Deferred.next_faster_way_readystatechange = ((typeof window === 'object') && (location.protocol == "http:") && !window.opera && /\bMSIE\b/.test(navigator.userAgent)) && function (fun) {
 	var d = new Deferred();
-	var t = new Date().getTime();
+	var t = Date.now();
 	if (t - arguments.callee._prev_timeout_called < 150) {
 		var cancel = false;
 		var script = document.createElement("script");
@@ -195,9 +195,9 @@ Deferred.chain = function () {
 };
 
 Deferred.wait = function (n) {
-	var d = new Deferred(), t = new Date();
+	var d = new Deferred(), t = Date.now();
 	var id = setTimeout(function () {
-		d.call((new Date).getTime() - t.getTime());
+		d.call(Date.now() - t);
 	}, n * 1000);
 	d.canceller = function () { clearTimeout(id) };
 	return d;
@@ -303,11 +303,11 @@ Deferred.loop = function (n, fun) {
 Deferred.repeat = function (n, fun) {
 	var i = 0, end = {}, ret = null;
 	return Deferred.next(function () {
-		var t = (new Date()).getTime();
+		var t = Date.now();
 		do {
 			if (i >= n) return null;
 			ret = fun(i++);
-		} while ((new Date()).getTime() - t < 20);
+		} while (Date.now() - t < 20);
 		return Deferred.call(arguments.callee);
 	});
 };
@@ -770,7 +770,7 @@ Ripple.helpers.isExist = function(url) {
 }
 
 Ripple.helpers.isOnline = function() {
-	return Ripple.helpers.isExist('http://m.fanfou.com/?' + +(new Date));
+	return Ripple.helpers.isExist('http://m.fanfou.com/?' + Date.now());
 }
 
 
@@ -987,7 +987,7 @@ Ripple.helpers.generateTimeFormater = function(func) {
 	return function() {
 		date = arguments[0];
 		// 修复服务器与本地的时间差
-		var now = new Date().getTime() + Ripple.OAuth.timeCorrectionMsec;
+		var now = Date.now() + Ripple.OAuth.timeCorrectionMsec;
 		delta = now - Date.parse(date);
 
 		// 使用懒惰计算(缓存结果)
@@ -1105,7 +1105,7 @@ var lscache = Ripple.cache = function() {
 	 * @return {number}
 	 */
 	function currentTime() {
-		return Math.floor((new Date().getTime())/EXPIRY_UNITS);
+		return Math.floor(Date.now()/EXPIRY_UNITS);
 	}
 
 	/**
@@ -1599,7 +1599,7 @@ OAuth.setProperties(OAuth, {
 	/** The difference between the correct time and my clock. */
 	timeCorrectionMsec: 0,
 	timestamp: function timestamp() {
-		var t = (new Date()).getTime() + OAuth.timeCorrectionMsec;
+		var t = Date.now() + OAuth.timeCorrectionMsec;
 		return Math.floor(t / 1000);
 	},
 	nonce: function(length) {

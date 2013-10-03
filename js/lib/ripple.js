@@ -1233,7 +1233,7 @@
 		}
 		var request = this;
 
-		options = this.options = helpers.fastClone(constants.ajaxOptions, config.ajaxOptions, options || {});
+		options = this.options = helpers.clone(constants.ajaxOptions, config.ajaxOptions, options || {});
 
 		var xhr = this.xhr = new XMLHttpRequest;
 		var method = options.method = options.method.toUpperCase();
@@ -1248,7 +1248,7 @@
 			options.params = helpers.paramMap(options.params);
 			// 如果禁用缓存, 则加上时间戳
 			if (options.noCache) {
-				options.params.timestamp = options.params.timestamp || new Date().getTime();
+				options.params._ = Date.now();
 			}
 		}
 
@@ -1454,7 +1454,7 @@
 						var server_time = this.getHeader('Date');
 						if (server_time && xhr.localTime) {
 							// 修正服务器与本地的时间差
-							Ripple.OAuth.correctTimestamp((new Date(server_time).getTime()) / 1000, xhr.localTime);
+							Ripple.OAuth.correctTimestamp(Date.parse(server_time) / 1000, xhr.localTime);
 						}
 					}
 					// 调用链式回调函数 (Deferred)
@@ -1559,7 +1559,6 @@
 							xhr.localTime = new Date;
 						}
 					}
-
 					xhr.send(params);
 				} catch (e) {
 					// 处理错误
