@@ -372,10 +372,12 @@ body.show-context-timeline #context-timeline {
 }
 #top-bar {
 	display: block;
+	position: relative;
+	height: 35px;
 }
 h1 {
 	float: left;
-	margin: 5px 0 10px 15px;
+	margin: 5px 0 0 15px;
 	padding: 0;
 	color: #fff;
 	font: 18px "Segoe UI";
@@ -399,10 +401,39 @@ h1 {
 #app.on-top #back-to-top {
 	opacity: 0 !important;
 }
+html.panel-mode #new-window {
+	display: none !important;
+}
+#new-window {
+	width: 16px;
+	height: 16px;
+	display: block;
+	position: absolute;
+	padding: 5px;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	-webkit-transition: opacity ease-in-out .2s;
+	transition: opacity ease-in-out .2s;
+	background: url('/images/new-window.png') center center no-repeat;
+	cursor: pointer;
+	opacity: 0;
+}
+#app:not(.on-top) #new-window {
+	opacity: 0 !important;
+	width: 0;
+	height: 0;
+	padding: 0;
+	overflow: hidden;
+}
+#top-bar:hover #new-window {
+	opacity: 1;
+}
 #navigation-bar {
 	float: right;
 	padding: 0;
-	margin: 6px 15px;
+	margin: 6px 15px 0 0;
 }
 #navigation-bar li {
 	position: relative;

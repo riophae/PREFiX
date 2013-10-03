@@ -3,6 +3,18 @@ var ct = chrome.tabs;
 var root_url = ce.getURL('');
 var popup_url = ce.getURL('popup.html');
 
+chrome.runtime.onMessage.addListener(function(request, sender) {
+	chrome.tabs.query({
+		url: chrome.extension.getURL('/popup.html?new_window=true')
+	}, function(tabs) {
+		tabs.forEach(function(tab) {
+			if (! sender.tab) {
+				chrome.tabs.remove(tab.id);
+			}
+		});
+	});
+});
+
 function createTab(url) {
 	ct.create({
 		url: url,

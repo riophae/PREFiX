@@ -225,16 +225,13 @@ function initMainUI() {
 		}
 	});
 
-	$('#uploading-photo').click(function(e) {
-		var options = {
-			url: 'uploading-photo.html',
-			focused: true,
-			type: 'panel',
-			width: 316,
-			height: 192
-		};
-		chrome.windows.create(options);
+	$('#new-window').click(function(e) {
+		createPanel(400, 600, '/popup.html?new_window=true');
 		close();
+	});
+
+	$('#uploading-photo').click(function(e) {
+		createPanel(316, 192, 'uploading-photo.html');
 	});
 
 	$('#picture-overlay').click(function(e) {
@@ -305,6 +302,19 @@ function computePosition(data) {
 	return function(param) {
 		return $.extend(data, param);
 	}
+}
+
+function createPanel(width, height, url) {
+	var options = {
+		url: url,
+		focused: true,
+		type: 'panel',
+		width: width,
+		height: height,
+		left: (screen.width - width) / 2,
+		top: (screen.height - height) / 2
+	};
+	chrome.windows.create(options);
 }
 
 function showPicture(img_url) {
@@ -926,3 +936,10 @@ onunload = function() {
 	if (! $main[0].scrollTop)
 		cutStream();
 }
+
+if (location.search == '?new_window=true') {
+	$('html').addClass('panel-mode');
+	initFixSize(400, 600);
+}
+
+chrome.runtime.sendMessage({ });

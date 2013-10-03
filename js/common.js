@@ -116,3 +116,23 @@ function unshift(list, statuses, reverse) {
 	if (reverse) statuses = statuses.reverse();
 	list.unshift.apply(list, statuses);
 }
+
+var fixing_size = false;
+function initFixSize(width, height) {
+	var de = document.documentElement;
+	onresize = _.throttle(function() {
+		if (fixing_size) return;
+		fixing_size = true;
+		resizeTo(width + 16, height + 42);
+		setTimeout(function() {
+			resizeBy(width - de.clientWidth, height - de.clientHeight);
+			setTimeout(function() {
+				fixing_size = false;
+			}, 32);
+		}, 24);
+	}, 16);
+	setInterval(function() {
+		if (de.clientWidth !== width || de.clientHeight !== height)
+			onresize();
+	}, 250);
+}

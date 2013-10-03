@@ -186,18 +186,5 @@ $(function() {
 		$('body').scrollTop(0);
 	});
 
-	var fixing_size = false;
-	onresize = _.throttle(function() {
-		if (fixing_size) return;
-		fixing_size = true;
-		var de = document.documentElement;
-		resizeTo(316, 192);
-		setTimeout(function() {
-			resizeBy(300 - de.clientWidth, 150 - de.clientHeight);
-			setTimeout(function() {
-				fixing_size = false;
-			}, 200);
-		}, 100);
-	}, 100);
-	onresize();
+	initFixSize(300, 150);
 });
