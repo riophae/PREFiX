@@ -4,7 +4,7 @@ function getLyric() {
 		lyrics = lyrics_data;
 	}
 	var no = _.random(0, lyrics.length - 1);
-	var lyric = lyrics.splice(no, 1)[0];
+	var lyric = '♪ ' + lyrics.splice(no, 1)[0];
 	lscache.set('lyrics', lyrics);
 	return lyric;
 }
