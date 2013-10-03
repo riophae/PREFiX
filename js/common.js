@@ -47,22 +47,22 @@ var getRelativeTime = Ripple.helpers.generateTimeFormater(function(table) {
 		[
 			15 * table.s,
 			function() {
-				return 'Just now';
+				return 'just now';
 			}
 		], [
 			table.m,
 			function(convertor) {
-				return convertor.s(2) + 'secs ago';
+				return convertor.s(2) + ' sec ago';
 			}
 		], [
 			table.h,
 			function(convertor) {
-				return convertor.m() + 'min' + (convertor.m() > 1 ? 's' : '') + ' ago';
+				return convertor.m() + ' min  ago';
 			}
 		], [
 			table.d,
 			function(convertor) {
-				return convertor.h() + 'hr' + (convertor.h() > 1 ? 's' : '') + ' ago';
+				return convertor.h() + ' hr ago';
 			}
 		], function(c) {
 			return c._yr() + '-' + c._ms(2) + 　 '-' + c._d(2) +
