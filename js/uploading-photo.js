@@ -108,12 +108,17 @@ $(function() {
 				});
 			dl.push(d);
 		});
+		if (dl.length) {
+			$('#img-droparea').addClass('loading');
+		}
 		dl = Deferred.parallel(dl);
 		dl = dl.next(function() {
 			if ($status.val().trim().length <= 140) return;
 			if (ignored.length) {
 				return shorten(ignored, true);
 			}
+		}).next(function() {
+			$('#img-droparea').removeClass('loading');
 		});
 		return dl;
 	}
@@ -151,6 +156,7 @@ $(function() {
 			}
 
 			setTip();
+			$('#tip').css('background-image', 'url("/images/photo.png")');
 		}
 	});
 
