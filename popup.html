@@ -52,7 +52,7 @@
               <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
               <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
             </div>
-            <div class="status-content" ms-html="status.text"></div>
+            <div class="status-content" ms-html="status.fixedText"></div>
             <div class="photo" ms-if="!! status.photo">
               <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
             </div>
@@ -98,7 +98,7 @@
                   <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
-                <div class="status-content" ms-html="status.text"></div>
+                <div class="status-content" ms-html="status.fixedText"></div>
                 <div class="photo" ms-if="!! status.photo">
                   <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
                 </div>
@@ -127,7 +127,7 @@
                   <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
-                <div class="status-content" ms-html="status.text"></div>
+                <div class="status-content" ms-html="status.fixedText"></div>
                 <div class="photo" ms-if="!! status.photo">
                   <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
                 </div>
@@ -153,7 +153,7 @@
                   <a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name"></a>
                   <span class="timestamp-client" ms-html="message.relativeTime"></span>
                 </div>
-                <div class="status-content" ms-html="message.text"></div>
+                <div class="status-content" ms-html="message.fixedText"></div>
                 <div ms-if="!! message.in_reply_to" ms-html="message.in_reply_to && message.in_reply_to.text" class="in-reply-to-message"></div>
               </div>
             </div>

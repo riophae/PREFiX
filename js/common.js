@@ -96,7 +96,7 @@ function fixStatusList(statuses) {
 			html = jEmoji.googleToUnified(html);
 			html = jEmoji.docomoToUnified(html);
 			html = jEmoji.kddiToUnified(html);
-			status.text = jEmoji.unifiedToHTML(html);
+			status.fixedText = jEmoji.unifiedToHTML(html);
 			status.textFixed = true;
 		}
 		status.relativeTime = getRelativeTime(status.created_at);
