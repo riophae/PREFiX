@@ -47,7 +47,7 @@ var getRelativeTime = Ripple.helpers.generateTimeFormater(function(table) {
 		[
 			15 * table.s,
 			function() {
-				return 'just now';
+				return 'Just now';
 			}
 		], [
 			table.m,
@@ -65,6 +65,14 @@ var getRelativeTime = Ripple.helpers.generateTimeFormater(function(table) {
 				return convertor.h() + ' hr ago';
 			}
 		], function(c) {
+			return c._MS(3) +　' ' + c._d(true) + ' ' + c._h(2) + ':' + c._m(2);
+		}
+	];
+});
+
+var getFullTime = Ripple.helpers.generateTimeFormater(function(table) {
+	return [
+		function(c) {
 			return c._yr() + '-' + c._ms(2) + 　 '-' + c._d(2) +
 			' ' + c._h(2) + ':' + c._m(2) + ':' + c._s(2);
 		}
@@ -92,6 +100,7 @@ function fixStatusList(statuses) {
 			status.textFixed = true;
 		}
 		status.relativeTime = getRelativeTime(status.created_at);
+		status.fullTime = getFullTime(status.created_at);
 	});
 	return statuses.sort(function(status_a, status_b) {
 		return status_a.rawid ?

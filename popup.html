@@ -49,6 +49,7 @@
           <div class="content">
             <div class="info">
               <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
+              <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
               <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
             </div>
             <div class="status-content" ms-html="status.text"></div>
@@ -94,7 +95,7 @@
               <div class="content">
                 <div class="info">
                   <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
-                  <a ms-href="'http://fanfou.com/statuses/' + status.id" title="消息链接" class="permanent-link">#</a>
+                  <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
                 <div class="status-content" ms-html="status.text"></div>
@@ -123,7 +124,7 @@
               <div class="content">
                 <div class="info">
                   <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
-                  <a ms-href="'http://fanfou.com/statuses/' + status.id" title="消息链接" class="permanent-link">#</a>
+                  <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
                 <div class="status-content" ms-html="status.text"></div>
