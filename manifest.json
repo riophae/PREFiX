@@ -6,6 +6,7 @@
 			"js/lib/ripple.js",
 			"js/lib/ripple.helpers.js",
 			"js/lib/ripple.api.js",
+			"js/lib/emoji.js",
 			"js/lib/avalon.js",
 			"js/common.js",
 			"js/bg.js"

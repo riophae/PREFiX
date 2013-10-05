@@ -82,6 +82,15 @@ function fixStatusList(statuses) {
 			status.source = status.source.replace('客户端', '');
 			status.sourceFixed = true;
 		}
+		if (! status.textFixed) {
+			var html = status.text;
+			html = jEmoji.softbankToUnified(html);
+			html = jEmoji.googleToUnified(html);
+			html = jEmoji.docomoToUnified(html);
+			html = jEmoji.kddiToUnified(html);
+			status.text = jEmoji.unifiedToHTML(html);
+			status.textFixed = true;
+		}
 		status.relativeTime = getRelativeTime(status.created_at);
 	});
 	return statuses.sort(function(status_a, status_b) {
