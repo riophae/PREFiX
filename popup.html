@@ -87,7 +87,7 @@
                 <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
                 <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
                 <a ms-click="repost" class="repost" title="转发"></a>
-                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" title="收藏"></a>
+                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
               </div>
               <div class="avatar">
                 <a ms-title="{{status.user.name}} ({{status.user.id}})"><img ms-src="status.user.profile_image_url" /></a>
@@ -116,7 +116,7 @@
                 <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
                 <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
                 <a ms-click="repost" class="repost" title="转发"></a>
-                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" title="收藏"></a>
+                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
               </div>
               <div class="avatar">
                 <a ms-title="{{status.user.name}} ({{status.user.id}})"><img ms-src="status.user.profile_image_url" /></a>

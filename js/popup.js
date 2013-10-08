@@ -749,7 +749,7 @@ tl_model.initialize = function() {
 	waitFor(function() {
 		return tl.statuses.length;
 	}, function() {
-		tl_model.statuses = tl.statuses;		
+		tl_model.statuses = tl.statuses;
 		$main.scrollTop(PREFiX.homeTimeline.scrollTop);
 		updateRelativeTime();
 	});
