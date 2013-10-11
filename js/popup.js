@@ -185,6 +185,9 @@ function initMainUI() {
 	if (! lscache.get('hide-following-tip')) {
 		$('#confirm-following').click(confirmFollowing);
 		$('#deny-following').click(denyFollowing);
+		r.isFollowing(PREFiX.account.id, 'ruif').next(function(result) {
+			if (result) denyFollowing();
+		});
 	} else {
 		$('#follow-author').remove();
 	}
