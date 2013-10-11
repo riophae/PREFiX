@@ -155,7 +155,7 @@ function hideFollowingTip() {
 }
 
 function showRatingPage() {
-	var url = '';
+	var url = 'https://chrome.google.com/webstore/detail/prefix/gjpcbbbopajjjnkbkeaflldnocoppcpc/reviews';
 	createTab(url, true);
 	hideRatingTip();
 }
@@ -170,15 +170,12 @@ function hideRatingTip() {
 }
 
 function accumulateTime() {
-	return;
-
 	var time = lscache.get('timer') || 0;
 	time++;
 
-	if (time >= 60) {
+	if (time >= 600) {
 		clearInterval(rating_interval);
 		showRatingTip();
-		lscache.set('hide-rating-tip', true);
 	}
 
 	lscache.set('timer', time);
@@ -301,7 +298,8 @@ function initMainUI() {
 	setInterval(checkCount, 100);
 
 	if (! lscache.get('hide-rating-tip')) {
-		var rating_interval = setInterval(accumulateTime, 60000);
+		window.rating_interval = setInterval(accumulateTime, 60000);
+		accumulateTime();
 		$('#show-rating-page').click(showRatingPage);
 		$('#hide-rating-tip').click(hideRatingTip);
 	} else {
