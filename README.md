@@ -7,7 +7,9 @@ PREFiX
 
 安装
 --
-Chrome 应用商店: http://is.gd/PREFiX
+**Chrome 应用商店:** http://is.gd/PREFiX
+
+**离线安装:** 点击[这里](http://pan.baidu.com/s/1AA8Fc)下载 crx 安装包, 打开扩展程序管理页面 [chrome://extensions/](chrome://extensions/), 将下载得到的 crx 文件拖拽至该页面即可完成安装.
 
 版本历史
 ----
