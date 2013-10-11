@@ -11,6 +11,9 @@ var $app;
 var $textarea;
 var $main;
 
+var is_panel_mode = false;
+var is_focused = true;
+
 var loading = false;
 var is_on_top = true;
 PREFiX.popupActive = true;
@@ -106,6 +109,13 @@ function getCurrent() {
 	return window[PREFiX.current];
 }
 
+function drawAttention() {
+	if (! is_panel_mode || is_focused) return;
+	chrome.runtime.sendMessage({
+		act: 'draw_attention'
+	});
+}
+
 function updateRelativeTime() {
 	var current = getCurrent();
 	if (! current || (! current.statuses && ! current.messages))
@@ -178,6 +188,12 @@ function initMainUI() {
 	} else {
 		$('#follow-author').remove();
 	}
+
+	$(window).on('focus', function(e) {
+		is_focused = true;
+	}).on('blur', function(e) {
+		is_focused = false;
+	});
 
 	$textarea = $('#compose-bar textarea');
 	$textarea.autosize().atwho({
@@ -757,6 +773,7 @@ tl_model.initialize = function() {
 	this.interval = setInterval(function update() {
 		if (! tl.buffered.length)
 			return;
+		drawAttention();
 		var buffered = tl.buffered;
 		tl.buffered = [];
 		insertKeepScrollTop(function() {
@@ -796,8 +813,10 @@ mentions_model.initialize = function() {
 	$('#mentions').addClass('current');
 
 	function check() {
-		if (PREFiX.count.mentions) 
+		if (PREFiX.count.mentions) {
 			update();
+			drawAttention();
+		}
 	}
 
 	function update() {
@@ -880,8 +899,10 @@ privatemsgs_model.initialize = function() {
 	$('#privatemsgs').addClass('current');
 
 	function check() {
-		if (PREFiX.count.direct_messages) 
+		if (PREFiX.count.direct_messages) {
 			update();
+			drawAttention();
+		}
 	}
 
 	function update() {
@@ -939,6 +960,7 @@ onunload = function() {
 }
 
 if (location.search == '?new_window=true') {
+	is_panel_mode = true;
 	$('html').addClass('panel-mode');
 	initFixSize(400, 600);
 }
