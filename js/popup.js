@@ -116,6 +116,12 @@ function drawAttention() {
 	});
 }
 
+function stopDrawingAttention() {
+	chrome.runtime.sendMessage({
+		act: 'stop_drawing_attention'
+	});
+}
+
 function updateRelativeTime() {
 	var current = getCurrent();
 	if (! current || (! current.statuses && ! current.messages))
@@ -194,6 +200,7 @@ function initMainUI() {
 
 	$(window).on('focus', function(e) {
 		is_focused = true;
+		stopDrawingAttention();
 	}).on('blur', function(e) {
 		is_focused = false;
 	});

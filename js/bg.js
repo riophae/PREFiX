@@ -8,6 +8,10 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 		chrome.windows.update(sender.tab.windowId, {
 			drawAttention: true
 		});
+	} else if (request.act === 'stop_drawing_attention') {
+		chrome.windows.update(sender.tab.windowId, {
+			drawAttention: false
+		});
 	} else {
 		chrome.tabs.query({
 			url: chrome.extension.getURL('/popup.html?new_window=true')
