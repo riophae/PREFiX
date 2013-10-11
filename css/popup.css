@@ -377,17 +377,21 @@ body.show-context-timeline #context-timeline {
 }
 h1 {
 	float: left;
-	margin: 5px 0 0 15px;
+	margin: 6px 0 0 15px;
 	padding: 0;
-	color: #fff;
-	font: 18px "Segoe UI";
-	text-shadow: 0 0 1px rgba(0, 0, 0, .75);
 	cursor: pointer;
+}
+h1 b {
+	color: transparent;
+	width: 92px;
+	height: 24px;
+	display: inline-block;
+	background: url('/images/logo.png') center center;
 }
 #back-to-top {
 	width: 16px;
 	height: 16px;
-	margin: 0 0 -2px 5px;
+	margin: 0 0 -7px 5px;
 	opacity: 0;
 	-webkit-transition: opacity ease-in-out .2s;
 	transition: opacity ease-in-out .2s;

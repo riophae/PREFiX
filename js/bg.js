@@ -57,11 +57,14 @@ function update() {
 	var newest_status = statuses[0];
 	var deferred_new = Deferred.next();
 
-	chrome.browserAction.setIcon({
-		path: '/icons/refresh.png'
-	});
 	chrome.browserAction.setBadgeText({
-		text: ''
+		text: '...'
+	});
+	chrome.browserAction.setBadgeBackgroundColor({
+		color: [ 255, 255, 255, 200 ]
+	});
+	chrome.browserAction.setTitle({
+		title: 'PREFiX - 正在刷新'
 	});
 
 	if (newest_status) {
@@ -111,13 +114,16 @@ function update() {
 		chrome.browserAction.setTitle({
 			title: title.join('\n')
 		});
-		chrome.browserAction.setIcon({
-			path: '/icons/19.png'
-		});
 		if (need_notify) playSound();
 	}).error(function(e) {
-		chrome.browserAction.setIcon({
-			path: '/icons/19_gray.png'
+		chrome.browserAction.setBadgeText({
+			text: ' '
+		});
+		chrome.browserAction.setBadgeBackgroundColor({
+			color: [ 255, 0, 0, 200 ]
+		});
+		chrome.browserAction.setTitle({
+			title: 'PREFiX - 网络连接断开或内部错误'
 		});
 	});
 }
