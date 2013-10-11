@@ -377,6 +377,8 @@ var playSound = (function() {
 	last_played.setFullYear(1970);
 	return function() {
 		clearTimeout(timeout);
+		if (! settings.current.playSound)
+			return;
 		timeout = setTimeout(function() {
 			if (audio.networkState !== 1)
 				return playSound();
