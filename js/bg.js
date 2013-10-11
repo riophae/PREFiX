@@ -5,10 +5,12 @@ var popup_url = ce.getURL('popup.html');
 
 chrome.runtime.onMessage.addListener(function(request, sender) {
 	if (request.act === 'draw_attention') {
+		if (! sender || ! sender.tab || ! sender.tab.windowId) return;
 		chrome.windows.update(sender.tab.windowId, {
 			drawAttention: true
 		});
 	} else if (request.act === 'stop_drawing_attention') {
+		if (! sender || ! sender.tab || ! sender.tab.windowId) return;
 		chrome.windows.update(sender.tab.windowId, {
 			drawAttention: false
 		});
