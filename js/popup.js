@@ -32,6 +32,7 @@ var goTop = (function() {
 	var current;
 	return function(e) {
 		if (e) {
+			stopSmoothScrolling();
 			e.preventDefault();
 			s = $main[0].scrollTop;
 		}
@@ -42,6 +43,53 @@ var goTop = (function() {
 		if (s >= 1) setTimeout(goTop, 24);
 	}
 })();
+
+var requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame;
+var cancelRequestAnimationFrame = cancelRequestAnimationFrame || webkitCancelRequestAnimationFrame;
+var destination;
+function initSmoothScroll() {
+	var id;
+	var is_scrolling = false;
+	destination = null;
+	var height = $main.height();
+	function runAnimation() {
+		function renderFrame(timestamp) {
+			if (! is_scrolling) return;
+			var progress = timestamp - breakpoint;
+			if (progress >= 16) {
+				var pos = $main.scrollTop();
+				var diff = destination - pos;
+				var dist = progress * diff / 100;
+				$main.scrollTop(pos + dist);
+				if (Math.abs(dist) <= 1) {
+					return stopSmoothScrolling();
+				}
+				breakpoint = timestamp;
+			}
+			id = requestAnimationFrame(renderFrame);
+			return;
+		}
+		if (is_scrolling) return;
+		is_scrolling = true;
+		var breakpoint = Date.now();
+		renderFrame(breakpoint);
+		stopSmoothScrolling = function() {
+			stopSmoothScrolling = function() { };
+			destination = null;
+			is_scrolling = false;
+			cancelRequestAnimationFrame(id);
+		}
+	}
+	$main.on('mousewheel', function(e, delta) {
+		e.preventDefault();
+		destination = destination || $main.scrollTop();
+		destination = Math.ceil(-delta * 120 + destination);
+		destination = Math.max(destination, 0);
+		destination = Math.min(destination, $main[0].scrollHeight - height);
+		runAnimation();
+	});
+}
+function stopSmoothScrolling() { }
 
 var showNotification = (function() {
 	var timeout;
@@ -218,6 +266,7 @@ function initMainUI() {
 	});
 
 	$main = $('#main');
+	initSmoothScroll();
 
 	$main.scroll(_.throttle(function(e) {
 		var scroll_top = $main.scrollTop();
