@@ -394,7 +394,8 @@ var playSound = (function() {
 var settings = {
 	current: { },
 	default: {
-		playSound: true
+		playSound: true,
+		smoothScroll: navigator.userAgent.indexOf('mac') === -1
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
@@ -417,9 +418,6 @@ var PREFiX = this.PREFiX = {
 	reset: reset,
 	update: update,
 	loaded: false,
-	showExtHomePage: function() {
-		//createTab('https://chrome.google.com/webstore/detail/fkabhbjhcdoccohpojphgofmlljekcgg/reviews');
-	},
 	interval: null,
 	current: 'tl_model',
 	compose: {

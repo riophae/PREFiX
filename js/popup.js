@@ -27,30 +27,50 @@ if (! r) {
 	close();
 }
 
+var requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame;
+var cancelRequestAnimationFrame = cancelRequestAnimationFrame || webkitCancelRequestAnimationFrame;
+
 var goTop = (function() {
 	var s = 0;
 	var current;
+	var id;
+	var stop = function() { };
 	return function(e) {
+		stopSmoothScrolling();
+		stop();
+		stop = function() {
+			stop = function() { };
+			cancelRequestAnimationFrame(id);
+		}
 		if (e) {
 			stopSmoothScrolling();
 			e.preventDefault();
 			s = $main[0].scrollTop;
 		}
-		current = $main[0].scrollTop;
-		if (s != current) return;
-		var to = Math.floor(s / 1.15);
-		$main[0].scrollTop = s = to;
-		if (s >= 1) setTimeout(goTop, 24);
+		var breakpoint = Date.now();
+		id = requestAnimationFrame(function(timestamp) {
+			var diff = timestamp - breakpoint;
+			if (diff >= 10) {
+				console.log(diff)
+				breakpoint = timestamp;
+				current = $main[0].scrollTop;
+				if (s != current) {
+					return stop();
+				}
+				var to = Math.floor(s / 1.1 / Math.max(20 / diff, 1));
+				$main[0].scrollTop = s = to;
+			}
+			if (s >= 1) {
+				requestAnimationFrame(arguments.callee);
+			};
+		});
 	}
 })();
 
-var requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame;
-var cancelRequestAnimationFrame = cancelRequestAnimationFrame || webkitCancelRequestAnimationFrame;
-var destination;
 function initSmoothScroll() {
 	var id;
 	var is_scrolling = false;
-	destination = null;
+	var destination = null;
 	var height = $main.height();
 	function runAnimation() {
 		function renderFrame(timestamp) {
@@ -81,6 +101,8 @@ function initSmoothScroll() {
 		}
 	}
 	$main.on('mousewheel', function(e, delta) {
+		if (! PREFiX.settings.current.smoothScroll)
+			return;
 		e.preventDefault();
 		destination = destination || $main.scrollTop();
 		destination = Math.ceil(-delta * 120 + destination);
