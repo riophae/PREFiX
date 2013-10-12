@@ -51,7 +51,6 @@ var goTop = (function() {
 		id = requestAnimationFrame(function(timestamp) {
 			var diff = timestamp - breakpoint;
 			if (diff >= 10) {
-				console.log(diff)
 				breakpoint = timestamp;
 				current = $main[0].scrollTop;
 				if (s != current) {
@@ -67,20 +66,20 @@ var goTop = (function() {
 	}
 })();
 
-function initSmoothScroll() {
+function initSmoothScroll($target) {
 	var id;
 	var is_scrolling = false;
 	var destination = null;
-	var height = $main.height();
+	var height = $target.height();
 	function runAnimation() {
 		function renderFrame(timestamp) {
 			if (! is_scrolling) return;
 			var progress = timestamp - breakpoint;
 			if (progress >= 16) {
-				var pos = $main.scrollTop();
+				var pos = $target.scrollTop();
 				var diff = destination - pos;
 				var dist = progress * diff / 100;
-				$main.scrollTop(pos + dist);
+				$target.scrollTop(pos + dist);
 				if (Math.abs(dist) <= 1) {
 					return stopSmoothScrolling();
 				}
@@ -93,21 +92,23 @@ function initSmoothScroll() {
 		is_scrolling = true;
 		var breakpoint = Date.now();
 		renderFrame(breakpoint);
-		stopSmoothScrolling = function() {
-			stopSmoothScrolling = function() { };
-			destination = null;
-			is_scrolling = false;
-			cancelRequestAnimationFrame(id);
+		if ($target === $main) {
+			stopSmoothScrolling = function() {
+				stopSmoothScrolling = function() { };
+				destination = null;
+				is_scrolling = false;
+				cancelRequestAnimationFrame(id);
+			}
 		}
 	}
-	$main.on('mousewheel', function(e, delta) {
+	$target.on('mousewheel', function(e, delta) {
 		if (! PREFiX.settings.current.smoothScroll)
 			return;
 		e.preventDefault();
-		destination = destination || $main.scrollTop();
+		destination = destination || $target.scrollTop();
 		destination = Math.ceil(-delta * 120 + destination);
 		destination = Math.max(destination, 0);
-		destination = Math.min(destination, $main[0].scrollHeight - height);
+		destination = Math.min(destination, $target[0].scrollHeight - height);
 		runAnimation();
 	});
 }
@@ -288,7 +289,6 @@ function initMainUI() {
 	});
 
 	$main = $('#main');
-	initSmoothScroll();
 
 	$main.scroll(_.throttle(function(e) {
 		var scroll_top = $main.scrollTop();
@@ -369,6 +369,8 @@ function initMainUI() {
 		var pos = composebar_model.text.length;
 		$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
 	}
+
+	[ $main, $('#context-timeline'), $('#picture-overlay') ].forEach(initSmoothScroll);
 
 	resetLoadingEffect();
 
