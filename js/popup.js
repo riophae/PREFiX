@@ -299,7 +299,8 @@ function initMainUI() {
 	}, 100));
 
 	$('#app').delegate('a', 'click', function(e) {
-		if (e.target.href.indexOf('http://') !== 0)
+		if (e.target.href.indexOf('http://') !== 0 &&
+			e.target.href.indexOf('https://') !== 0)
 			return;
 		e.preventDefault();
 		e.stopPropagation();
