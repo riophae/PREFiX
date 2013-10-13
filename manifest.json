@@ -17,6 +17,9 @@
 		"default_popup": "popup.html",
 		"default_title": "PREFiX"
 	},
+	"web_accessible_resources": [
+		"manifest.json"
+	],
 	"content_security_policy": "default_src 'self'; object-src 'self'; script-src 'self' 'unsafe-eval'",
 	"description": "\u7b80\u6d01\u3001\u6613\u7528\u7684\u996d\u5426\u5ba2\u6237\u7aef.",
 	"icons": {
