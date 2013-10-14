@@ -72,6 +72,7 @@ function initSmoothScroll($target) {
 	var is_scrolling = false;
 	var destination = null;
 	var height = $target.height();
+	var _stop = function() { };
 	function runAnimation() {
 		function renderFrame(timestamp) {
 			if (! is_scrolling) return;
@@ -82,7 +83,7 @@ function initSmoothScroll($target) {
 				var dist = progress * diff / 100;
 				$target.scrollTop(pos + dist);
 				if (Math.abs(dist) <= 1) {
-					return stopSmoothScrolling();
+					return _stop();
 				}
 				breakpoint = timestamp;
 			}
@@ -93,13 +94,17 @@ function initSmoothScroll($target) {
 		is_scrolling = true;
 		var breakpoint = Date.now();
 		renderFrame(breakpoint);
-		if ($target === $main) {
-			stopSmoothScrolling = function() {
-				stopSmoothScrolling = function() { };
-				destination = null;
-				is_scrolling = false;
-				cancelRequestAnimationFrame(id);
+		_stop = function() {
+			_stop = function() { };
+			if ($target === $main) {
+				stopSmoothScrolling = _stop;
 			}
+			destination = null;
+			is_scrolling = false;
+			cancelRequestAnimationFrame(id);
+		}
+		if ($target === $main) {
+			stopSmoothScrolling = _stop;
 		}
 	}
 	$target.on('mousewheel', function(e, delta) {
