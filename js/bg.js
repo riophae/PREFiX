@@ -391,11 +391,13 @@ var playSound = (function() {
 	}
 })();
 
+var is_mac = navigator.platform.indexOf('Mac') > -1;
+
 var settings = {
 	current: { },
 	default: {
 		playSound: true,
-		smoothScroll: navigator.platform.indexOf('Mac') === -1
+		smoothScroll: ! is_mac
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
@@ -412,6 +414,7 @@ var settings = {
 
 var PREFiX = this.PREFiX = {
 	version: chrome.app.getDetails().version,
+	is_mac: is_mac,
 	load: load,
 	unload: unload,
 	initialize: initialize,

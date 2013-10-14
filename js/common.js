@@ -135,20 +135,30 @@ function unshift(list, statuses, reverse) {
 	list.unshift.apply(list, statuses);
 }
 
+function getDefaultWindowSize(width, height) {
+	var PREFiX = chrome.extension.getBackgroundPage().PREFiX;
+	return PREFiX.is_mac ? {
+		width: width, height: height + 36
+	} : {
+		width: width + 16, height: height + 42
+	};
+}
+
 var fixing_size = false;
 function initFixSize(width, height) {
 	var de = document.documentElement;
 	onresize = _.throttle(function() {
 		if (fixing_size) return;
 		fixing_size = true;
-		resizeTo(width + 16, height + 42);
+		var size = getDefaultWindowSize(width, height);
+		resizeTo(size.width, size.height);
 		setTimeout(function() {
 			resizeBy(width - de.clientWidth, height - de.clientHeight);
 			setTimeout(function() {
 				fixing_size = false;
-			}, 32);
-		}, 24);
-	}, 16);
+			}, 48);
+		}, 36);
+	}, 24);
 	setInterval(function() {
 		if (de.clientWidth !== width || de.clientHeight !== height)
 			onresize();

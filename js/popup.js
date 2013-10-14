@@ -340,7 +340,7 @@ function initMainUI() {
 	});
 
 	$('#uploading-photo').click(function(e) {
-		createPanel(316, 192, 'uploading-photo.html');
+		createPanel(300, 150, 'uploading-photo.html');
 	});
 
 	$('#picture-overlay').click(function(e) {
@@ -452,14 +452,15 @@ function computePosition(data) {
 }
 
 function createPanel(width, height, url) {
+	var size = getDefaultWindowSize(width, height);
 	var options = {
 		url: url,
 		focused: true,
 		type: 'panel',
-		width: width,
-		height: height,
-		left: (screen.width - width) / 2,
-		top: (screen.height - height) / 2
+		width: size.width,
+		height: size.height,
+		left: (screen.width - size.width) / 2,
+		top: (screen.height - size.height) / 2
 	};
 	chrome.windows.create(options);
 }
