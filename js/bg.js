@@ -395,7 +395,7 @@ var settings = {
 	current: { },
 	default: {
 		playSound: true,
-		smoothScroll: navigator.userAgent.indexOf('mac') === -1
+		smoothScroll: navigator.platform.indexOf('Mac') === -1
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
