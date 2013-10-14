@@ -380,8 +380,7 @@ function initMainUI() {
 
 	[ $main, $('#context-timeline'), $('#picture-overlay') ].forEach(initSmoothScroll);
 
-	$(window).on('keyup', function(e) {
-		if (! e.ctrlKey) return;
+	$(window).on('keydown', function(e) {
 		var $link;
 		switch (e.keyCode) {
 			case 49:
