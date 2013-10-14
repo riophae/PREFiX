@@ -832,7 +832,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 		});
 	}
 	vm.onkeydown = function(e) {
-		e.stopPropagation();
+		e.stopPropagation && e.stopPropagation();
 		if (e.keyCode === 13) {
 			e.preventDefault && e.preventDefault();
 		}
