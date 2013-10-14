@@ -9,7 +9,8 @@
 			"js/lib/emoji.js",
 			"js/lib/avalon.js",
 			"js/common.js",
-			"js/bg.js"
+			"js/bg.js",
+			"js/versions.js"
 		]
 	},
 	"browser_action": {
@@ -33,6 +34,6 @@
 	"name": "PREFiX",
 	"options_page": "options.html",
 	"permissions": [ "tabs", "contextMenus", "notifications", "http://*.fanfou.com/*", "http://is.gd/*" ],
-	"version": "0.1.2",
+	"version": "0.2.0",
 	"minimum_chrome_version": "28"
 }
