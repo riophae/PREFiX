@@ -412,6 +412,9 @@ function initMainUI() {
 		}
 		e.preventDefault();
 		$scrolling_elem.trigger('mousewheel', e.keyCode === 40 ? -1 : 1);
+	}).on('keydown', function(e) {
+		if (e.keyCode !== 36) return;
+		goTop(e);
 	});
 
 	resetLoadingEffect();
