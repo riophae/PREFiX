@@ -399,8 +399,6 @@ function initMainUI() {
 		var event = new Event('click');
 		$link[0].dispatchEvent(event);
 	}).on('keydown', function(e) {
-		var $src = $(e.srcElement);
-		if ($src.is('textarea')) return;
 		switch (e.keyCode) {
 			case 40: case 38:
 				break;
@@ -834,6 +832,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 		});
 	}
 	vm.onkeydown = function(e) {
+		e.stopPropagation();
 		if (e.keyCode === 13) {
 			e.preventDefault && e.preventDefault();
 		}
