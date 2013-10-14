@@ -373,6 +373,28 @@ function initMainUI() {
 
 	[ $main, $('#context-timeline'), $('#picture-overlay') ].forEach(initSmoothScroll);
 
+	$(window).on('keyup', function(e) {
+		if (! e.ctrlKey) return;
+		var $link;
+		switch (e.keyCode) {
+			case 49:
+				$link = $('#navigation-bar .home-timeline');
+				break;
+			case 50:
+				$link = $('#navigation-bar .mentions');
+				break;
+			case 51:
+				$link = $('#navigation-bar .privatemsgs');
+				break;
+			default:
+				return;
+		}
+		e.preventDefault();
+		var event = document.createEvent('MouseEvents');
+		event.initMouseEvent('click');
+		$link[0].dispatchEvent(event);
+	});
+
 	resetLoadingEffect();
 
 	setInterval(updateRelativeTime, 15000);
