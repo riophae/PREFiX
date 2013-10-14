@@ -491,15 +491,18 @@ function hidePicture() {
 
 function checkCount() {
 	var count = PREFiX.count;
+	var title_contents = [];
 	var $home_tl = $('#navigation-bar .home-timeline .count');
 	var $mentions = $('#navigation-bar .mentions .count');
 	var $privatemsgs = $('#navigation-bar .privatemsgs .count');
 	if (count.mentions) {
+		title_contents.push(count.mentions + ' @');
 		$mentions.text(count.mentions).show();
 	} else {
 		$mentions.text('').hide();
 	}
 	if (count.direct_messages) {
+		title_contents.push(count.direct_messages + ' 私信');
 		$privatemsgs.text(count.direct_messages).show();
 	} else {
 		$privatemsgs.text('').hide();
@@ -508,10 +511,16 @@ function checkCount() {
 		return ! status.is_self;
 	}).length;
 	if (buffered) {
+		title_contents.push(buffered + ' 新消息');
 		$home_tl.text(Math.min(buffered, 99)).show();
 	} else {
 		$home_tl.text('').hide();
 	}
+	var title = 'PREFiX';
+	if (title_contents.length) {
+		title += ' (' + title_contents.join(' / ') + ')';
+	}
+	document.title = title;
 }
 
 function resetLoadingEffect() {
@@ -863,6 +872,7 @@ tl_model.initialize = function() {
 		if (! tl.buffered.length)
 			return;
 		drawAttention();
+		if (! is_focused) return;
 		var buffered = tl.buffered;
 		tl.buffered = [];
 		insertKeepScrollTop(function() {
