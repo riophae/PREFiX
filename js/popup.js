@@ -108,7 +108,7 @@ function initSmoothScroll($target) {
 		}
 	}
 	$target.on('mousewheel', function(e, delta) {
-		if (! PREFiX.settings.current.smoothScroll)
+		if (! PREFiX.settings.current.smoothScroll && e.flag !== true)
 			return;
 		e.preventDefault();
 		destination = destination || $target.scrollTop();
@@ -400,8 +400,6 @@ function initMainUI() {
 		var event = new Event('click');
 		$link[0].dispatchEvent(event);
 	}).on('keydown', function(e) {
-		if (! PREFiX.settings.current.smoothScroll)
-			return;
 		var $src = $(e.srcElement);
 		if ($src.is('textarea')) return;
 		switch (e.keyCode) {
@@ -411,10 +409,39 @@ function initMainUI() {
 				return;
 		}
 		e.preventDefault();
-		$scrolling_elem.trigger('mousewheel', e.keyCode === 40 ? -1 : 1);
+		$scrolling_elem.trigger({
+			type: 'mousewheel',
+			flag: true
+		}, e.keyCode === 40 ? -1 : 1, true);
 	}).on('keydown', function(e) {
 		if (e.keyCode !== 36) return;
 		goTop(e);
+	}).on('keydown', function(e) {
+		if (e.keyCode !== 35) return;
+		e.preventDefault();
+		var $win = $(window);
+		var event;
+		var times = ($main[0].scrollHeight - $main.height() - $main.scrollTop())/ 120;
+		for (var i = 0; i < times; i++) {
+			event = new Event('keydown');
+			event.keyCode = 40;
+			dispatchEvent(event);
+		}
+	}).on('keydown', function(e) {
+		switch (e.keyCode) {
+			case 34: case 33:
+				break;
+			default:
+				return;
+		}
+		e.preventDefault();
+		var $win = $(window);
+		var event;
+		for (var i = 0; i < 4; i++) {
+			event = new Event('keydown');
+			event.keyCode = e.keyCode === 33 ? 38 : 40;
+			dispatchEvent(event);
+		}
 	});
 
 	resetLoadingEffect();
