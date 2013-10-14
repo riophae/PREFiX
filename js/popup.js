@@ -44,7 +44,6 @@ var goTop = (function() {
 			cancelRequestAnimationFrame(id);
 		}
 		if (e) {
-			stopSmoothScrolling();
 			e.preventDefault();
 			s = $main[0].scrollTop;
 		}
@@ -787,16 +786,22 @@ var nav_model = avalon.define('navigation', function(vm) {
 	vm.current = PREFiX.current;
 	vm.showHomeTimeline = function(e) {
 		if (loading) return;
+		if (vm.current == 'tl_model' && $main.scrollTop())
+			return goTop(e);
 		PREFiX.current = vm.current = 'tl_model';
 		tl_model.initialize();
 	}
 	vm.showMentions = function(e) {
 		if (loading) return;
+		if (vm.current == 'mentions_model' && $main.scrollTop())
+			return goTop(e);
 		PREFiX.current = vm.current = 'mentions_model';
 		mentions_model.initialize();
 	}
 	vm.showPrivateMsgs = function(e) {
 		if (loading) return;
+		if (vm.current == 'privatemsgs_model' && $main.scrollTop())
+			return goTop(e);
 		PREFiX.current = vm.current = 'privatemsgs_model';
 		privatemsgs_model.initialize();
 	}
