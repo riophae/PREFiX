@@ -9,7 +9,7 @@ PREFiX
 --
 **Chrome 应用商店:** http://is.gd/PREFiX (如出现安装错误请检查 Chrome 版本号是否 ≥ 28, 如果是则请尝试按下面的方法离线安装)
 
-**离线安装:** 点击[这里](http://pan.baidu.com/s/1n9ZRU)下载 crx 安装包, 打开扩展程序管理页面 [chrome://extensions/](chrome://extensions/), 将下载得到的 crx 文件拖拽至该页面即可完成安装.
+**离线安装(升级):** 点击[这里](http://pan.baidu.com/s/1n9ZRU)下载 crx 安装包, 打开扩展程序管理页面 [chrome://extensions/](chrome://extensions/), 将下载得到的 crx 文件拖拽至该页面即可完成安装.
 
 版本历史
 ----
@@ -26,5 +26,9 @@ PREFiX
 * 记录 Timeline 阅读位置
 * 查看图片和消息上下文
 * 支持独立窗口模式运行
+
+**ver 0.2.0**
+* 平滑滚动效果
+* 支持将粘贴板中的图像数据直接上传到饭否
 
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
