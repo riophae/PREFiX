@@ -140,7 +140,7 @@ function getDefaultWindowSize(width, height) {
 	return PREFiX.is_mac ? {
 		width: width, height: height + 36
 	} : {
-		width: width + 16, height: height + 42
+		width: width + 16, height: height + 38
 	};
 }
 
