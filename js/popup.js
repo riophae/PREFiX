@@ -327,7 +327,8 @@ function initMainUI() {
 	$('h1').click(function(e) {
 		if ($main[0].scrollTop) {
 			goTop(e);
-		} else {
+		}
+		if ($main[0].scrollTop < 30) {
 			cutStream();
 			PREFiX.update();
 		}
@@ -1140,7 +1141,7 @@ $(function() {
 
 onunload = function() {
 	PREFiX.popupActive = false;
-	if (! $main[0].scrollTop)
+	if ($main[0].scrollTop < 30)
 		cutStream();
 }
 
