@@ -179,8 +179,13 @@ $(function() {
 			var length = computeLength($status.val());
 			$status.toggleClass('over', length > 140);
 		},
+		keydown: function(e) {
+			if (e.keyCode === 13) {
+				e.preventDefault();
+			}
+		},
 		keyup: function(e) {
-			if (e.which == 13 && e.ctrlKey)
+			if (e.keyCode == 13 && e.ctrlKey)
 				submit();
 		},
 		dblclick: function(e) {
@@ -190,7 +195,56 @@ $(function() {
 
 	$(window).scroll(function(e) {
 		$('body').scrollTop(0);
+	}).on('paste', function(e) {
+		var e = e.originalEvent;
+		var items = e.clipboardData.items;
+		if (! items.length) return;
+		var f, i = 0;
+		while (items[i]) {
+			f = items[i].getAsFile();
+			if (f && isImage(f.type))	{
+				file = f;
+				break;
+			}
+			i++;
+		}
+		if (! file) return;
+		file.name = 'image-from-clipboard.' + file.type.replace('image/', '');
+		if (file.type === 'image/png') {
+			fixTransparentPNG();
+		}
+		setTip();
+		var string_to_add = '';
+		var deferreds = [];
+		[].slice.call(items, 0).forEach(function(item, i) {
+			if (item.kind !== 'string' || item.type === 'text/html')
+				return;
+			var d = new Deferred;
+			item.getAsString(function(string) {
+				string_to_add += string.replace(/\n/g, ' ');
+				d.call();
+			});
+			deferreds.push(d);
+		});
+		Deferred.parallel(deferreds).next(function() {
+			if (! string_to_add.length) return;
+			var original = $status.val();
+			var prefix = original.slice(0, $status[0].selectionStart);
+			var postfix = original.slice($status[0].selectionEnd);
+			$status.val(prefix + string_to_add + postfix);
+			$status[0].selectionStart = prefix.length;
+			$status[0].selectionEnd = (prefix + string_to_add).length;
+		});
 	});
 
 	initFixSize(300, 150);
 });
+
+if (! localStorage.messageDisplayed) {
+	var msg = '您可以直接将剪接板中的图像数据 (注意并不是图像文件)' +
+		'粘贴至本窗口以更便捷地上传图片. PREFiX 将只在您' +
+		'通过 "右键菜单 - 粘贴" 或按下 Ctrl + V 时' +
+		'读取剪切板中的数据, 且不会擦除或写入内容到剪切板. '
+	alert(msg);
+	localStorage.messageDisplayed = true;
+}
