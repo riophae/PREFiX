@@ -13,6 +13,7 @@ var $main;
 
 var is_panel_mode = false;
 var is_focused = true;
+var $scrolling_elem;
 
 var loading = false;
 var is_on_top = true;
@@ -288,7 +289,7 @@ function initMainUI() {
 		tpl: '<li data-value="${name}">${name}</li>'
 	});
 
-	$main = $('#main');
+	$main = $scrolling_elem = $('#main');
 
 	$main.scroll(_.throttle(function(e) {
 		var scroll_top = $main.scrollTop();
@@ -345,6 +346,7 @@ function initMainUI() {
 		if (! $(e.target).is('a') && ! $(e.target).is('img')) {
 			$(this).removeClass('focusInFromBottom').addClass('focusOutFromTop');
 			setTimeout(function() {
+				$scrolling_elem = $main;
 				$('body').removeClass('show-context-timeline');
 			}, 150);
 			if (showContextTimeline.ajax) {
@@ -390,9 +392,21 @@ function initMainUI() {
 				return;
 		}
 		e.preventDefault();
-		var event = document.createEvent('MouseEvents');
-		event.initMouseEvent('click');
+		var event = new Event('click');
 		$link[0].dispatchEvent(event);
+	}).on('keydown', function(e) {
+		if (! PREFiX.settings.current.smoothScroll)
+			return;
+		var $src = $(e.srcElement);
+		if ($src.is('textarea')) return;
+		switch (e.keyCode) {
+			case 40: case 38:
+				break;
+			default:
+				return;
+		}
+		e.preventDefault();
+		$scrolling_elem.trigger('mousewheel', e.keyCode === 40 ? -1 : 1);
 	});
 
 	resetLoadingEffect();
@@ -455,7 +469,7 @@ function showPicture(img_url) {
 		'width': '',
 		'height': ''
 	});
-	var $overlay = $('#picture-overlay');
+	var $overlay = $scrolling_elem = $('#picture-overlay');
 	$overlay.removeClass('error');
 	$picture.off().on('error', function(e) {
 		$overlay.addClass('error');
@@ -493,6 +507,7 @@ function showPicture(img_url) {
 }
 
 function hidePicture() {
+	$scrolling_elem = $main;
 	var $picture = $('#picture');
 	$picture.animate(computePosition({
 		width: parseInt($picture.css('width')) / 2,
@@ -511,6 +526,7 @@ function hidePicture() {
 	});
 }
 
+var pre_count = 0;
 function checkCount() {
 	var count = PREFiX.count;
 	var title_contents = [];
@@ -687,7 +703,7 @@ function showContextTimeline(e) {
 	var id = status.id;
 	context_tl_model.statuses = [];
 	var context_statuses = [ status ];
-	var $context_tl = $('#context-timeline');
+	var $context_tl = $scrolling_elem = $('#context-timeline');
 	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom');
 	if (status.repost_status) {
 		context_statuses.push(status.repost_status);
@@ -711,7 +727,7 @@ function showContextTimeline(e) {
 
 function showRelatedStatuses(e) {
 	$body.addClass('show-context-timeline');
-	var $context_tl = $('#context-timeline');
+	var $context_tl = $scrolling_elem = $('#context-timeline');
 	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom loading');
 	context_tl_model.statuses = [];
 	var status = this.$vmodel.status.$model;
@@ -891,9 +907,14 @@ tl_model.initialize = function() {
 	});
 
 	this.interval = setInterval(function update() {
-		if (! tl.buffered.length)
+		if (! tl.buffered.length) {
+			pre_count = 0;
 			return;
-		drawAttention();
+		}
+		if (tl.buffered.length !== pre_count) {
+			drawAttention();
+			pre_count = tl.buffered.length;
+		}
 		if (! is_focused) return;
 		var buffered = tl.buffered;
 		tl.buffered = [];
