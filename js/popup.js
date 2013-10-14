@@ -793,15 +793,18 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 		$textarea.prop('placeholder', '');
 	}
 	vm.ondblclick = function(e) {
-		return vm.onkeyup({
+		return vm.onkeydown({
 			ctrlKey: true,
-			which: 13
+			keyCode: 13
 		});
 	}
-	vm.onkeyup = function(e) {
+	vm.onkeydown = function(e) {
+		if (e.keyCode === 13) {
+			e.preventDefault && e.preventDefault();
+		}
 		var value = $textarea.val();
 		if (! value || vm.submitting) return;
-		if (e.which === 13 && e.ctrlKey) {
+		if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
 			vm.submitting = true;
 			showNotification('正在提交..');
 			var data = {
