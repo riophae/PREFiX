@@ -1,0 +1,22 @@
+@font-face {
+	font-family: "HelveticaNeueLT Pro for PERFiX";
+	src: local("☺"), url("/fonts/HelveticaNeueLTPro-Lt.otf") format("opentype");
+}
+@font-face {
+	font-family: "Calibri for PREFiX";
+	src: local("☺"), url("/fonts/Calibri.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Lucida Grande for PREFiX";
+	src: local("☺"), url("/fonts/Lucida Grande.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Lucida Grande for PREFiX";
+	src: local("☺"), url("/fonts/Lucida Grande Bold.ttf") format("truetype");
+	font-weight: bold;
+	font-style: normal;
+}

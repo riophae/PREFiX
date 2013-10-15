@@ -79,15 +79,24 @@ var getFullTime = Ripple.helpers.generateTimeFormater(function(table) {
 	];
 });
 
+var re = new RegExp;
+re.compile('[「\u4E00-\u9FA5\uf900-\ufa2d」]', 'g');
 function fixStatusList(statuses) {
+	var $text = $('<div />');
 	statuses.forEach(function(status) {
 		if (status.source && ! status.sourceFixed) {
+			status.source = $text.html(status.source).text();
 			status.source = ({
 				'网页': 'Web',
 				'手机上网': 'Wap',
 				'iPhone版': 'iPhone'
 			})[status.source] || status.source;
 			status.source = status.source.replace('客户端', '');
+			status.source = status.source.replace(/[a-zA-Z0-0]+/g, function(en) {
+				return '<span class="en">' + en + '</span>'
+			}).replace(re, function(chs) {
+				return '<span class="chs">' + chs + '</span>';
+			});
 			status.sourceFixed = true;
 		}
 		if (! status.textFixed) {

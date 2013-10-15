@@ -348,11 +348,15 @@ body.show-context-timeline #context-timeline {
 #context-timeline ul li .timestamp-client {
 	float: right;
 }
+#context-timeline ul li .timestamp-client .chs {
+	-webkit-transform: scale(0.89) translateY(1px);
+	transform: scale(0.89) translateY(1px);
+	display: inline-block;
+	margin: 0 -1px 0 0;
+}
 #context-timeline ul li .timestamp-client,
-#context-timeline ul li .timestamp-client a {
-	font: 12px Calibri, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
-	-webkit-transform: scale(0.9);
-	transform: scale(0.9);
+#context-timeline ul li .timestamp-client span {
+	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
 	color: #ccc !important;
 }
 #context-timeline ul li .status-content a {
@@ -537,7 +541,7 @@ textarea {
 	overflow-x: hidden;
 }
 #title h2 {
-	font: 18px "HelveticaNeue-Light";
+	font: 18px "HelveticaNeueLT Pro for PERFiX";
 	font-weight: 300;
 	padding: 10px 0 5px 15px;
 	margin: 0;
@@ -685,11 +689,15 @@ textarea {
 .status-list .content .timestamp-client {
 	float: right;
 }
+.status-list .content .timestamp-client .chs {
+	-webkit-transform: scale(0.89) translateY(1px);
+	transform: scale(0.89) translateY(1px);
+	display: inline-block;
+	margin: 0 -1px 0 0;
+}
 .status-list .content .timestamp-client,
-.status-list .content .timestamp-client a {
-	font: 12px Calibri, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
-	-webkit-transform: scale(0.9);
-	transform: scale(0.9);
+.status-list .content .timestamp-client span {
+	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
 }
 .status-list .status-content {
 	clear: both;
