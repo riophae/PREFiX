@@ -347,12 +347,18 @@ body.show-context-timeline #context-timeline {
 }
 #context-timeline ul li .timestamp-client {
 	float: right;
+	line-height: 18px !important;
+}
+#context-timeline ul li .timestamp-client .chs ~ .en {
+	display: inline-block;
+	-webkit-transform: translateY(1px);
+	transform: translateY(1px);
 }
 #context-timeline ul li .timestamp-client .chs {
 	-webkit-transform: scale(0.89) translateY(1px);
 	transform: scale(0.89) translateY(1px);
-	display: inline-block;
 	margin: 0 -1px 0 0;
+	display: inline-block;
 }
 #context-timeline ul li .timestamp-client,
 #context-timeline ul li .timestamp-client span {
@@ -630,6 +636,7 @@ textarea {
 	transition: opacity .2s ease-in-out;
 }
 .status-list li .timestamp-client {
+	margin-top: 1px;
 	opacity: 1;
 }
 .status-list li:hover .timestamp-client {
@@ -689,11 +696,16 @@ textarea {
 .status-list .content .timestamp-client {
 	float: right;
 }
+.status-list .content .timestamp-client .chs ~ .en {
+	display: inline-block;
+	-webkit-transform: translateY(1px);
+	transform: translateY(1px);
+}
 .status-list .content .timestamp-client .chs {
 	-webkit-transform: scale(0.89) translateY(1px);
 	transform: scale(0.89) translateY(1px);
-	display: inline-block;
 	margin: 0 -1px 0 0;
+	display: inline-block;
 }
 .status-list .content .timestamp-client,
 .status-list .content .timestamp-client span {
