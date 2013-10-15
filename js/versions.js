@@ -7,6 +7,11 @@ localStorage['prefix_version'] = PREFiX.version;
 PREFiX.updated = PREFiX.old_version != PREFiX.version;
 
 var history = {
+	'0.2.1': [
+		'修改导航栏图标快捷键',
+		'改进平滑滚动效果',
+		'修正字体间距不统一的问题'
+	],
 	'0.2.0': [
 		'支持上传剪贴板图片',
 		'加入平滑滚动效果',
