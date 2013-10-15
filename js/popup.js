@@ -79,9 +79,10 @@ function initSmoothScroll($target) {
 			if (progress >= 16) {
 				var pos = $target.scrollTop();
 				var diff = destination - pos;
-				var dist = progress * diff / 100;
-				$target.scrollTop(pos + dist);
-				if (Math.abs(dist) <= 1) {
+				var dist = Math.floor(progress * diff / 100);
+				$target.scrollTop(Math.max(0, pos + dist));
+				diff = Math.max(0, destination) - pos;
+				if (Math.abs(diff) <= 1) {
 					return _stop();
 				}
 				breakpoint = timestamp;
@@ -112,7 +113,6 @@ function initSmoothScroll($target) {
 		e.preventDefault();
 		destination = destination || $target.scrollTop();
 		destination = Math.ceil(-delta * 120 + destination);
-		destination = Math.max(destination, 0);
 		destination = Math.min(destination, $target[0].scrollHeight - height);
 		runAnimation();
 	});
