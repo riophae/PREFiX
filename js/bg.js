@@ -61,6 +61,8 @@ function closeWindow(id) {
 }
 
 function update() {
+	var d = new Deferred;
+
 	clearInterval(PREFiX.interval);
 	PREFiX.interval = setInterval(update, 30000);
 
@@ -127,6 +129,8 @@ function update() {
 			title: title.join('\n')
 		});
 		if (need_notify) playSound();
+
+		d.call();
 	}).error(function(e) {
 		chrome.browserAction.setBadgeText({
 			text: ' '
@@ -138,6 +142,8 @@ function update() {
 			title: 'PREFiX - 网络连接断开或内部错误'
 		});
 	});
+
+	return d;
 }
 
 function loadFriends() {

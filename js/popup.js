@@ -44,7 +44,7 @@ var goTop = (function() {
 			cancelRequestAnimationFrame(id);
 		}
 		if (e) {
-			e.preventDefault();
+			e.preventDefault && e.preventDefault();
 			s = $main[0].scrollTop;
 		}
 		var breakpoint = Date.now();
@@ -884,7 +884,12 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 					r.postStatus(data).next(function() {
 						showNotification('发表成功!');
 						vm.text = '';
-						PREFiX.update();
+						PREFiX.update().next(function() {
+							if (PREFiX.current === 'tl_model') {
+								if ($main[0].scrollTop < $main.height() / 2)
+									goTop(true);
+							}
+						});
 					}).setupAjax({
 						lock: vm
 					}).error(function(e) {
