@@ -30,6 +30,7 @@
 		"19": "icons/19.png",
 		"16": "icons/16.png"
 	},
+	"omnibox": { "keyword": "f" },
 	"manifest_version": 2,
 	"name": "PREFiX",
 	"options_page": "options.html",

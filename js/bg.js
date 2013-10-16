@@ -27,6 +27,40 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 	}
 });
 
+function onInputEntered(text) {
+	PREFiX.user.postStatus({
+		status: text
+	}).next(function(status) {
+		PREFiX.update();
+		showNotification({
+			title: '消息已成功发送至饭否',
+			content: status.text,
+			timeout: 10000
+		}).addEventListener('click', function(e) {
+			this.cancel();
+		});
+	}).error(function(e) {
+		console.log(arguments)
+		var content = '错误原因: ' + e.exceptionType;
+		if (e.response && e.response.error) {
+			content += ' / ' + e.response.error;
+		}
+		content += ' (点击这里重试)';
+		showNotification({
+			title: '消息发送失败',
+			content: content,
+			timeout: false
+		}).addEventListener('click', function(e) {
+			this.cancel();
+			onInputEntered(text);
+		});
+	});
+}
+
+chrome.omnibox.setDefaultSuggestion({
+	description: '发送消息至饭否'
+});
+
 function createTab(url) {
 	ct.create({
 		url: url,
@@ -196,6 +230,7 @@ function load() {
 	init_data();
 	update();
 	loadFriends();
+	chrome.omnibox.onInputEntered.addListener(onInputEntered);
 }
 
 function unload() {
@@ -236,9 +271,7 @@ function unload() {
 	chrome.browserAction.setTitle({
 		title: 'PREFiX'
 	});
-	chrome.browserAction.setIcon({
-		path: '/icons/19.png'
-	});
+	chrome.omnibox.onInputEntered.removeListener(onInputEntered);
 }
 
 function initialize() {
