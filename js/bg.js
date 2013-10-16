@@ -203,7 +203,8 @@ function unload() {
 		text: '',
 		type: '',
 		id: '',
-		user: ''
+		user: '',
+		username: ''
 	};
 	PREFiX.count = {
 		mentions: 0,
@@ -427,7 +428,8 @@ var PREFiX = this.PREFiX = {
 		text: '',
 		type: '',
 		id: '',
-		user: ''
+		user: '',
+		username: ''
 	},
 	count: {
 		mentions: 0,

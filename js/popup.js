@@ -371,6 +371,7 @@ function initMainUI() {
 	composebar_model.type = PREFiX.compose.type;
 	composebar_model.id = PREFiX.compose.id;
 	composebar_model.user = PREFiX.compose.user;
+	composebar_model.username = PREFiX.compose.username;
 	composebar_model.text = PREFiX.compose.text;
 	if (PREFiX.compose.text) {
 		$textarea.focus();
@@ -816,14 +817,21 @@ var nav_model = avalon.define('navigation', function(vm) {
 });
 
 var composebar_model = avalon.define('composebar-textarea', function(vm) {
-	vm.text = vm.type = vm.id = vm.user = '';
+	vm.text = vm.type = vm.id = vm.user = vm.username = '';
 	vm.submitting = false;
 	vm.onfocus = function(e) {
 		lyric = lyric || getLyric();
-		$textarea.prop('placeholder', lyric);
+		var placeholder = vm.username ? '回复 @' + vm.username + ' 的私信' : lyric;
+		$textarea.prop('placeholder', placeholder);
 	}
 	vm.onblur = function(e) {
 		$textarea.prop('placeholder', '');
+		if (! vm.text.length) {
+			vm.type = '';
+			vm.id = '';
+			vm.user = '';
+			vm.username = '';
+		}
 	}
 	vm.ondblclick = function(e) {
 		return vm.onkeydown({
@@ -897,6 +905,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			vm.type = '';
 			vm.id = '';
 			vm.user = '';
+			vm.username = '';
 		}
 		$textarea.toggleClass('filled', !! value);
 		count();
@@ -910,6 +919,9 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	});
 	vm.$watch('user', function(value) {
 		PREFiX.compose.user = value;
+	});
+	vm.$watch('username', function(value) {
+		PREFiX.compose.username = value;
 	});
 });
 
@@ -1064,6 +1076,7 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 		composebar_model.type = 'reply-pm';
 		composebar_model.id = message.id;
 		composebar_model.user = message.sender.id;
+		composebar_model.username = message.sender.name;
 		$textarea.focus();
 	}
 
