@@ -975,7 +975,7 @@ tl_model.initialize = function() {
 			drawAttention();
 			pre_count = tl.buffered.length;
 		}
-		if (! is_focused) return;
+		if (! is_focused || $main[0].scrollTop) return;
 		var buffered = tl.buffered;
 		tl.buffered = [];
 		insertKeepScrollTop(function() {
@@ -1015,6 +1015,7 @@ mentions_model.initialize = function() {
 	$('#mentions').addClass('current');
 
 	function check() {
+		if (! is_focused || $main[0].scrollTop) return;
 		if (PREFiX.count.mentions) {
 			update();
 			drawAttention();
@@ -1102,6 +1103,7 @@ privatemsgs_model.initialize = function() {
 	$('#privatemsgs').addClass('current');
 
 	function check() {
+		if (! is_focused || $main[0].scrollTop) return;
 		if (PREFiX.count.direct_messages) {
 			update();
 			drawAttention();
