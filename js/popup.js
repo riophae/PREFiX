@@ -820,8 +820,12 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	vm.text = vm.type = vm.id = vm.user = vm.username = '';
 	vm.submitting = false;
 	vm.onfocus = function(e) {
-		lyric = lyric || getLyric();
-		var placeholder = vm.username ? '回复 @' + vm.username + ' 的私信' : lyric;
+		var placeholder;
+		placeholder = lyric = lyric || getLyric();
+		if (PREFiX.isTodayFanfouBirthday) {
+			placeholder = '还记得今天是什么日子吗? 祝你饭否 ' + Math.floor(PREFiX.fanfouYears) + ' 周岁生日快乐! :)';
+		}
+		placeholder = vm.username ? '回复 @' + vm.username + ' 的私信' : placeholder;
 		$textarea.prop('placeholder', placeholder);
 	}
 	vm.onblur = function(e) {

@@ -57,22 +57,18 @@ function onInputEntered(text) {
 	});
 }
 
+var birthday_interval;
 chrome.omnibox.setDefaultSuggestion({
 	description: '发送消息至饭否'
 });
-
-function createTab(url) {
-	ct.create({
-		url: url,
-		selected: true
-	});
-}
 
 function updateDetails(flag) {
 	var user = Ripple(PREFiX.accessToken);
 	var verify = user.verify().next(function(details) {
 		lscache.set('account_details', details);
 		PREFiX.account = details;
+		birthday_interval = setInterval(detectFanfouBirthday, 60000);
+		detectFanfouBirthday();
 	});
 	if (flag) {
 		// 延时重试
@@ -84,6 +80,36 @@ function updateDetails(flag) {
 		});
 	}
 	return verify;
+}
+
+function detectFanfouBirthday() {
+	if (! PREFiX.account) return;
+	var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
+	var ff_birthday = new Date(Date.parse(PREFiX.account.created_at));
+	var year = ff_birthday.getFullYear();
+	var delta;
+	do {
+		delta = now - ff_birthday;
+	} while (delta > 0 && (ff_birthday.setFullYear(++year) || true));
+	ff_birthday.setFullYear(--year);
+	[ 'Milliseconds', 'Seconds', 'Minutes', 'Hours' ].
+	forEach(function(i) {
+		ff_birthday['set' + i](0);
+	});
+	ff_birthday.setHours(-(now.getTimezoneOffset() / 60 + 8));
+	delta = now - ff_birthday;
+	PREFiX.isTodayFanfouBirthday = delta >= 0 && delta < 24 * 60 * 60 * 1000;
+	if (PREFiX.isTodayFanfouBirthday) {
+		PREFiX.fanfouYears = (now - (new Date(Date.parse(PREFiX.account.created_at)))) 
+			/ 365 / 24 / 60 / 60 / 1000;
+	}
+}
+
+function createTab(url) {
+	ct.create({
+		url: url,
+		selected: true
+	});
 }
 
 function closeTab(id) {
@@ -217,6 +243,7 @@ function load() {
 		direct_messages: 0
 	};
 	PREFiX.friends = [],
+	PREFiX.birthday = null;
 	PREFiX.user = Ripple(PREFiX.accessToken);
 	var init_data = function() {
 		PREFiX.user.getHomeTimeline().next(function(statuses) {
@@ -237,8 +264,9 @@ function unload() {
 	if (! PREFiX.loaded) return;
 	clearInterval(PREFiX.interval);
 	clearInterval(init_interval);
+	clearInterval(birthday_interval);
 	PREFiX.loaded = false;
-	PREFiX.user = null;
+	PREFiX.user = PREFiX.account = null;
 	PREFiX.current = 'tl_model';
 	PREFiX.compose = {
 		text: '',
