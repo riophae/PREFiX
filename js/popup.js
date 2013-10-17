@@ -351,13 +351,6 @@ function initMainUI() {
 		is_focused = false;
 	});
 
-	$('#navigation-bar li').each(function(i) {
-		var $li = $(this);
-		$li.css('margin-right', (i-1 * $li.width()) + 'px').animate({
-			'margin-right': 0
-		});
-	})
-
 	$textarea = $('#compose-bar textarea');
 	$textarea.autosize().atwho({
 		at: '@',
