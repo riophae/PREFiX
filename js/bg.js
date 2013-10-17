@@ -127,6 +127,22 @@ function detectBirthday() {
 	PREFiX.isTodayBirthday = false;
 }
 
+function detectFriendBirthday() {
+	PREFiX.birthdayFriends = [];
+	var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
+	PREFiX.friends.forEach(function(friend) {
+		var birthday = friend.birthday;
+		var birth_month = +birthday.split('-')[1];
+		var birth_date = +birthday.split('-')[2];
+		if (birth_month && birth_date) {
+			if (birth_month === now.getMonth() + 1 &&
+				birth_date === now.getDate()) {
+				PREFiX.birthdayFriends.push(friend);
+			}
+		}
+	});
+}
+
 function createTab(url) {
 	ct.create({
 		url: url,
@@ -230,7 +246,10 @@ function update() {
 
 function loadFriends() {
 	var friends = {};
+	var dl = [];
 	[ 'Friends', 'Followers' ].forEach(function(type) {
+		var d = new Deferred;
+		dl.push(d);
 		(function get(page) {
 			PREFiX.user['getLatestLogged' + type]({
 				page: page,
@@ -240,6 +259,7 @@ function loadFriends() {
 					data = data.map(function(user) {
 						return {
 							name: user.name,
+							id: user.id,
 							string: user.id + ' ' + user.name,
 							birthday: user.birthday
 						};
@@ -250,9 +270,15 @@ function loadFriends() {
 					});
 					PREFiX.friends.push.apply(PREFiX.friends, data);
 					get(page + 1);
+				} else {
+					d.call();
 				}
 			});
 		})(1);
+	});
+	dl = new Deferred.parallel(dl).next(function() {
+		detectFriendBirthday();
+		setInterval(detectFriendBirthday, 60 * 60 * 1000);
 	});
 }
 
@@ -265,7 +291,8 @@ function load() {
 		mentions: 0,
 		direct_messages: 0
 	};
-	PREFiX.friends = [],
+	PREFiX.friends = [];
+	PREFiX.birthdayFriends = [];
 	PREFiX.birthday = null;
 	PREFiX.user = Ripple(PREFiX.accessToken);
 	var init_data = function() {

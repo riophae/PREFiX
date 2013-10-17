@@ -165,6 +165,7 @@ body {
 a {
 	color: #333 !important;
 	text-decoration: none !important;
+	cursor: pointer;
 }
 #birthday-cake {
 	display: none;
@@ -233,6 +234,26 @@ a {
 }
 #rating-tip a {
 	cursor: pointer;
+	text-decoration: underline !important;
+}
+#birthday-tip {
+	display: none;
+	z-index: 99;
+	position: fixed;
+	top: 450px;
+	left: 50%;
+	width: 250px;
+	background: rgba(255, 255, 255, .95);
+	padding: 10px;
+	border-radius: 3px;
+	box-shadow: 0 0 6px #555;
+	-webkit-transform: translateX(-50%);
+	transform: translateX(-50%);
+}
+#birthday-tip p {
+	margin: 0;
+}
+#birthday-tip p:first-of-type a {
 	text-decoration: underline !important;
 }
 #notification {

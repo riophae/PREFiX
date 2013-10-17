@@ -257,6 +257,22 @@ function accumulateTime() {
 	lscache.set('timer', time);
 }
 
+function sendBirthdayMessage() {
+	var text = [];
+	PREFiX.birthdayFriends.forEach(function(friend) {
+		text.push('@' + friend.name + ' ');
+	});
+	text.push('生日快乐! :)');
+	composebar_model.text = text.join('');
+	focusToEnd();
+}
+
+function focusToEnd() {
+	$textarea.focus();
+	var pos = composebar_model.text.length;
+	$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
+}
+
 function initMainUI() {
 	$body = $('body');
 	$app = $('#app');
@@ -280,6 +296,42 @@ function initMainUI() {
 		}
 	} else {
 		$birthday_cake.remove();
+	}
+
+	var birthday_friends = [].slice.call(PREFiX.birthdayFriends, 0);
+	var $birthday_tip = $('#birthday-tip');
+	if (birthday_friends.length) {
+		var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
+		var today = now.getFullYear() + '-' + (now.getMonth() + 1) + now.getDate();
+		if (! lscache.get(today + '-friends-birthday')) {
+			function getHTML(friends) {
+				return friends.map(function(friend) {
+					return '<a href="http://fanfou.com/' +
+						friend.id + '">@' + friend.name + '</a>';
+				});
+			}
+			function hideBirthdayTip() {
+				$('#birthday-tip').fadeOut(function() {
+					$(this).remove();
+					lscache.set(today + '-friends-birthday', true);
+				})
+			}
+			var friends = [];
+			var total = birthday_friends.length;
+			if (total > 2) {
+				var pre_friends = birthday_friends.splice(0, total - 1);
+				friends.push(getHTML(pre_friends).join('、'));
+			}
+			if (birthday_friends.length) {
+				friends.push(getHTML(birthday_friends).join(' 和 '));
+			}
+			$('#birthday-friend-list').html(friends.join(' 和 '));
+			$('#send-birthday-message').click(sendBirthdayMessage).click(hideBirthdayTip);
+			$('#hide-birthday-tip').click(hideBirthdayTip);
+			$birthday_tip.fadeIn();
+		}
+	} else {
+		$birthday_tip.remove();
 	}
 
 	if (! lscache.get('hide-following-tip')) {
@@ -395,9 +447,7 @@ function initMainUI() {
 	composebar_model.username = PREFiX.compose.username;
 	composebar_model.text = PREFiX.compose.text;
 	if (PREFiX.compose.text) {
-		$textarea.focus();
-		var pos = composebar_model.text.length;
-		$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
+		focusToEnd();
 	}
 
 	[ $main, $('#context-timeline'), $('#picture-overlay') ].forEach(initSmoothScroll);
