@@ -67,8 +67,8 @@ function updateDetails(flag) {
 	var verify = user.verify().next(function(details) {
 		lscache.set('account_details', details);
 		PREFiX.account = details;
-		birthday_interval = setInterval(detectFanfouBirthday, 60000);
-		detectFanfouBirthday();
+		birthday_interval = setInterval(checkBirthday, 60000);
+		checkBirthday();
 	});
 	if (flag) {
 		// 延时重试
@@ -80,6 +80,11 @@ function updateDetails(flag) {
 		});
 	}
 	return verify;
+}
+
+function checkBirthday() {
+	detectBirthday();
+	detectFanfouBirthday();
 }
 
 function detectFanfouBirthday() {
@@ -103,6 +108,23 @@ function detectFanfouBirthday() {
 		PREFiX.fanfouYears = (now - (new Date(Date.parse(PREFiX.account.created_at)))) 
 			/ 365 / 24 / 60 / 60 / 1000;
 	}
+}
+
+function detectBirthday() {
+	if (PREFiX.account && PREFiX.account.birthday) {
+		var birthday = PREFiX.account.birthday;
+		var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
+		var birth_month = +birthday.split('-')[1];
+		var birth_date = +birthday.split('-')[2];
+		if (birth_month && birth_date) {
+			if (birth_month === now.getMonth() + 1 &&
+				birth_date === now.getDate()) {
+				PREFiX.isTodayBirthday = true;
+				return;
+			}
+		}
+	}
+	PREFiX.isTodayBirthday = false;
 }
 
 function createTab(url) {
@@ -218,7 +240,8 @@ function loadFriends() {
 					data = data.map(function(user) {
 						return {
 							name: user.name,
-							string: user.id + ' ' + user.name
+							string: user.id + ' ' + user.name,
+							birthday: user.birthday
 						};
 					}).filter(function(user) {
 						if (friends[user.name]) return false;

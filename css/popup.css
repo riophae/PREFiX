@@ -166,6 +166,14 @@ a {
 	color: #333 !important;
 	text-decoration: none !important;
 }
+#birthday-cake {
+	display: none;
+	position: fixed;
+	left: 50%;
+	bottom: 10%;
+	-webkit-transform: translateX(-50%);
+	z-index: 9999;
+}
 #follow-author {
 	z-index: 99;
 	position: fixed;

@@ -261,6 +261,27 @@ function initMainUI() {
 	$body = $('body');
 	$app = $('#app');
 
+	var $birthday_cake = $('#birthday-cake');
+	if (PREFiX.isTodayBirthday) {
+		var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
+		var today = now.getFullYear() + '-' + (now.getMonth() + 1) + now.getDate();
+		var count = lscache.get(today + '-birthday') || 0;
+		if (count >= 3) {
+			$birthday_cake.remove();
+		} else {
+			$birthday_cake.fadeIn(1000, function() {
+				setTimeout(function() {
+					$birthday_cake.fadeOut(1000, function() {
+						$birthday_cake.remove();
+						lscache.set(today + '-birthday', ++count);
+					});
+				}, 10000);
+			});
+		}
+	} else {
+		$birthday_cake.remove();
+	}
+
 	if (! lscache.get('hide-following-tip')) {
 		$('#confirm-following').click(confirmFollowing);
 		$('#deny-following').click(denyFollowing);
@@ -821,9 +842,10 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	vm.submitting = false;
 	vm.onfocus = function(e) {
 		var placeholder;
-		placeholder = lyric = lyric || getLyric();
 		if (PREFiX.isTodayFanfouBirthday) {
 			placeholder = '还记得今天是什么日子吗? 祝你饭否 ' + Math.floor(PREFiX.fanfouYears) + ' 周岁生日快乐! :)';
+		} else {
+			placeholder = lyric = lyric || getLyric();
 		}
 		placeholder = vm.username ? '回复 @' + vm.username + ' 的私信' : placeholder;
 		$textarea.prop('placeholder', placeholder);
