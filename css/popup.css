@@ -509,12 +509,17 @@ html.panel-mode #new-window {
 	border: 0;
 	outline: 0 !important;
 	box-shadow: 0 0 6px rgba(0, 0, 0, .15);
+	overflow: hidden;
+	resize: none;
+	-webkit-transition-property: box-shadow, height;
+	-webkit-transition-timing-function: ease-in-out;
+	-webkit-transition-duration: .2s;
 }
 #compose-bar textarea.over {
 	background: #ffe5e5;
 }
-textarea {
-	resize: none;
+#compose-bar textarea:focus {
+	box-shadow: 0 0px 10px 0 rgba(83, 186, 237, .5);
 }
 #uploading-photo {
 	display: block;
