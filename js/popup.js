@@ -56,7 +56,7 @@ var goTop = (function() {
 				if (s != current) {
 					return stop();
 				}
-				var to = Math.floor(s / 1.1 / Math.max(20 / diff, 1));
+				var to = Math.floor(s / 1.12 / Math.max(diff / 32, 1));
 				$main[0].scrollTop = s = to;
 			}
 			if (s >= 1) {
