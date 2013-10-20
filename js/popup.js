@@ -783,6 +783,7 @@ function generateMethod(type) {
 function toggleFavourite(e) {
 	var self = this;
 	var status = self.$vmodel.status;
+	$(self).css('animation', '');
 	showNotification(status.favorited ? '取消收藏..' : '正在收藏..')
 	r[status.favorited ? 'removeFavorite' : 'addFavorite']({
 		id: status.id
@@ -791,6 +792,7 @@ function toggleFavourite(e) {
 	}).next(function() {
 		status.favorited = ! status.favorited;
 		showNotification(status.favorited ? '收藏成功!' : '取消收藏成功!');
+		$(self).css('animation', 'spring .5s linear');
 	});
 }
 
