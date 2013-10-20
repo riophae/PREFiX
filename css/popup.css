@@ -24,8 +24,8 @@
 		transform: translateY(-8px);
 	}
 	27.5% {
-		-webkit-transform: translateY(-12px);
-		transform: translateY(-12px);
+		-webkit-transform: translateY(-14px);
+		transform: translateY(-14px);
 	}
 	50% {
 		-webkit-transform: translateY(-8px);
@@ -36,18 +36,22 @@
 		transform: scaleY(1) translateY(0);
 	}
 	77.5% {
-		-webkit-transform: scaleY(.7) translateY(0);
-		transform: scaleY(.7) translateY(0);
+		-webkit-transform: scaleY(.75) translateY(0);
+		transform: scaleY(.75) translateY(0);
+	}
+	81% {
+		-webkit-transform: scaleY(1);
+		transform: scaleY(1);
 	}
 	85% {
-		-webkit-transform: scaleY(1) translateY(-5px);
-		transform: scaleY(1) translateY(-5px);
+		-webkit-transform: translateY(-5px);
+		transform: translateY(-5px);
 	}
-	92.5% {
+	94% {
 		-webkit-transform: translateY(0);
 		transform: translateY(0);
 	}
-	96% {
+	97% {
 		-webkit-transform: translateY(-2px);
 		transform: translateY(-2px);
 	}
@@ -66,8 +70,8 @@
 		transform: translateY(-8px);
 	}
 	27.5% {
-		-webkit-transform: translateY(-12px);
-		transform: translateY(-12px);
+		-webkit-transform: translateY(-14px);
+		transform: translateY(-14px);
 	}
 	50% {
 		-webkit-transform: translateY(-8px);
@@ -78,18 +82,22 @@
 		transform: scaleY(1) translateY(0);
 	}
 	77.5% {
-		-webkit-transform: scaleY(.7) translateY(0);
-		transform: scaleY(.7) translateY(0);
+		-webkit-transform: scaleY(.75) translateY(0);
+		transform: scaleY(.75) translateY(0);
+	}
+	81% {
+		-webkit-transform: scaleY(1);
+		transform: scaleY(1);
 	}
 	85% {
-		-webkit-transform: scaleY(1) translateY(-5px);
-		transform: scaleY(1) translateY(-5px);
+		-webkit-transform: translateY(-5px);
+		transform: translateY(-5px);
 	}
-	92.5% {
+	94% {
 		-webkit-transform: translateY(0);
 		transform: translateY(0);
 	}
-	96% {
+	97% {
 		-webkit-transform: translateY(-2px);
 		transform: translateY(-2px);
 	}
@@ -967,6 +975,8 @@ html.panel-mode #new-window {
 .status-list li .action-icons .favourite {
 	right: 7px;
 	background-image: url('/images/favourite.png');
+	-webkit-transform-origin: center bottom;
+	transform-origin: center bottom;
 }
 .status-list li .action-icons .favourite:hover {
 	background-position: left center;
