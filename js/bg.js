@@ -27,6 +27,27 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 	}
 });
 
+function onInputStarted() {
+	chrome.omnibox.setDefaultSuggestion({
+		description: '按回车键发送消息至饭否, 按 ↑/↓ 回复指定消息'
+	});
+}
+
+function onInputChanged(text, suggest) {
+	var suggestions = PREFiX.homeTimeline.buffered.
+		concat(PREFiX.homeTimeline.statuses).
+		slice(0, 5).
+		map(function(status) {
+			return {
+				content: '@' + status.user.name + ' ',
+				description: '<dim>' + status.user.name + ': </dim>' + 
+					status.textWithoutTags + '<dim> - ' + 
+					getRelativeTime(status.created_at) + '</dim>'
+			};
+		});
+	suggest(suggestions);
+}
+
 function onInputEntered(text) {
 	PREFiX.user.postStatus({
 		status: text
@@ -40,7 +61,6 @@ function onInputEntered(text) {
 			this.cancel();
 		});
 	}).error(function(e) {
-		console.log(arguments)
 		var content = '错误原因: ' + e.exceptionType;
 		if (e.response && e.response.error) {
 			content += ' / ' + e.response.error;
@@ -58,10 +78,6 @@ function onInputEntered(text) {
 }
 
 var birthday_interval;
-chrome.omnibox.setDefaultSuggestion({
-	description: '发送消息至饭否'
-});
-
 function updateDetails(flag) {
 	var user = Ripple(PREFiX.accessToken);
 	var verify = user.verify().next(function(details) {
@@ -307,6 +323,8 @@ function load() {
 	init_data();
 	update();
 	loadFriends();
+	chrome.omnibox.onInputStarted.addListener(onInputStarted);
+	chrome.omnibox.onInputChanged.addListener(onInputChanged);
 	chrome.omnibox.onInputEntered.addListener(onInputEntered);
 }
 
@@ -349,6 +367,8 @@ function unload() {
 	chrome.browserAction.setTitle({
 		title: 'PREFiX'
 	});
+	chrome.omnibox.onInputStarted.removeListener(onInputStarted);
+	chrome.omnibox.onInputChanged.removeListener(onInputChanged);
 	chrome.omnibox.onInputEntered.removeListener(onInputEntered);
 }
 

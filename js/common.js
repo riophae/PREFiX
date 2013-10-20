@@ -103,6 +103,8 @@ function fixStatusList(statuses) {
 		}
 		if (! status.textFixed) {
 			var html = status.text;
+			$text.html(html);
+			status.textWithoutTags = $text.text();
 			html = jEmoji.softbankToUnified(html);
 			html = jEmoji.googleToUnified(html);
 			html = jEmoji.docomoToUnified(html);
