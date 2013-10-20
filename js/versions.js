@@ -1,11 +1,3 @@
-var manifest = chrome.app.getDetails();
-
-PREFiX.version = manifest.version;
-PREFiX.old_version = localStorage['prefix_version'];
-localStorage['prefix_version'] = PREFiX.version;
-
-PREFiX.updated = PREFiX.old_version != PREFiX.version;
-
 var history = {
 	'0.2.1': [
 		'修改导航栏图标快捷键',
@@ -19,6 +11,14 @@ var history = {
 		'细节更新和其他 bug 修正'
 	]
 };
+
+var manifest = chrome.app.getDetails();
+
+PREFiX.version = manifest.version;
+PREFiX.old_version = localStorage['prefix_version'] || Object.keys(history)[1];
+localStorage['prefix_version'] = PREFiX.version;
+
+PREFiX.updated = PREFiX.old_version != PREFiX.version;
 
 var updates = (function() {
 	function fixVersionNum(version) {
