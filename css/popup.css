@@ -952,6 +952,7 @@ html.panel-mode #new-window {
 	padding: 10px 0 5px 15px;
 	margin: 0;
 	border-bottom: 1px solid #ddd;
+	height: 21px;
 }
 #stream {
 	padding-bottom: 10px;
