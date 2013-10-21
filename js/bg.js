@@ -38,11 +38,16 @@ function onInputChanged(text, suggest) {
 		concat(PREFiX.homeTimeline.statuses).
 		slice(0, 5).
 		map(function(status) {
+			var text = status.textWithoutTags.replace(/@[^0-9\.][^ @]+/g, function(name) {
+				return '<url>' + name + '</url>';
+			});
 			return {
 				content: '@' + status.user.name + ' ',
-				description: '<dim>' + status.user.name + ': </dim>' + 
-					status.textWithoutTags + '<dim> - ' + 
-					getRelativeTime(status.created_at) + '</dim>'
+				description: '<dim>' + status.user.name + ': </dim>' +
+					(status.photo ? '<url>[Photo]</url> ' : '') +
+					text + '<dim> - ' +
+					getRelativeTime(status.created_at) +
+					' via ' + status.source + '</dim>'
 			};
 		});
 	suggest(suggestions);
