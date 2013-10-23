@@ -715,7 +715,7 @@ body.show-context-timeline #context-timeline {
 	padding: 0;
 	text-shadow: none;
 }
-#context-timeline  ul li {
+#context-timeline ul li {
 	clear: both;
 	margin-bottom: 15px;
 }
@@ -733,6 +733,9 @@ body.show-context-timeline #context-timeline {
 }
 #context-timeline ul li .info {
 	margin-bottom: 3px;
+}
+#context-timeline ul li .permanent-link {
+	color: #aaa !important;
 }
 #context-timeline ul li .timestamp-client {
 	float: right;
