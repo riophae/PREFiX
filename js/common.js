@@ -1,9 +1,28 @@
-R.setupConsumer({
+var default_consumer = {
 	key: '11d4291ccc71b962d657b47006411831',
 	secret: '9d71fb4415e2ccb1f516144d7fb922ab'
-});
+};
+var custom_consumer = lscache.get('custom_consumer');
+Ripple.setupConsumer(custom_consumer || default_consumer);
 
-waitFor = (function() {
+function enableCustomConsuer(key, secret) {
+	custom_consumer = {
+		key: key,
+		secret: secret
+	};
+	lscache.set('custom_consumer', custom_consumer);
+	Ripple.setupConsumer(custom_consumer);
+	PREFiX.reset();
+}
+
+function disableCustomConsumer() {
+	custom_consumer = null;
+	lscache.remove('custom_consumer');
+	Ripple.setupConsumer(default_consumer);
+	PREFiX.reset();
+}
+
+var waitFor = (function() {
 	var waiting_list = [];
 
 	var interval = 0;
