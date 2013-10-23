@@ -540,7 +540,8 @@ var settings = {
 	current: { },
 	default: {
 		playSound: true,
-		smoothScroll: ! is_mac
+		smoothScroll: ! is_mac,
+		zoomRatio: '1'
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };

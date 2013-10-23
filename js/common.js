@@ -169,6 +169,9 @@ function unshift(list, statuses, reverse) {
 
 function getDefaultWindowSize(width, height) {
 	var PREFiX = chrome.extension.getBackgroundPage().PREFiX;
+	var ratio = +PREFiX.settings.current.zoomRatio;
+	width = Math.round(width * ratio);
+	height = Math.round(height * ratio);
 	return PREFiX.is_mac ? {
 		width: width, height: height + 36
 	} : {
@@ -178,20 +181,24 @@ function getDefaultWindowSize(width, height) {
 
 var fixing_size = false;
 function initFixSize(width, height) {
+	var PREFiX = chrome.extension.getBackgroundPage().PREFiX;
+	var ratio = +PREFiX.settings.current.zoomRatio;
+	var target_width = Math.round(width * ratio);
+	var target_height = Math.round(height * ratio);
 	onresize = _.throttle(function() {
 		if (fixing_size) return;
 		fixing_size = true;
 		var size = getDefaultWindowSize(width, height);
 		resizeTo(size.width, size.height);
 		setTimeout(function() {
-			resizeBy(width - innerWidth, height - innerHeight);
+			resizeBy(target_width - innerWidth, target_height - innerHeight);
 			setTimeout(function() {
 				fixing_size = false;
 			}, 48);
 		}, 36);
 	}, 24);
 	setInterval(function() {
-		if (innerWidth !== width || innerHeight !== height)
+		if (innerWidth !== target_width || innerHeight !== target_height)
 			onresize();
 	}, 250);
 }

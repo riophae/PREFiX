@@ -16,14 +16,31 @@ $(function() {
 	$('[key]').each(function() {
 		var $item = $(this);
 		var key = $item.attr('key');
-		$item.prop('checked', current[key]);
+		var value = current[key];
+		switch ($item.attr('type')) {
+			case 'checkbox':
+				$item.prop('checked', value);
+				break;
+			case 'select':
+				$item.val(value);
+				break;
+		}
 	});
 
 	onunload = function(e) {
 		$('[key]').each(function() {
 			var $item = $(this);
 			var key = $item.attr('key');
-			current[key] = $item.prop('checked');
+			var value;
+			switch ($item.attr('type')) {
+				case 'checkbox':
+					value = $item.prop('checked');
+					break;
+				case 'select':
+					value = $item.val();
+					break;
+			}
+			current[key] = value;
 		});
 		PREFiX.settings.save();
 	}

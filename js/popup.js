@@ -284,6 +284,11 @@ function initMainUI() {
 		appendTo('head');
 	}
 
+	var ratio = +PREFiX.settings.current.zoomRatio;
+	if (ratio !== 1 && is_panel_mode) {
+		$body.css('zoom', ratio);
+	}
+
 	var $birthday_cake = $('#birthday-cake');
 	if (PREFiX.isTodayBirthday) {
 		var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
@@ -556,10 +561,10 @@ function createPanel(width, height, url) {
 		url: url,
 		focused: true,
 		type: 'panel',
-		width: size.width,
-		height: size.height,
-		left: (screen.width - size.width) / 2,
-		top: (screen.height - size.height) / 2
+		width: Math.round(size.width),
+		height: Math.round(size.height),
+		left: Math.round((screen.width - size.width) / 2),
+		top: Math.round((screen.height - size.height) / 2)
 	};
 	chrome.windows.create(options);
 }
