@@ -178,21 +178,20 @@ function getDefaultWindowSize(width, height) {
 
 var fixing_size = false;
 function initFixSize(width, height) {
-	var de = document.documentElement;
 	onresize = _.throttle(function() {
 		if (fixing_size) return;
 		fixing_size = true;
 		var size = getDefaultWindowSize(width, height);
 		resizeTo(size.width, size.height);
 		setTimeout(function() {
-			resizeBy(width - de.clientWidth, height - de.clientHeight);
+			resizeBy(width - innerWidth, height - innerHeight);
 			setTimeout(function() {
 				fixing_size = false;
 			}, 48);
 		}, 36);
 	}, 24);
 	setInterval(function() {
-		if (de.clientWidth !== width || de.clientHeight !== height)
+		if (innerWidth !== width || innerHeight !== height)
 			onresize();
 	}, 250);
 }
