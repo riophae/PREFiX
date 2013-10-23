@@ -277,6 +277,13 @@ function initMainUI() {
 	$body = $('body');
 	$app = $('#app');
 
+	if (navigator.platform.indexOf('Linux') > -1) {
+		$('<link />').
+		prop('rel', 'stylesheet').
+		prop('href', 'css/linux-fix.css').
+		appendTo('head');
+	}
+
 	var $birthday_cake = $('#birthday-cake');
 	if (PREFiX.isTodayBirthday) {
 		var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
