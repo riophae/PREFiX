@@ -214,27 +214,6 @@ $(function() {
 			fixTransparentPNG();
 		}
 		setTip();
-		var string_to_add = '';
-		var deferreds = [];
-		[].slice.call(items, 0).forEach(function(item, i) {
-			if (item.kind !== 'string' || item.type === 'text/html')
-				return;
-			var d = new Deferred;
-			item.getAsString(function(string) {
-				string_to_add += string.replace(/\n/g, ' ');
-				d.call();
-			});
-			deferreds.push(d);
-		});
-		Deferred.parallel(deferreds).next(function() {
-			if (! string_to_add.length) return;
-			var original = $status.val();
-			var prefix = original.slice(0, $status[0].selectionStart);
-			var postfix = original.slice($status[0].selectionEnd);
-			$status.val(prefix + string_to_add + postfix);
-			$status[0].selectionStart = prefix.length;
-			$status[0].selectionEnd = (prefix + string_to_add).length;
-		});
 	});
 
 	initFixSize(300, 150);
