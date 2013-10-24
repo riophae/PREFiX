@@ -217,6 +217,10 @@ $(function() {
 	});
 
 	initFixSize(300, 150);
+	var ratio = +PREFiX.settings.current.zoomRatio;
+	if (ratio !== 1) {
+		$('body').css('zoom', ratio);
+	}
 });
 
 if (! localStorage.messageDisplayed) {
