@@ -31,10 +31,12 @@ function onInputStarted() {
 	chrome.omnibox.setDefaultSuggestion({
 		description: '按回车键发送消息至饭否, 按 ↑/↓ 回复指定消息'
 	});
+	prepareSuggestions();
 }
 
-function onInputChanged(text, suggest) {
-	var suggestions = PREFiX.homeTimeline.buffered.
+var suggestions;
+function prepareSuggestions() {
+	suggestions = PREFiX.homeTimeline.buffered.
 		concat(PREFiX.homeTimeline.statuses).
 		slice(0, 5).
 		map(function(status) {
@@ -50,7 +52,13 @@ function onInputChanged(text, suggest) {
 					' via ' + status.source + '</dim>'
 			};
 		});
+}
+
+var delaySuggest = _.throttle(prepareSuggestions, 1000);
+
+function onInputChanged(text, suggest) {
 	suggest(suggestions);
+	delaySuggest();
 }
 
 function onInputEntered(text) {
