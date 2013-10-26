@@ -312,7 +312,7 @@ function initMainUI() {
 
 	var birthday_friends = [].slice.call(PREFiX.birthdayFriends, 0);
 	var $birthday_tip = $('#birthday-tip');
-	if (birthday_friends.length) {
+	if (birthday_friends.length && PREFiX.settings.current.birthdayNotice) {
 		var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
 		var today = now.getFullYear() + '-' + (now.getMonth() + 1) + now.getDate();
 		if (! lscache.get(today + '-friends-birthday')) {

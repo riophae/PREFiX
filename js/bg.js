@@ -541,6 +541,7 @@ var settings = {
 	default: {
 		playSound: true,
 		smoothScroll: ! is_mac,
+		birthdayNotice: true,
 		zoomRatio: '1'
 	},
 	load: function() {
