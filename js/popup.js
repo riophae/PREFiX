@@ -28,6 +28,19 @@ if (! r) {
 	close();
 }
 
+var usage_tips = [
+	'按 Ctrl + Enter 或双击输入框即可发送消息. ',
+	'点击 PREFiX 回到页面顶部或刷新. ',
+	'在上传图片窗口, 双击输入框发送. ',
+	'按 1/2/3 键在 首页/提到我的/私信 页面间切换. ',
+	'左击上下文图标展开回复和转发, 右击显示上下文. ',
+	'右击消息中的图片小图, 将在新窗口打开大图. ',
+	'将鼠标指针放在用户头像上, 可以显示用户 ID. ',
+	'如果饭友生日提醒打扰了您, 可以在设置页关闭. ',
+	'按 PageUp/PageDown 可以快速翻页. ',
+	'按 Home/End 可以快速滑动到页面顶端/末端. '
+];
+
 var requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame;
 var cancelRequestAnimationFrame = cancelRequestAnimationFrame || webkitCancelRequestAnimationFrame;
 
@@ -136,6 +149,26 @@ var showNotification = (function() {
 		}, 5000);
 	}
 })();
+
+function showUsageTip() {
+	var pos = lscache.get('usage_tip_pos') || 0;
+	var tip = usage_tips[pos];
+	if (! tip) {
+		$('#usage-tip').remove();
+		return;
+	}
+	$('#hide-usage-tip').click(function(e) {
+		lscache.set('usage_tip_pos', usage_tips.length);
+		$title.removeClass('show-usage-tip');
+	});
+	lscache.set('usage_tip_pos', ++pos);
+	$('#usage-tip-content').html(tip);
+	var $title = $('#title');
+	$title.addClass('show-usage-tip');
+	setTimeout(function() {
+		$title.removeClass('show-usage-tip');
+	}, 15000);
+}
 
 function count(e) {
 	var length = computeLength(composebar_model.text);
@@ -445,6 +478,8 @@ function initMainUI() {
 		if (! $(e.target).is('a') && ! $(e.target).is('img'))
 			e.stopPropagation();
 	});
+
+	showUsageTip();
 
 	composebar_model.type = PREFiX.compose.type;
 	composebar_model.id = PREFiX.compose.id;

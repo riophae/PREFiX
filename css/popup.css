@@ -949,6 +949,15 @@ html.panel-mode #new-window {
 	overflow-y: auto;
 	overflow-x: hidden;
 }
+#title {
+	position: relative;
+	-webkit-transition: margin-left .4s ease-in-out;
+	transition: margin-left .4s ease-in-out;
+	width: 800px;
+}
+#title.show-usage-tip {
+	margin-left: -400px;
+}
 #title h2 {
 	font: 18px "HelveticaNeueLT Pro for PERFiX";
 	font-weight: 300;
@@ -956,6 +965,17 @@ html.panel-mode #new-window {
 	margin: 0;
 	border-bottom: 1px solid #ddd;
 	height: 21px;
+}
+#usage-tip {
+	position: absolute;
+	left: 400px;
+	top: 50%;
+	padding-left: 15px;
+	-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+#hide-usage-tip {
+	text-decoration: underline !important;
 }
 #stream {
 	padding-bottom: 10px;
