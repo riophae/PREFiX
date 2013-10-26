@@ -3,6 +3,8 @@ var ct = chrome.tabs;
 var root_url = ce.getURL('');
 var popup_url = ce.getURL('popup.html');
 
+var $temp = $('<div />');
+
 chrome.runtime.onMessage.addListener(function(request, sender) {
 	if (request.act === 'draw_attention') {
 		if (! sender || ! sender.tab || ! sender.tab.windowId) return;
@@ -34,15 +36,16 @@ function onInputStarted() {
 	prepareSuggestions();
 }
 
-var suggestions;
+var suggestions = [];
 function prepareSuggestions() {
 	suggestions = PREFiX.homeTimeline.buffered.
 		concat(PREFiX.homeTimeline.statuses).
 		slice(0, 5).
 		map(function(status) {
-			var text = status.textWithoutTags.replace(/@[^0-9\.][^ @]+/g, function(name) {
-				return '<url>' + name + '</url>';
-			});
+			var text = $temp.text(status.textWithoutTags).html().
+				replace(/@[\u4E00-\u9FA5\uf900-\ufa2da-zA-Z][\u4E00-\u9FA5\uf900-\ufa2da-zA-Z\._0-9]+/g, function(name) {
+					return '<url>' + name + '</url>';
+				});
 			return {
 				content: '@' + status.user.name + ' ',
 				description: '<dim>' + status.user.name + ': </dim>' +
@@ -57,8 +60,8 @@ function prepareSuggestions() {
 var delaySuggest = _.throttle(prepareSuggestions, 1000);
 
 function onInputChanged(text, suggest) {
-	suggest(suggestions);
 	delaySuggest();
+	suggest(suggestions);
 }
 
 function onInputEntered(text) {
@@ -68,7 +71,7 @@ function onInputEntered(text) {
 		PREFiX.update();
 		showNotification({
 			title: '消息已成功发送至饭否',
-			content: status.text,
+			content: $temp.html(status.text).text(),
 			timeout: 10000
 		}).addEventListener('click', function(e) {
 			this.cancel();
