@@ -65,3 +65,34 @@ input[type="checkbox"] {
 	font: 20px "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
 	color: #777;
 }
+#customConsumer {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	text-align: center;
+}
+#customConsumer a {
+	color: #333;
+	font-weight: bold;
+}
+#customConsumer table {
+	padding: 5px;
+}
+#customConsumer tr td:first-of-type {
+	text-align: right;
+	padding-right: 5px;
+}
+#customConsumer [type="text"] {
+	width: 255px;
+	padding: 3px;
+	text-align: center;
+}
+#customConsumer div {
+	margin: 100px 0 -100px 0;
+}
+#donation {
+	background: url('/images/donate.png') left center no-repeat;
+	padding-left: 20px;
+}

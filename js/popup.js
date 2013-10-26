@@ -43,7 +43,8 @@ var usage_tips = [
 	'本页面关闭前保持滚动条在顶端可让程序性能更佳. ',
 	'当输入框中字数超过 140 时, 输入框背景显示为淡红色. ',
 	'按 PageUp/PageDown 可以快速翻页. ',
-	'按 Home/End 可以快速滑动到页面顶端/末端. '
+	'按 Home/End 可以快速滑动到页面顶端/末端. ',
+	'您可以自定义尾巴 (即通过...发送), 详情请见设置页. '
 ];
 
 var requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame;
