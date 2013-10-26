@@ -2,12 +2,17 @@ $(function() {
 	var ce = chrome.extension;
 	var bg_win = ce.getBackgroundPage();
 	var PREFiX = bg_win.PREFiX;
-	var account = PREFiX.account;
+	var account = PREFiX.account || {
+		profile_image_url_large: '/images/unknown-user.jpg'
+	};
 
 	$('#avatar img').prop('src', account.profile_image_url_large).prop('title', account.name);
-	$('#switch button').click(function(e) {
+	$('#switchAccount').click(function(e) {
 		PREFiX.reset();
 		close();
+	});
+	$('#setCustomConsumer').click(function(e) {
+		location.href = '/set-custom-consumer.html';
 	});
 	$('#version').text(PREFiX.version);
 
@@ -26,6 +31,10 @@ $(function() {
 				break;
 		}
 	});
+
+	if (! PREFiX.account) {
+		$('#switchAccount').text('登入账号');
+	}
 
 	onunload = function(e) {
 		$('[key]').each(function() {

@@ -5,7 +5,7 @@ var default_consumer = {
 var custom_consumer = lscache.get('custom_consumer');
 Ripple.setupConsumer(custom_consumer || default_consumer);
 
-function enableCustomConsuer(key, secret) {
+function enableCustomConsumer(key, secret) {
 	custom_consumer = {
 		key: key,
 		secret: secret
