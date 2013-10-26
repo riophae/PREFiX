@@ -30,6 +30,7 @@ if (! r) {
 
 var usage_tips = [
 	'按 Ctrl + Enter 或双击输入框即可发送消息. ',
+	'如果您觉得字体太小, 可以在设置页启用<b>放大功能</b>. ',
 	'点击 PREFiX 回到页面顶部或刷新. ',
 	'在上传图片窗口, 双击输入框发送. ',
 	'按 1/2/3 键在 首页/提到我的/私信 页面间切换. ',
@@ -37,6 +38,9 @@ var usage_tips = [
 	'右击消息中的图片小图, 将在新窗口打开大图. ',
 	'将鼠标指针放在用户头像上, 可以显示用户 ID. ',
 	'如果饭友生日提醒打扰了您, 可以在设置页关闭. ',
+	'如果您不希望 PREFiX 播放提示音, 可以在设置页关闭. ',
+	'本页面关闭前保持滚动条在顶端可让程序性能更佳. ',
+	'当输入框中字数超过 140 时, 输入框背景显示为淡红色. ',
 	'按 PageUp/PageDown 可以快速翻页. ',
 	'按 Home/End 可以快速滑动到页面顶端/末端. '
 ];
@@ -320,6 +324,9 @@ function initMainUI() {
 	var ratio = +PREFiX.settings.current.zoomRatio;
 	if (ratio !== 1 && is_panel_mode) {
 		$body.css('zoom', ratio);
+		if (ratio > 1.4) {
+			$('h2').css('letter-spacing', '.5px');
+		}
 	}
 
 	var $birthday_cake = $('#birthday-cake');

@@ -527,6 +527,9 @@ a {
 	text-decoration: none !important;
 	cursor: pointer;
 }
+b {
+	font-weight: bold;
+}
 #birthday-cake {
 	display: none;
 	position: fixed;
