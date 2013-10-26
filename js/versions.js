@@ -42,54 +42,6 @@ var updates = (function() {
 	return updated_items;
 })();
 
-var Notifications = Notifications || webkitNotifications;
-var notifications = [];
-
-function showNotification(options) {
-	var notification = Notifications.createNotification(options.icon || '/icons/128.png',
-		options.title || 'PREFiX', options.content);
-
-	if (options.id) {
-		notification.id = options.id;
-		notifications = notifications.filter(function(n) {
-			if (n.id != options.id)
-				return true;
-			n.cancel();
-			return false;
-		});
-	}
-
-	notification.addEventListener('close', function(e) {
-		clearTimeout(notification.timeout);
-		hideNotification(notification);
-	}, false);
-
-	notification.show();
-	notifications.push(notification);
-
-	if (options.timeout !== false) {
-		notification.timeout = setTimeout(function() {
-			hideNotification(notification);
-		}, options.timeout || 30000);
-	}
-
-	return notification;
-}
-function hideAllNotifications() {
-	notifications.slice(0).
-	forEach(hideNotification);
-}
-function hideNotification(notification) {
-	notification.cancel();
-	if (notification.timeout) {
-		clearTimeout(notification.timeout);
-	}
-	var index = notifications.indexOf(notification);
-	if (index > -1) {
-		notifications.splice(index, 1);
-	}
-}
-
 if (updates.length) {
 	var updated_items = (function() {
 		if (updates.length === 1)
