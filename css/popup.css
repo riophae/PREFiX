@@ -920,7 +920,7 @@ html.panel-mode #new-window {
 	background: #ffe5e5;
 }
 #compose-bar textarea:focus {
-	box-shadow: 0 0px 10px 0 rgba(83, 186, 237, .5);
+	box-shadow: 0 0px 5px 0 rgba(83, 186, 237, .5);
 }
 #uploading-photo {
 	display: block;
