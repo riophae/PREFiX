@@ -52,5 +52,6 @@ $(function() {
 			current[key] = value;
 		});
 		PREFiX.settings.save();
+		bg_win.detectFriendBirthday();
 	}
 });

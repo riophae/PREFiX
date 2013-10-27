@@ -169,7 +169,10 @@ function detectFriendBirthday() {
 		if (birth_month && birth_date) {
 			if (birth_month === now.getMonth() + 1 &&
 				birth_date === now.getDate()) {
-				PREFiX.birthdayFriends.push(friend);
+				if (PREFiX.settings.current.birthdayNoticeType === 'friends_and_followers' ||
+					friend.following) {
+					PREFiX.birthdayFriends.push(friend);
+				}
 			}
 		}
 	});
@@ -293,7 +296,8 @@ function loadFriends() {
 							name: user.name,
 							id: user.id,
 							string: user.id + ' ' + user.name,
-							birthday: user.birthday
+							birthday: user.birthday,
+							following: user.following
 						};
 					}).filter(function(user) {
 						if (friends[user.name]) return false;
@@ -601,6 +605,7 @@ var settings = {
 		playSound: true,
 		smoothScroll: ! is_mac,
 		birthdayNotice: true,
+		birthdayNoticeType: 'only_friends',
 		zoomRatio: '1'
 	},
 	load: function() {
