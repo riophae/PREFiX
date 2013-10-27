@@ -221,6 +221,16 @@ function update() {
 			lock: update
 		}).next(function(statuses) {
 			unshift(tl.buffered, statuses);
+			if (! PREFiX.popupActive && tl.scrollTop < 30) {
+				var buffered_count = tl.buffered.length;
+				var read_count = tl.statuses.length;
+				if (buffered_count + read_count > 20) {
+					tl.statuses.splice(Math.max(0, 20 - buffered_count));
+					if (buffered_count > 20) {
+						tl.buffered.splice(20);
+					}
+				}
+			}
 		});
 	}
 	var deferred_notification = PREFiX.user.getNotification().next(function(data) {
@@ -521,9 +531,9 @@ function reset() {
 	initialize();
 }
 
-function switchTo(model) {
+function switchTo(model_name) {
 	if (! PREFiX.popupActive) {
-		PREFiX.current = model;
+		PREFiX.current = model_name;
 	}
 }
 
@@ -606,6 +616,7 @@ var settings = {
 		smoothScroll: ! is_mac,
 		birthdayNotice: true,
 		birthdayNoticeType: 'only_friends',
+		autoFlushCache: false,
 		zoomRatio: '1'
 	},
 	load: function() {

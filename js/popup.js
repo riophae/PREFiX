@@ -1105,9 +1105,13 @@ tl_model.initialize = function() {
 		if (! is_focused || $main[0].scrollTop) return;
 		var buffered = tl.buffered;
 		tl.buffered = [];
-		insertKeepScrollTop(function() {
+		if (! tl.statuses.length) {
 			unshift(tl_model.statuses, buffered);
-		});
+		} else {
+			insertKeepScrollTop(function() {
+				unshift(tl_model.statuses, buffered);
+			});
+		}
 	}, 16);
 }
 tl_model.unload = function() {
