@@ -497,7 +497,7 @@
 	animation: focusInFromBottom .25s ease-out;
 }
 * {
-	font: 13px "Lucida Grande for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
+	font: 13px "Lucida Grande for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
 }
 html,
 body,
@@ -759,7 +759,7 @@ body.show-context-timeline #context-timeline {
 }
 #context-timeline ul li .timestamp-client,
 #context-timeline ul li .timestamp-client span {
-	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
+	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
 	color: #ccc !important;
 }
 #context-timeline ul li .status-content a {
@@ -1139,7 +1139,7 @@ html.panel-mode #new-window {
 }
 .status-list .content .timestamp-client,
 .status-list .content .timestamp-client span {
-	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
+	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
 }
 .status-list .status-content {
 	clear: both;
