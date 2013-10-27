@@ -557,6 +557,9 @@ b {
 	width: 48px;
 	height: 48px;
 }
+#author-avator a {
+	outline: 0 !important;
+}
 #follow-tip {
 	float: left;
 	width: 225px;
@@ -624,12 +627,11 @@ b {
 	position: fixed;
 	top: 500px;
 	left: 50%;
-	height: 20px;
 	font: 12px Verdana, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
     background: rgba(0, 0, 0, .75);
     color: #fff;
-    line-height: 20px;
-    padding: 2px 6px;
+    line-height: 18px;
+    padding: 3px 6px;
     border-radius: 3px;
 	display: none;
 	-webkit-transform: translateX(-50%);
