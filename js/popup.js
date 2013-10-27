@@ -1006,15 +1006,26 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 					});
 				});
 			} else {
+				var type = vm.type;
 				shorten().next(function() {
 					data.status = vm.text;
-					r.postStatus(data).next(function() {
+					r.postStatus(data).next(function(status) {
 						showNotification('发表成功!');
 						vm.text = '';
 						PREFiX.update().next(function() {
-							if (PREFiX.current === 'tl_model') {
-								if ($main[0].scrollTop < $main.height() / 2)
-									goTop(true);
+							if (PREFiX.current === 'tl_model' && ! type) {
+								var now = new Date;
+								waitFor(function() {
+									return tl_model.statuses.some(function(s) {
+											return status.id == s.id;
+										}) || ((new Date) - now > 5000);
+								}, function() {
+									if ($main[0].scrollTop < $main.height() / 2) {
+										setTimeout(function() {
+											goTop(true);
+										}, 100);
+									}
+								});
 							}
 						});
 					}).setupAjax({
