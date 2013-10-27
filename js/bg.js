@@ -98,6 +98,11 @@ function updateDetails(flag) {
 	var user = Ripple(PREFiX.accessToken);
 	var verify = user.verify().next(function(details) {
 		lscache.set('account_details', details);
+		if (details.friends_count >= 85 && is_first_run) {
+			settings.current.autoFlushCache = true;
+			settings.save();
+		}
+		is_first_run = false;
 		PREFiX.account = details;
 		birthday_interval = setInterval(checkBirthday, 60000);
 		checkBirthday();
@@ -679,3 +684,5 @@ var PREFiX = this.PREFiX = {
 };
 
 initialize();
+var is_first_run = lscache.get('is_first_run') !== false;
+lscache.set('is_first_run', false);
