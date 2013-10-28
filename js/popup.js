@@ -1118,7 +1118,9 @@ tl_model.initialize = function() {
 		return tl.statuses.length;
 	}, function() {
 		tl_model.statuses = tl.statuses;
-		$main.scrollTop(PREFiX.homeTimeline.scrollTop);
+		setTimeout(function() {
+			$main.scrollTop(PREFiX.homeTimeline.scrollTop);
+		}, 50);
 		updateRelativeTime();
 	});
 
