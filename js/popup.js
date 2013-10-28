@@ -43,6 +43,7 @@ var usage_tips = [
 	'如果您不希望 PREFiX 播放提示音, 可以在设置页关闭. ',
 	'本页面关闭前保持滚动条在顶端可让程序性能更佳. ',
 	'当输入框中字数超过 140 时, 输入框背景显示为淡红色. ',
+	'按住 Ctrl / Command 键双击输入框可以发送歌词 :)',
 	'按 PageUp/PageDown 可以快速翻页. ',
 	'按 Home/End 可以快速滑动到页面顶端/末端. ',
 	'您可以自定义尾巴 (即通过...发送), 详情请见设置页. '
@@ -968,6 +969,11 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 		}
 	}
 	vm.ondblclick = function(e) {
+		if (e.ctrlKey || e.metaKey) {
+			if (! vm.text.trim()) {
+				vm.text = $textarea.prop('placeholder');
+			}
+		}
 		return vm.onkeydown({
 			ctrlKey: true,
 			keyCode: 13
