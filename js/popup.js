@@ -1130,6 +1130,7 @@ tl_model.initialize = function() {
 				unshift(tl_model.statuses, buffered);
 			});
 		}
+		bg_win.updateTitle();
 	}, 16);
 }
 tl_model.unload = function() {

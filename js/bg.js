@@ -198,6 +198,45 @@ function closeWindow(id) {
 	chrome.windows.remove(id);
 }
 
+function updateTitle() {
+	var need_notify = false;
+	var title = [ 'PREFiX' ];
+
+	var tl = PREFiX.homeTimeline;
+	var new_statuses = tl.buffered.filter(function(status) {
+		return ! status.is_self;
+	});
+	if (new_statuses.length) {
+		title.push(new_statuses.length + ' 条新消息');
+	}
+	if (PREFiX.count.mentions) {
+		switchTo('mentions_model');
+		title.push('你被 @ 了 ' + PREFiX.count.mentions + ' 次');
+		chrome.browserAction.setBadgeBackgroundColor({
+			color: [ 113, 202, 224, 204 ]
+		});
+		if (PREFiX.count.mentions > PREFiX.previous_count.mentions)
+			need_notify = true;
+	}
+	if (PREFiX.count.direct_messages) {
+		switchTo('privatemsgs_model');
+		title.push('你有 ' + PREFiX.count.direct_messages + ' 条未读私信');
+		chrome.browserAction.setBadgeBackgroundColor({
+			color: [ 211, 0, 4, 204 ]
+		});
+		if (PREFiX.count.direct_messages > PREFiX.previous_count.direct_messages)
+			need_notify = true;
+	}
+	chrome.browserAction.setBadgeText({
+		text: (PREFiX.count.direct_messages || PREFiX.count.mentions || '') + ''
+	});
+	chrome.browserAction.setTitle({
+		title: title.join('\n')
+	});
+
+	return need_notify;
+}
+
 function update() {
 	var d = new Deferred;
 
@@ -243,39 +282,7 @@ function update() {
 		PREFiX.count = data;
 	});
 	Deferred.parallel(deferred_new, deferred_notification).next(function() {
-		var need_notify = false;
-		var title = [ 'PREFiX' ];
-
-		var new_statuses = tl.buffered.filter(function(status) {
-			return ! status.is_self;
-		});
-		if (new_statuses.length) {
-			title.push(new_statuses.length + ' 条新消息');
-		}
-		if (PREFiX.count.mentions) {
-			switchTo('mentions_model');
-			title.push('你被 @ 了 ' + PREFiX.count.mentions + ' 次');
-			chrome.browserAction.setBadgeBackgroundColor({
-				color: [ 113, 202, 224, 204 ]
-			});
-			if (PREFiX.count.mentions > PREFiX.previous_count.mentions)
-				need_notify = true;
-		}
-		if (PREFiX.count.direct_messages) {
-			switchTo('privatemsgs_model');
-			title.push('你有 ' + PREFiX.count.direct_messages + ' 条未读私信');
-			chrome.browserAction.setBadgeBackgroundColor({
-				color: [ 211, 0, 4, 204 ]
-			});
-			if (PREFiX.count.direct_messages > PREFiX.previous_count.direct_messages)
-				need_notify = true;
-		}
-		chrome.browserAction.setBadgeText({
-			text: (PREFiX.count.direct_messages || PREFiX.count.mentions || '') + ''
-		});
-		chrome.browserAction.setTitle({
-			title: title.join('\n')
-		});
+		var need_notify = updateTitle();
 		if (need_notify) playSound();
 
 		d.call();
