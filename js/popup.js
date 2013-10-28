@@ -224,11 +224,17 @@ function getCurrent() {
 	return window[PREFiX.current];
 }
 
+var last_draw_attention = new Date;
 function drawAttention() {
 	if (! is_panel_mode || is_focused) return;
-	chrome.runtime.sendMessage({
-		act: 'draw_attention'
-	});
+	var now = new Date;
+	if (now - last_draw_attention < 3000) return;
+	last_draw_attention = now;
+	setTimeout(function() {
+		chrome.runtime.sendMessage({
+			act: 'draw_attention'
+		});
+	}, 0);
 }
 
 function stopDrawingAttention() {
