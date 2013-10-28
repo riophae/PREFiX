@@ -325,10 +325,7 @@ function initMainUI() {
 	$app = $('#app');
 
 	if (navigator.platform.indexOf('Linux') > -1) {
-		$('<link />').
-		prop('rel', 'stylesheet').
-		prop('href', 'css/linux-fix.css').
-		appendTo('head');
+		$('html').attr('platform', 'linux');
 	}
 
 	var ratio = +PREFiX.settings.current.zoomRatio;
@@ -336,6 +333,12 @@ function initMainUI() {
 		$body.css('zoom', ratio);
 		if (ratio > 1.4) {
 			$('h2').css('letter-spacing', '.5px');
+		}
+		if (ratio === 1.25) {
+			$('<link />').
+			prop('rel', 'stylesheet').
+			prop('href', 'css/font-fix.css').
+			appendTo('head');
 		}
 	}
 

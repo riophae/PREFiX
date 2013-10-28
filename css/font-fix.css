@@ -1,0 +1,12 @@
+@font-face {
+	font-family: "Calibri for PREFiX";
+	src: local("☺"), url("/fonts/Calibri-B.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+.status-list li .timestamp-client {
+	height: 15px;
+}
+[platform="linux"] .status-list li.protected .timestamp-client {
+	background-position: right center !important;
+}

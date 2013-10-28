@@ -1082,6 +1082,9 @@ html.panel-mode #new-window {
 	padding-right: 12px;
 	background: url('/images/protected.png') right center no-repeat;
 }
+[platform="linux"] .status-list li.protected .timestamp-client {
+	background-position: right 1px !important;
+}
 .status-list .avatar {
 	float: left;
 	margin-left: 15px;
