@@ -265,6 +265,8 @@ function update() {
 			lock: update
 		}).next(function(statuses) {
 			unshift(tl.buffered, statuses);
+			if (! settings.current.autoFlushCache)
+				return;
 			if (! PREFiX.popupActive && tl.scrollTop < 30) {
 				var buffered_count = tl.buffered.length;
 				var read_count = tl.statuses.length;
