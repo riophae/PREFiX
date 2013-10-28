@@ -8,7 +8,7 @@
 	height: 15px;
 }
 [platform="linux"] .status-list li.protected .timestamp-client {
-	background-position: right center !important;
+	background-position: right 4px !important;
 }
 [platform="mac"] .status-list .content .timestamp-client {
 	line-height: 20px;
