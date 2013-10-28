@@ -326,6 +326,8 @@ function initMainUI() {
 
 	if (navigator.platform.indexOf('Linux') > -1) {
 		$('html').attr('platform', 'linux');
+	} else if (PREFiX.is_mac) {
+		$('html').attr('platform', 'mac');
 	}
 
 	var ratio = +PREFiX.settings.current.zoomRatio;

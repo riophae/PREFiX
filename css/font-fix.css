@@ -10,3 +10,9 @@
 [platform="linux"] .status-list li.protected .timestamp-client {
 	background-position: right center !important;
 }
+[platform="mac"] .status-list .content .timestamp-client {
+	line-height: 20px;
+}
+[platform="mac"] .status-list li.protected .timestamp-client {
+	background-position: right 7px !important;
+}

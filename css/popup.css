@@ -1085,6 +1085,13 @@ html.panel-mode #new-window {
 [platform="linux"] .status-list li.protected .timestamp-client {
 	background-position: right 1px !important;
 }
+[platform="mac"] .status-list li .timestamp-client {
+	height: 18px;
+	margin: 0;
+}
+[platform="mac"] .status-list li.protected .timestamp-client {
+	background-position: right 5px !important;
+}
 .status-list .avatar {
 	float: left;
 	margin-left: 15px;
@@ -1129,16 +1136,23 @@ html.panel-mode #new-window {
 .status-list .content .timestamp-client {
 	float: right;
 }
-.status-list .content .timestamp-client .chs ~ .en {
-	display: inline-block;
-	-webkit-transform: translateY(1px);
-	transform: translateY(1px);
-}
 .status-list .content .timestamp-client .chs {
 	-webkit-transform: scale(0.89) translateY(1px);
 	transform: scale(0.89) translateY(1px);
 	margin: 0 -1px 0 0;
 	display: inline-block;
+}
+.status-list .content .timestamp-client .chs ~ .en {
+	display: inline-block;
+	-webkit-transform: translateY(1px);
+	transform: translateY(1px);
+}
+[platform="mac"] .status-list .content .timestamp-client {
+	line-height: 22px;
+}
+[platform="mac"] .status-list .content .timestamp-client .chs {
+	-webkit-transform: scale(0.89) translateY(2px);
+	transform: scale(0.89) translateY(2px);
 }
 .status-list .content .timestamp-client,
 .status-list .content .timestamp-client span {
