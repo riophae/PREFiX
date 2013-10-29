@@ -83,7 +83,7 @@ var getRelativeTime = Ripple.helpers.generateTimeFormater(function(table) {
 			table.d,
 			function(convertor) {
 				var h = convertor.h();
-				return h + ' hour' + (h === '1' ? '' : 's') + ' ago';
+				return h + ' hr' + (h === '1' ? '' : 's') + ' ago';
 			}
 		], function(c) {
 			return c._MS(3) +　' ' + c._d(true) + ' ' + c._h(2) + ':' + c._m(2);
