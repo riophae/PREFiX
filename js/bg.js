@@ -65,8 +65,23 @@ function onInputChanged(text, suggest) {
 }
 
 function onInputEntered(text) {
+	var re = /^@([\u4E00-\u9FA5\uf900-\ufa2da-zA-Z][\u4E00-\u9FA5\uf900-\ufa2da-zA-Z\._0-9]+) /g;
+	var at_user = re.exec(text);
+	var status_id;
+	if (at_user) {
+		at_user = at_user[1];
+		PREFiX.homeTimeline.buffered.
+		concat(PREFiX.homeTimeline.statuses).
+		some(function(status) {
+			if (status.user.name === at_user) {
+				status_id = status.id;
+				return true;
+			}
+		});
+	}
 	PREFiX.user.postStatus({
-		status: text
+		status: text,
+		in_reply_to_status_id: status_id
 	}).next(function(status) {
 		PREFiX.update();
 		showNotification({
