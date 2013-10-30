@@ -70,19 +70,27 @@ function onInputChanged(text, suggest) {
 }
 
 function onInputEntered(text) {
-	var re = /^@([\u4E00-\u9FA5\uf900-\ufa2da-zA-Z][\u4E00-\u9FA5\uf900-\ufa2da-zA-Z\._0-9]+) /g;
-	var at_user = re.exec(text);
+	var re = /^@([\u4E00-\u9FA5\uf900-\ufa2da-zA-Z][\u4E00-\u9FA5\uf900-\ufa2da-zA-Z\._0-9]+)( +)/g;
+	var result = re.exec(text);
+	var at_user, spaces;
 	var status_id;
-	if (at_user) {
-		at_user = at_user[1];
+	if (result) {
+		at_user = result[1];
+		spaces = result[2];
+		var matched_statuses = [];
 		PREFiX.homeTimeline.buffered.
 		concat(PREFiX.homeTimeline.statuses).
-		some(function(status) {
+		forEach(function(status) {
 			if (status.user.name === at_user) {
-				status_id = status.id;
-				return true;
+				matched_statuses.push(status);
 			}
 		});
+		for (var i = spaces.length; i-- > 0;) {
+			if (matched_statuses[i]) {
+				status_id = matched_statuses[i].id;
+				break;
+			}
+		}
 	}
 	PREFiX.user.postStatus({
 		status: text.replace(/\s+/g, ' ').trim(),
