@@ -1139,9 +1139,11 @@ tl_model.initialize = function() {
 		if (! tl.statuses.length) {
 			unshift(tl_model.statuses, buffered);
 		} else {
-			insertKeepScrollTop(function() {
-				unshift(tl_model.statuses, buffered);
-			});
+			setTimeout(function() {
+				insertKeepScrollTop(function() {
+					unshift(tl_model.statuses, buffered);
+				});
+			}, 50);
 		}
 		bg_win.updateTitle();
 	}, 16);
