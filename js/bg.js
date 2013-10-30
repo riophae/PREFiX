@@ -38,6 +38,10 @@ function onInputStarted() {
 
 var suggestions = [];
 function prepareSuggestions() {
+	var users = { };
+	function getSpaces(n) {
+		return (new Array(n + 1)).join(' ');
+	}
 	suggestions = PREFiX.homeTimeline.buffered.
 		concat(PREFiX.homeTimeline.statuses).
 		slice(0, 5).
@@ -46,8 +50,9 @@ function prepareSuggestions() {
 				replace(/@[\u4E00-\u9FA5\uf900-\ufa2da-zA-Z][\u4E00-\u9FA5\uf900-\ufa2da-zA-Z\._0-9]+/g, function(name) {
 					return '<url>' + name + '</url>';
 				});
+			users[status.user.name] = users[status.user.name] || 0;
 			return {
-				content: '@' + status.user.name + ' ',
+				content: '@' + status.user.name + getSpaces(++users[status.user.name]),
 				description: '<dim>' + status.user.name + ': </dim>' +
 					(status.photo ? '<url>[Photo]</url> ' : '') +
 					text + '<dim> - ' +
@@ -80,7 +85,7 @@ function onInputEntered(text) {
 		});
 	}
 	PREFiX.user.postStatus({
-		status: text,
+		status: text.replace(/\s+/g, ' ').trim(),
 		in_reply_to_status_id: status_id
 	}).next(function(status) {
 		PREFiX.update();
