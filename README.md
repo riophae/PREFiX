@@ -31,4 +31,12 @@ PREFiX
 * 平滑滚动效果
 * 支持将粘贴板中的图像数据直接上传到饭否
 
+**ver 0.3.0**
+* 自定义尾巴
+* 在地址栏查看 Timeline 和发布消息
+* 自动抛弃缓存功能 (改善性能)
+* 生日提醒
+* 界面放大功能
+* 显示使用技巧
+
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
