@@ -160,6 +160,10 @@ var showNotification = (function() {
 })();
 
 function showUsageTip() {
+	if ($main[0].scrollTop) {
+		setTimeout(showUsageTip, 100);
+		return;
+	}
 	var pos = lscache.get('usage_tip_pos') || 0;
 	var tip = usage_tips[pos];
 	if (! tip) {
@@ -229,7 +233,6 @@ function getCurrent() {
 
 var last_draw_attention = new Date;
 function drawAttention() {
-	if (! PREFiX.settings.current.drawAttention) return;
 	if (! is_panel_mode || is_focused) return;
 	var now = new Date;
 	if (now - last_draw_attention < 3000) return;
@@ -503,8 +506,6 @@ function initMainUI() {
 			e.stopPropagation();
 	});
 
-	showUsageTip();
-
 	composebar_model.type = PREFiX.compose.type;
 	composebar_model.id = PREFiX.compose.id;
 	composebar_model.user = PREFiX.compose.user;
@@ -695,7 +696,11 @@ function hidePicture() {
 	});
 }
 
-var pre_count = 0;
+var pre_count = {
+	timeline: 0,
+	mentions: 0,
+	direct_messages: 0
+};
 function checkCount() {
 	var count = PREFiX.count;
 	var title_contents = [];
@@ -704,24 +709,30 @@ function checkCount() {
 	var $privatemsgs = $('#navigation-bar .privatemsgs .count');
 	if (count.mentions) {
 		title_contents.push(count.mentions + ' @');
-		$mentions.text(count.mentions).show();
+		$mentions.text(count.mentions).fadeIn(120);
+		if (pre_count.mentions < count.mentions)
+			drawAttention();
 	} else {
-		$mentions.text('').hide();
+		$mentions.text('').fadeOut(120);
 	}
+	pre_count.mentions = count.mentions;
 	if (count.direct_messages) {
 		title_contents.push(count.direct_messages + ' 私信');
-		$privatemsgs.text(count.direct_messages).show();
+		$privatemsgs.text(count.direct_messages).fadeIn(120);
+		if (pre_count.direct_messages < count.direct_messages)
+			drawAttention();
 	} else {
-		$privatemsgs.text('').hide();
+		$privatemsgs.text('').fadeOut(120);
 	}
+	pre_count.direct_messages = count.direct_messages;
 	var buffered = PREFiX.homeTimeline.buffered.filter(function(status) {
 		return ! status.is_self;
 	}).length;
 	if (buffered) {
 		title_contents.push(buffered + ' 新消息');
-		$home_tl.text(Math.min(buffered, 99)).show();
+		$home_tl.text(Math.min(buffered, 99)).fadeIn(120);
 	} else {
-		$home_tl.text('').hide();
+		$home_tl.text('').fadeOut(120);
 	}
 	var title = 'PREFiX';
 	if (title_contents.length) {
@@ -1129,12 +1140,13 @@ tl_model.initialize = function() {
 
 	this.interval = setInterval(function update() {
 		if (! tl.buffered.length) {
-			pre_count = 0;
+			pre_count.timeline = 0;
 			return;
 		}
-		if (tl.buffered.length !== pre_count) {
-			drawAttention();
-			pre_count = tl.buffered.length;
+		if (tl.buffered.length !== pre_count.timeline) {
+			if (! PREFiX.settings.current.drawAttention)
+				drawAttention();
+			pre_count.timeline = tl.buffered.length;
 		}
 		if (! is_focused || $main[0].scrollTop) return;
 		var buffered = tl.buffered;
@@ -1186,7 +1198,6 @@ mentions_model.initialize = function() {
 		if (! is_focused || $main[0].scrollTop) return;
 		if (PREFiX.count.mentions) {
 			update();
-			drawAttention();
 		}
 	}
 
@@ -1274,7 +1285,6 @@ privatemsgs_model.initialize = function() {
 		if (! is_focused || $main[0].scrollTop) return;
 		if (PREFiX.count.direct_messages) {
 			update();
-			drawAttention();
 		}
 	}
 
@@ -1323,6 +1333,7 @@ $(function() {
 			$textarea.blur();
 		}
 		getCurrent().initialize();
+		setTimeout(showUsageTip, 100);
 	}, 100);
 });
 
