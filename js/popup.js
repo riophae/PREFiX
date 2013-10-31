@@ -46,7 +46,8 @@ var usage_tips = [
 	'按住 Ctrl / Command 键双击输入框可以发送歌词 :)',
 	'按 PageUp/PageDown 可以快速翻页. ',
 	'按 Home/End 可以快速滑动到页面顶端/末端. ',
-	'您可以自定义尾巴 (即通过...发送), 详情请见设置页. '
+	'您可以自定义尾巴 (即通过...发送), 详情请见设置页. ',
+	'当有新消息时任务栏图标会闪烁. 您可以在设置中关闭. '
 ];
 
 var requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame;
@@ -228,6 +229,7 @@ function getCurrent() {
 
 var last_draw_attention = new Date;
 function drawAttention() {
+	if (! PREFiX.settings.current.drawAttention) return;
 	if (! is_panel_mode || is_focused) return;
 	var now = new Date;
 	if (now - last_draw_attention < 3000) return;

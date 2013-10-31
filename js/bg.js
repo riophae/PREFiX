@@ -659,7 +659,8 @@ var settings = {
 		birthdayNotice: true,
 		birthdayNoticeType: 'only_friends',
 		autoFlushCache: false,
-		zoomRatio: '1'
+		zoomRatio: '1',
+		drawAttention: true
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
