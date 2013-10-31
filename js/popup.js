@@ -957,7 +957,9 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	vm.onfocus = function(e) {
 		var placeholder;
 		if (PREFiX.isTodayFanfouBirthday) {
-			placeholder = '还记得今天是什么日子吗? 祝你饭否 ' + Math.floor(PREFiX.fanfouYears) + ' 周岁生日快乐! :)';
+			placeholder = '还记得今天是什么日子吗? 祝你饭否 ' + 
+				Math.floor(PREFiX.fanfouYears) + 
+				' 周岁生日快乐! :)';
 		} else {
 			placeholder = lyric = lyric || getLyric();
 		}
@@ -1024,14 +1026,13 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 					});
 				});
 			} else {
-				var type = vm.type;
 				shorten().next(function() {
 					data.status = vm.text;
 					r.postStatus(data).next(function(status) {
 						showNotification('发表成功!');
 						vm.text = '';
 						PREFiX.update().next(function() {
-							if (PREFiX.current === 'tl_model' && ! type) {
+							if (PREFiX.current === 'tl_model') {
 								var now = new Date;
 								waitFor(function() {
 									return tl_model.statuses.some(function(s) {
