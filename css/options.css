@@ -46,7 +46,7 @@ li {
 	line-height: 22px;
 }
 input[type="checkbox"] {
-	margin: 2px 8px 5px 0;
+	margin: 0 5px 5px 0;
 	vertical-align:bottom;
 }
 #about {
