@@ -193,6 +193,15 @@ $(function() {
 		}
 	});
 
+	$status.atwho({
+		at: '@',
+		limit: 3,
+		data: PREFiX.friends,
+		search_key: 'string',
+		tpl: '<li data-value="${name}">${name}</li>'
+	});
+
+
 	$(window).scroll(function(e) {
 		$('body').scrollTop(0);
 	}).on('paste', function(e) {
