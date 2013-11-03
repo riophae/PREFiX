@@ -38,5 +38,7 @@ PREFiX
 * 生日提醒
 * 界面放大功能
 * 显示使用技巧
+* 一键设置尾巴
+* 上传页面加入@自动补全
 
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
