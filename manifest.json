@@ -13,6 +13,11 @@
 			"js/versions.js"
 		]
 	},
+	"content_scripts": [ {
+		"js": [ "js/lib/jquery-min.js", "js/consumer-helper.js" ],
+		"matches": [ "http://fanfou.com/apps.details/*" ],
+		"run_at": "document_end"
+	} ],
 	"browser_action": {
 		"default_icon": "icons/19.png",
 		"default_popup": "popup.html",

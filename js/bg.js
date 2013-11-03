@@ -16,6 +16,8 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 		chrome.windows.update(sender.tab.windowId, {
 			drawAttention: false
 		});
+	} else if (request.act === 'set_consumer') {
+		enableCustomConsumer(request.key, request.secret);
 	} else {
 		chrome.tabs.query({
 			url: chrome.extension.getURL('/popup.html?new_window=true')
