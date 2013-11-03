@@ -354,7 +354,7 @@ function initMainUI() {
 		var now = new Date(Date.now() + Ripple.OAuth.timeCorrectionMsec);
 		var today = now.getFullYear() + '-' + (now.getMonth() + 1) + now.getDate();
 		var count = lscache.get(today + '-birthday') || 0;
-		if (count >= 3) {
+		if (count >= 1) {
 			$birthday_cake.remove();
 		} else {
 			$birthday_cake.fadeIn(1000, function() {
