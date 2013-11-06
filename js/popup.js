@@ -101,10 +101,15 @@ function initSmoothScroll($target) {
 			if (progress >= 16) {
 				var pos = $target.scrollTop();
 				var diff = destination - pos;
-				var dist = Math.floor(progress * diff / 100);
-				$target.scrollTop(Math.max(0, pos + dist));
-				diff = Math.max(0, destination) - pos;
-				if (Math.abs(diff) <= 1) {
+				var dist = Math.round(progress * diff / 100);
+				dist = dist || Math.abs(diff) / diff;
+				var min_pos = 0;
+				var max_pos = $target[0].scrollHeight - height;
+				var this_pos = Math.max(min_pos, pos + dist);
+				this_pos = Math.min(this_pos, max_pos);
+				$target.scrollTop(this_pos);
+				diff = destination - this_pos;
+				if (! diff || [ min_pos, max_pos ].indexOf(this_pos) > -1) {
 					return _stop();
 				}
 				breakpoint = timestamp;
@@ -135,7 +140,6 @@ function initSmoothScroll($target) {
 		e.preventDefault();
 		destination = destination || $target.scrollTop();
 		destination = Math.ceil(-delta * 120 + destination);
-		destination = Math.min(destination, $target[0].scrollHeight - height);
 		runAnimation();
 	});
 }
@@ -641,6 +645,7 @@ function showPicture(img_url) {
 	});
 	var $overlay = $scrolling_elem = $('#picture-overlay');
 	$overlay.removeClass('error');
+	$overlay.scrollTop(0);
 	$picture.off().on('error', function(e) {
 		$overlay.addClass('error');
 		canceled = true;
@@ -887,6 +892,7 @@ function showContextTimeline(e) {
 	var context_statuses = [ status ];
 	var $context_tl = $scrolling_elem = $('#context-timeline');
 	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom');
+	$context_tl.scrollTop(0);
 	if (status.repost_status) {
 		context_statuses.push(status.repost_status);
 		id = status.repost_status.id;
@@ -911,6 +917,7 @@ function showRelatedStatuses(e) {
 	$body.addClass('show-context-timeline');
 	var $context_tl = $scrolling_elem = $('#context-timeline');
 	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom loading');
+	$context_tl.scrollTop(0);
 	context_tl_model.statuses = [];
 	var status = this.$vmodel.status.$model;
 	(function get() {
