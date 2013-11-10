@@ -446,12 +446,12 @@ function initMainUI() {
 	}, 100));
 
 	$('#app').delegate('a', 'click', function(e) {
-		if (e.target.href.indexOf('http://') !== 0 &&
-			e.target.href.indexOf('https://') !== 0)
+		if (e.currentTarget.href.indexOf('http://') !== 0 &&
+			e.currentTarget.href.indexOf('https://') !== 0)
 			return;
 		e.preventDefault();
 		e.stopPropagation();
-		createTab(e.target.href);
+		createTab(e.currentTarget.href);
 	}).delegate('a[href^="/q/"]', 'click', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
