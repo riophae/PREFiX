@@ -1151,7 +1151,7 @@ tl_model.initialize = function() {
 			return;
 		}
 		if (tl.buffered.length !== pre_count.timeline) {
-			if (! PREFiX.settings.current.drawAttention)
+			if (PREFiX.settings.current.drawAttention)
 				drawAttention();
 			pre_count.timeline = tl.buffered.length;
 		}
