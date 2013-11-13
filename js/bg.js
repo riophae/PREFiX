@@ -657,7 +657,7 @@ var settings = {
 	current: { },
 	default: {
 		playSound: true,
-		smoothScroll: ! is_mac,
+		smoothScroll: true,
 		birthdayNotice: true,
 		birthdayNoticeType: 'only_friends',
 		autoFlushCache: false,
