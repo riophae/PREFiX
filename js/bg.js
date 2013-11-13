@@ -651,6 +651,50 @@ var playSound = (function() {
 	}
 })();
 
+var chs_re = new RegExp;
+chs_re.compile('[「\u4E00-\u9FA5\uf900-\ufa2d」]', 'g');
+Ripple.events.observe('process_status', function(status) {
+	if (! status) return;
+
+	var created_at = status.created_at;
+	status.fullTime = getFullTime(created_at);
+
+	status.source = $temp.html(status.source).text();
+	status.source = ({
+		'网页': 'Web',
+		'手机上网': 'Wap',
+		'iPhone版': 'iPhone'
+	})[status.source] || status.source;
+	status.source = status.source.replace('客户端', '');
+	status.source = status.source.replace(/[a-zA-Z0-0]+/g, function(en) {
+		return '<span class="en">' + en + '</span>'
+	}).replace(chs_re, function(chs) {
+		return '<span class="chs">' + chs + '</span>';
+	});
+
+	var html = status.text;
+	$temp.html(html);
+	status.textWithoutTags = $temp.text();
+	html = jEmoji.softbankToUnified(html);
+	html = jEmoji.googleToUnified(html);
+	html = jEmoji.docomoToUnified(html);
+	html = jEmoji.kddiToUnified(html);
+	status.fixedText = jEmoji.unifiedToHTML(html);
+
+	if (status.photo) {
+		var img = new Image;
+		img.src = status.photo.thumburl;
+		waitFor(function() {
+			return img.naturalWidth;
+		}, function() {
+			status.photo.thumb_width = img.naturalWidth;
+			status.photo.thumb_height = img.naturalHeight;
+			img.src = '';
+			delete img;
+		});
+	}
+});
+
 var is_mac = navigator.platform.indexOf('Mac') > -1;
 
 var settings = {

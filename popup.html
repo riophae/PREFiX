@@ -62,7 +62,7 @@
             </div>
             <div class="status-content" ms-html="status.fixedText"></div>
             <div class="photo" ms-if="!! status.photo">
-              <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+              <img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
             </div>
           </div>
   			</li>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="status-content" ms-html="status.fixedText"></div>
                 <div class="photo" ms-if="!! status.photo">
-                  <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+                  <img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
                 </div>
               </div>
               <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
@@ -145,7 +145,7 @@
                 </div>
                 <div class="status-content" ms-html="status.fixedText"></div>
                 <div class="photo" ms-if="!! status.photo">
-                  <img ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+                  <img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
                 </div>
               </div>
               <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
