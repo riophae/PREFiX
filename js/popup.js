@@ -50,9 +50,6 @@ var usage_tips = [
 	'当有新消息时任务栏图标会闪烁. 您可以在设置中关闭. '
 ];
 
-var requestAnimationFrame = requestAnimationFrame || webkitRequestAnimationFrame;
-var cancelRequestAnimationFrame = cancelRequestAnimationFrame || webkitCancelRequestAnimationFrame;
-
 var goTop = (function() {
 	var s = 0;
 	var current;
@@ -63,26 +60,26 @@ var goTop = (function() {
 		stop();
 		stop = function() {
 			stop = function() { };
-			cancelRequestAnimationFrame(id);
+			cancelAnimationFrame(id);
 		}
 		if (e) {
 			e.preventDefault && e.preventDefault();
 			s = $main[0].scrollTop;
 		}
-		var breakpoint = Date.now();
+		var breakpoint;
 		id = requestAnimationFrame(function(timestamp) {
-			var diff = timestamp - breakpoint;
-			if (diff >= 10) {
-				breakpoint = timestamp;
+			if (breakpoint) {
+				var diff = (timestamp - breakpoint) * 1.2;
 				current = $main[0].scrollTop;
 				if (s != current) {
 					return stop();
 				}
-				var to = Math.floor(s / 1.12 / Math.max(diff / 32, 1));
+				var to = Math.floor(s / 1.15 / Math.max(1, diff / 32));
 				$main[0].scrollTop = s = to;
 			}
-			if (s >= 1) {
-				requestAnimationFrame(arguments.callee);
+			if (s >= 1 || ! breakpoint) {
+				breakpoint = timestamp;
+				id = requestAnimationFrame(arguments.callee);
 			};
 		});
 	}
@@ -97,30 +94,36 @@ function initSmoothScroll($target) {
 	function runAnimation() {
 		function renderFrame(timestamp) {
 			if (! is_scrolling) return;
-			var progress = timestamp - breakpoint;
-			if (progress >= 16) {
+
+			if (breakpoint) {
+				var progress = (timestamp - breakpoint) * 1.2;
+
 				var pos = $target.scrollTop();
 				var diff = destination - pos;
-				var dist = Math.round(progress * diff / 100);
+				var dist = Math.round(Math.min(1, progress / 32) * diff / 4);
 				dist = dist || Math.abs(diff) / diff;
+
 				var min_pos = 0;
 				var max_pos = $target[0].scrollHeight - height;
 				var this_pos = Math.max(min_pos, pos + dist);
 				this_pos = Math.min(this_pos, max_pos);
+
 				$target.scrollTop(this_pos);
+
 				diff = destination - this_pos;
 				if (! diff || [ min_pos, max_pos ].indexOf(this_pos) > -1) {
 					return _stop();
 				}
-				breakpoint = timestamp;
 			}
+
+
+			breakpoint = performance.now();
 			id = requestAnimationFrame(renderFrame);
-			return;
 		}
 		if (is_scrolling) return;
 		is_scrolling = true;
-		var breakpoint = Date.now();
-		renderFrame(breakpoint);
+		var breakpoint;
+		id = requestAnimationFrame(renderFrame);
 		_stop = function() {
 			_stop = function() { };
 			if ($target === $main) {
@@ -128,7 +131,7 @@ function initSmoothScroll($target) {
 			}
 			destination = null;
 			is_scrolling = false;
-			cancelRequestAnimationFrame(id);
+			cancelAnimationFrame(id);
 		}
 		if ($target === $main) {
 			stopSmoothScrolling = _stop;
