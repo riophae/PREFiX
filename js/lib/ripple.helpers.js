@@ -1379,7 +1379,7 @@ OAuth.setProperties = function(into, from) {
 // Utility Functions
 OAuth.setProperties(OAuth, {
 	percentEncode: function(s) {
-		if (! s) {
+		if (s == null) {
 			return '';
 		}
 		if (s instanceof Array) {
@@ -1412,7 +1412,7 @@ OAuth.setProperties(OAuth, {
 	},
 	/** Convert the given parameters to an Array of name-value pairs. */
 	getParameterList: function(parameters) {
-		if (! parameters) {
+		if (parameters == null) {
 			return [];
 		}
 		if (typeof parameters != 'object') {
@@ -1429,7 +1429,7 @@ OAuth.setProperties(OAuth, {
 	},
 	/** Convert the given parameters to a map from name to value. */
 	getParameterMap: function(parameters) {
-		if (! parameters) {
+		if (parameters == null) {
 			return {};
 		}
 		if (typeof parameters != 'object') {
@@ -1464,7 +1464,7 @@ OAuth.setProperties(OAuth, {
 		var list = OAuth.getParameterList(parameters);
 		for (var p = 0, len = list.length; p < len; ++p) {
 			var value = list[p][1];
-			if (value == null) value = '';
+			if ([null, undefined].indexOf(value) > -1 || value !== value) value = '';
 			if (form != '') form += '&';
 			form += OAuth.percentEncode(list[p][0])
 				+ '=' + OAuth.percentEncode(value);
@@ -1669,7 +1669,7 @@ OAuth.setProperties(OAuth.SignatureMethod.prototype, {
 OAuth.setProperties(OAuth.SignatureMethod, {
 	sign: function sign(message, accessor) {
 		var name = OAuth.getParameterMap(message.parameters).oauth_signature_method;
-		if (! name || name == '') {
+		if (name == null || name == '') {
 			name = 'HMAC-SHA1';
 			OAuth.setParameter(message, 'oauth_signature_method', name);
 		}
@@ -1774,7 +1774,7 @@ OAuth.setProperties(OAuth.SignatureMethod, {
 		return uri;
 	},
 	normalizeParameters: function(parameters) {
-		if (! parameters) {
+		if (parameters == null) {
 			return '';
 		}
 		var list = OAuth.getParameterList(parameters);

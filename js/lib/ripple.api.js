@@ -212,14 +212,14 @@
 		action: 'direct_messages/new',
 		method: 'POST',
 		argsProcessor: completeStatusParams
-	});
+	}, { success: _processStatus });
 
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.destroy
 	N({
 		name: 'destroyDirectMessage',
 		action: 'direct_messages/destroy',
 		method: 'POST'
-	});
+	}, { success: _processStatus });
 
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.inbox
 	N({
@@ -227,7 +227,7 @@
 		action: 'direct_messages/inbox',
 		method: 'GET',
 		argsProcessor: completeStatusParams
-	});
+	}, { success: _processStatuses });
 
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.sent
 	N({
@@ -235,7 +235,7 @@
 		action: 'direct_messages/sent',
 		method: 'GET',
 		argsProcessor: completeStatusParams
-	});
+	}, { success: _processStatuses });
 
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.conversation
 	N({
@@ -243,7 +243,7 @@
 		action: 'direct_messages/conversation',
 		method: 'GET',
 		argsProcessor: completeStatusParams
-	});
+	}, { success: _processStatuses });
 
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/direct-messages.conversation-list
 	N({
@@ -414,7 +414,7 @@
 			return completeStatusParams(params);
 		},
 		urlProcessor: idReplacer
-	});
+	}, { success: _processStatuses });
 
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/favorites.create
 	N({
@@ -423,7 +423,7 @@
 		method: 'POST',
 		argsProcessor: completeStatusParams,
 		urlProcessor: idReplacer
-	});
+	}, { success: _processStatus });
 
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/favorites.destroy
 	N({
@@ -432,7 +432,7 @@
 		method: 'POST',
 		argsProcessor: completeStatusParams,
 		urlProcessor: idReplacer
-	});
+	}, { success: _processStatus });
 
 
 	/* Trends */
