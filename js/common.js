@@ -137,6 +137,61 @@ function unshift(list, statuses, reverse) {
 	list.unshift.apply(list, statuses);
 }
 
+function isImage(type) {
+	switch (type) {
+	case 'image/jpeg':
+	case 'image/png':
+	case 'image/gif':
+	case 'image/bmp':
+	case 'image/jpg':
+		return true;
+	default:
+		return false;
+	}
+}
+function computeSize(size) {
+	var units = ['', 'K', 'M', 'G', 'T'];
+	while (size / 1024 >= .75) {
+		size = size / 1024;
+		units.shift();
+	}
+	size = Math.round(size * 10) / 10 + units[0] + 'B';
+	return size;
+}
+function fixTransparentPNG(file) {
+	var d = new Deferred;
+	var img = new Image;
+	var fr = new FileReader;
+	fr.onload = function(e) {
+		img.src = fr.result;
+		Ripple.helpers.image2canvas(img).
+		next(function(canvas) {
+			var ctx = canvas.getContext('2d');
+			var image_data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			var pixel_array = image_data.data;
+			var m, a, s;
+			for (var i = 0, len = pixel_array.length; i < len; i += 4) {
+				a = pixel_array[i+3];
+				if (a === 255) continue;
+				s = 255 - a;
+				a /= 255;
+				m = 3;
+				while (m--) {
+					pixel_array[i+m] = pixel_array[i+m] * a + s;
+				}
+				pixel_array[i+3] = 255;
+			}
+			ctx.putImageData(image_data, 0, 0);
+			canvas.toBlob(function(blob) {
+				blob.name = file.name;
+				d.call(blob);
+			});
+		});
+	}
+	fr.readAsDataURL(file);
+	return d;
+}
+
 function getDefaultWindowSize(width, height) {
 	var PREFiX = chrome.extension.getBackgroundPage().PREFiX;
 	var ratio = +PREFiX.settings.current.zoomRatio;
