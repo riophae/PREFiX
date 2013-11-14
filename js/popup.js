@@ -1466,6 +1466,13 @@ $(function() {
 		getCurrent().initialize();
 		setTimeout(showUsageTip, 100);
 	}, 100);
+	var msg = '您可以将图片文件拖拽至本窗口, 或粘贴 (Ctrl + V) 图像数据' +
+		', 或点击图标选择文件以上传. '
+	var shown = lscache.get('uploading_photo_tip');
+	if (! shown) {
+		alert(msg);
+		lscache.set('uploading_photo_tip', true);
+	}
 });
 
 onunload = function() {
@@ -1480,13 +1487,6 @@ if (location.search == '?new_window=true') {
 	var height = getViewHeight();
 	initFixSize(400, 600);
 	$(applyViewHeight);
-	var msg = '您可以将图片文件拖拽至本窗口, 或粘贴 (Ctrl + V) 图像数据' +
-		', 或点击图标选择文件以上传. '
-	var shown = lscache.get('uploading_photo_tip');
-	if (! shown) {
-		alert(msg);
-		lscache.set('uploading_photo_tip', true);
-	}
 }
 
 chrome.runtime.sendMessage({ });
