@@ -1354,8 +1354,11 @@ $(function() {
 	avalon.scan();
 	initMainUI();
 	setTimeout(function() {
+		$textarea.focus();
 		if (! PREFiX.compose.text) {
 			$textarea.blur();
+		} else if (PREFiX.compose.type === 'repost') {
+			$textarea[0].selectionStart = $textarea[0].selectionEnd = 0;
 		}
 		getCurrent().initialize();
 		setTimeout(showUsageTip, 100);
