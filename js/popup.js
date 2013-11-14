@@ -131,7 +131,7 @@ function initSmoothScroll($target) {
 			}
 
 
-			breakpoint = performance.now();
+			breakpoint = timestamp;
 			id = requestAnimationFrame(renderFrame);
 		}
 		if (is_scrolling) return;
