@@ -149,6 +149,7 @@ function isImage(type) {
 		return false;
 	}
 }
+
 function computeSize(size) {
 	var units = ['', 'K', 'M', 'G', 'T'];
 	while (size / 1024 >= .75) {
@@ -158,6 +159,7 @@ function computeSize(size) {
 	size = Math.round(size * 10) / 10 + units[0] + 'B';
 	return size;
 }
+
 function fixTransparentPNG(file) {
 	var d = new Deferred;
 	var img = new Image;

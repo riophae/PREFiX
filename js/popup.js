@@ -207,7 +207,7 @@ function showUsageTip() {
 
 function count(e) {
 	var length = computeLength(composebar_model.text);
-	$textarea.toggleClass('over', length > 140);
+	$app.toggleClass('over', length > 140);
 }
 
 function setContent(content) {
@@ -347,6 +347,34 @@ function focusToEnd() {
 	$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
 }
 
+function setImage(file) {
+	$textarea.css('text-indent', file ? '30px' : '');
+	var size;
+	if (file) {
+		size = computeSize(file.size);
+	}
+	if (file && file.size > 2 * 1024 * 1024) {
+		var msg = '您的图片文件大小 (' + size + ') 超过 2MB, 上传可能会失败.' +
+			' 确定要继续吗?';
+		if (! confirm(msg)) return;
+	}
+	var $upload = $('#uploading-photo');
+	var title = '上传图片';
+	if (file) {
+		title = '取消上传 ' + file.name + ' (' +
+			size + ')';
+			$textarea.focus();
+	}
+	$upload.prop('title', title);
+	$upload.toggleClass('file-selected', !! file);
+	PREFiX.image = file;
+	$textarea[0].focus();
+	$textarea[0].blur();
+	if (file) {
+		$textarea.focus();
+	}
+}
+
 function initMainUI() {
 	$body = $('body');
 	$app = $('#app');
@@ -453,6 +481,80 @@ function initMainUI() {
 		tpl: '<li data-value="${name}">${name}</li>'
 	});
 
+	$app.on({
+		dragenter: function(e) {},
+		dragover: function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+		},
+		dragleave: function(e) {},
+		drop: function(e) {
+			e = e.originalEvent;
+
+			e.stopPropagation();
+			e.preventDefault();
+
+			var file = e.dataTransfer.files[0];
+			if (! file || ! isImage(file.type))
+				return;
+
+			if (file.type === 'image/png') {
+				fixTransparentPNG(file).next(function(blob) {
+					setImage(blob);
+				});
+			} else {
+				setImage(file);
+			}
+		}
+	});
+
+	$('#uploading-photo').click(function(e) {
+		if (! PREFiX.image) return;
+		setImage(null);
+		var $copy = $file.clone(true);
+		$file.replaceWith($copy);
+		$file = $copy;
+	});
+
+	var $file = $('#file');
+	$file.on('change', function(e) {
+		var file = $(this)[0].files[0];
+		if (! file || ! isImage(file.type))
+			return;
+		if (file.type === 'image/png') {
+			fixTransparentPNG(file).next(function(blob) {
+				setImage(blob);
+			});
+		} else {
+			setImage(file);
+		}
+	});
+
+	$(window).on('paste', function(e) {
+		var e = e.originalEvent;
+		var items = e.clipboardData.items;
+		if (! items.length) return;
+		var f, i = 0;
+		while (items[i]) {
+			f = items[i].getAsFile();
+			if (f && isImage(f.type))	{
+				break;
+			}
+			i++;
+		}
+		if (! f) return;
+		f.name = 'image-from-clipboard.' + f.type.replace('image/', '');
+		if (file.type === 'image/png') {
+			fixTransparentPNG(f).next(function(blob) {
+				setImage(f);
+			});
+		} else {
+			setImage(f);
+		}
+	});
+
+	setImage(PREFiX.image);
+
 	$main = $scrolling_elem = $('#main');
 
 	$main.scroll(_.throttle(function(e) {
@@ -497,10 +599,6 @@ function initMainUI() {
 	$('#new-window').click(function(e) {
 		createPanel(400, getViewHeight(), '/popup.html?new_window=true');
 		close();
-	});
-
-	$('#uploading-photo').click(function(e) {
-		createPanel(300, 150, 'uploading-photo.html');
 	});
 
 	$('#picture-overlay').click(function(e) {
@@ -1066,9 +1164,14 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			} else {
 				shorten().next(function() {
 					data.status = vm.text;
-					r.postStatus(data).next(function(status) {
+					data.photo = PREFiX.image;
+					r[ PREFiX.image ? 'postPhoto' : 'postStatus' ](data).
+					setupAjax({
+						timeout: PREFiX.image ? 180000 : 30000
+					}).next(function(status) {
 						showNotification('发表成功!');
 						vm.text = '';
+						setImage(null);
 						PREFiX.update().next(function() {
 							if (PREFiX.current === 'tl_model') {
 								var now = new Date;
@@ -1377,6 +1480,13 @@ if (location.search == '?new_window=true') {
 	var height = getViewHeight();
 	initFixSize(400, 600);
 	$(applyViewHeight);
+	var msg = '您可以将图片文件拖拽至本窗口, 或粘贴 (Ctrl + V) 图像数据' +
+		', 或点击图标选择文件以上传. '
+	var shown = lscache.get('uploading_photo_tip');
+	if (! shown) {
+		alert(msg);
+		lscache.set('uploading_photo_tip', true);
+	}
 }
 
 chrome.runtime.sendMessage({ });

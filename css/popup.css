@@ -905,10 +905,10 @@ html.panel-mode #new-window {
 }
 #compose-bar textarea {
 	width: 370px;
-	height: 16px;
-	min-height: 16px;
+	height: 18px;
+	min-height: 18px;
 	padding: 12px 15px;
-	line-height: 16px;
+	line-height: 18px;
 	border: 0;
 	outline: 0 !important;
 	box-shadow: 0 0 6px rgba(0, 0, 0, .15);
@@ -918,8 +918,13 @@ html.panel-mode #new-window {
 	-webkit-transition-timing-function: ease-in-out;
 	-webkit-transition-duration: .2s;
 }
-#compose-bar textarea.over {
-	background: #ffe5e5;
+#compose-bar textarea:not(:focus):not(.filled) {
+	text-indent: 30px;
+}
+.over #compose-bar textarea,
+.over #uploading-photo {
+	background-color: #ffe5e5;
+	border-color: #ffe5e5;
 }
 #compose-bar textarea:focus {
 	box-shadow: 0 0px 5px 0 rgba(83, 186, 237, .5);
@@ -929,10 +934,14 @@ html.panel-mode #new-window {
 	position: absolute;
 	left: 8px;
 	top: 0;
-	width: 22px;
-	height: 16px;
-	padding: 12px 7px;
-	background: url('/images/uploading-photo.png') center center no-repeat;
+	width: 25px;
+	height: 19px;
+	border-width: 12px 5px 7px 6px;
+	border-style: solid;
+	border-color: white;
+	background-image: url('/images/uploading-photo.png');
+	background-position: top left;
+	background-repeat: no-repeat;
 	cursor: pointer;
 	-webkit-transition: opacity ease-in-out .2s;
 	transition: opacity ease-in-out .2s;
@@ -941,8 +950,22 @@ html.panel-mode #new-window {
 #uploading-photo:hover {
 	opacity: 1;
 }
-#compose-bar textarea:focus + #uploading-photo,
-#compose-bar textarea.filled + #uploading-photo {
+#uploading-photo.file-selected {
+	background-position: bottom left;
+}
+#uploading-photo.file-selected #file {
+	display: none;
+}
+#file {
+	position: absolute;
+	opacity: 0;
+	height: 100%;
+	cursor: pointer;
+	right: 0;
+	top: 0;
+}
+#compose-bar textarea:focus + #uploading-photo:not(.file-selected),
+#compose-bar textarea.filled + #uploading-photo:not(.file-selected) {
 	display: none;
 }
 #main {
