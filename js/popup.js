@@ -50,6 +50,21 @@ var usage_tips = [
 	'当有新消息时任务栏图标会闪烁. 您可以在设置中关闭. '
 ];
 
+function getViewHeight() {
+	return lscache.get('popup_view_height') || 600;
+}
+
+function setViewHeight(height) {
+	lscache.set('popup_view_height', Math.max(600, height));
+	applyViewHeight();
+}
+
+function applyViewHeight() {
+	var height = getViewHeight();
+	$('body, #picture-overlay, #context-timeline').height(height);
+	$main.height(height - parseInt($main.css('top')));
+}
+
 var goTop = (function() {
 	var s = 0;
 	var current;
@@ -89,7 +104,6 @@ function initSmoothScroll($target) {
 	var id;
 	var is_scrolling = false;
 	var destination = null;
-	var height = $target.height();
 	var _stop = function() { };
 	function runAnimation() {
 		function renderFrame(timestamp) {
@@ -121,6 +135,7 @@ function initSmoothScroll($target) {
 			id = requestAnimationFrame(renderFrame);
 		}
 		if (is_scrolling) return;
+		var height = $target.height();
 		is_scrolling = true;
 		var breakpoint;
 		id = requestAnimationFrame(renderFrame);
@@ -480,7 +495,7 @@ function initMainUI() {
 	});
 
 	$('#new-window').click(function(e) {
-		createPanel(400, 600, '/popup.html?new_window=true');
+		createPanel(400, getViewHeight(), '/popup.html?new_window=true');
 		close();
 	});
 
@@ -1356,7 +1371,9 @@ onunload = function() {
 if (location.search == '?new_window=true') {
 	is_panel_mode = true;
 	$('html').addClass('panel-mode');
+	var height = getViewHeight();
 	initFixSize(400, 600);
+	$(applyViewHeight);
 }
 
 chrome.runtime.sendMessage({ });

@@ -159,10 +159,13 @@ function initFixSize(width, height) {
 		if (fixing_size) return;
 		fixing_size = true;
 		var size = getDefaultWindowSize(width, height);
+		size.height = Math.max(size.height, outerHeight);
 		resizeTo(size.width, size.height);
 		setTimeout(function() {
-			resizeBy(target_width - innerWidth, target_height - innerHeight);
+			var _height = Math.max(outerHeight, target_height);
+			resizeBy(target_width - innerWidth, _height - outerHeight);
 			setTimeout(function() {
+				window.setViewHeight && setViewHeight(innerHeight);
 				fixing_size = false;
 			}, 48);
 		}, 36);
