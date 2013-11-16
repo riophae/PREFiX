@@ -625,7 +625,7 @@ b {
 #notification {
 	z-index: 99;
 	position: fixed;
-	top: 500px;
+	bottom: 100px;
 	left: 50%;
 	font: 12px Verdana, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei", sans-serif;
     background: rgba(0, 0, 0, .75);
@@ -936,7 +936,7 @@ html.panel-mode #new-window {
 	top: 0;
 	width: 25px;
 	height: 19px;
-	border-width: 12px 5px 7px 6px;
+	border-width: 12px 5px 2px 6px;
 	border-style: solid;
 	border-color: white;
 	background-image: url('/images/uploading-photo.png');
