@@ -55,7 +55,7 @@ function getViewHeight() {
 }
 
 function setViewHeight(height) {
-	lscache.set('popup_view_height', Math.max(600, height));
+	lscache.set('popup_view_height', Math.round(Math.max(600, height)));
 	applyViewHeight();
 }
 
@@ -1484,7 +1484,6 @@ onunload = function() {
 if (location.search == '?new_window=true') {
 	is_panel_mode = true;
 	$('html').addClass('panel-mode');
-	var height = getViewHeight();
 	initFixSize(400, 600);
 	$(applyViewHeight);
 }

@@ -222,7 +222,7 @@ function initFixSize(width, height) {
 			var _height = Math.max(outerHeight, target_height);
 			resizeBy(target_width - innerWidth, _height - outerHeight);
 			setTimeout(function() {
-				window.setViewHeight && setViewHeight(innerHeight);
+				window.setViewHeight && setViewHeight(innerHeight / ratio);
 				fixing_size = false;
 			}, 48);
 		}, 36);
