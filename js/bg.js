@@ -267,7 +267,7 @@ function updateTitle() {
 	return need_notify;
 }
 
-function update() {
+function update(retry_chances, new_status_id) {
 	var d = new Deferred;
 
 	clearInterval(PREFiX.interval);
@@ -294,6 +294,16 @@ function update() {
 		}).setupAjax({
 			lock: update
 		}).next(function(statuses) {
+			if (retry_chances) {
+				var new_status_found = statuses.some(function(s) {
+					return s.id === new_status_id;
+				});
+				if (! new_status_found) {
+					setTimeout(function() {
+						update(--retry_chances, new_status_id);
+					});
+				}
+			}
 			unshift(tl.buffered, statuses);
 			if (! settings.current.autoFlushCache)
 				return;

@@ -1173,7 +1173,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 						showNotification('发表成功!');
 						vm.text = '';
 						setImage(null);
-						PREFiX.update().next(function() {
+						PREFiX.update(3, status.id).next(function() {
 							if (PREFiX.current === 'tl_model') {
 								var now = new Date;
 								waitFor(function() {
