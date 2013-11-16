@@ -63,7 +63,7 @@ function setViewHeight(height) {
 function applyViewHeight() {
 	var height = getViewHeight();
 	$('body, #picture-overlay, #context-timeline').height(height);
-	$main.height(height - parseInt($main.css('top')));
+	$main.height(height - parseInt($main.css('top'), 10));
 }
 
 var goTop = (function() {
@@ -101,12 +101,16 @@ var goTop = (function() {
 	}
 })();
 
+var registered_smooth_scroll_data = [];
 function initSmoothScroll($target) {
 	var id;
 	var is_scrolling = false;
 	var destination = null;
 	var _stop = function() { };
-	function runAnimation() {
+	function runAnimation(dest) {
+		if (dest !== undefined) {
+			destination = Math.round(dest);
+		}
 		function renderFrame(timestamp) {
 			if (! is_scrolling) return;
 
@@ -161,8 +165,19 @@ function initSmoothScroll($target) {
 		destination = Math.ceil(-delta * 120 + destination);
 		runAnimation();
 	});
+	registered_smooth_scroll_data.push({
+		elem: $target[0],
+		run: runAnimation
+	});
 }
 function stopSmoothScrolling() { }
+function smoothScrollTo(destination) {
+	registered_smooth_scroll_data.forEach(function(item) {
+		if (item.elem === $scrolling_elem[0]) {
+			item.run(destination);
+		}
+	});
+}
 
 var showNotification = (function() {
 	var timeout;
@@ -664,24 +679,27 @@ function initMainUI() {
 				return;
 		}
 		e.preventDefault();
-		$scrolling_elem.trigger({
-			type: 'mousewheel',
-			flag: true
-		}, e.keyCode === 40 ? -1 : 1, true);
+		var page_height = innerHeight / ratio;
+		if ($scrolling_elem === $main) {
+			page_height -= parseInt($main.css('top'), 10);
+		}
+		var current_pos = $scrolling_elem.scrollTop();
+		var direction = e.keyCode === 40 ? 1 : -1;
+		smoothScrollTo(current_pos + (page_height * direction));
 	}).on('keydown', function(e) {
 		if (e.keyCode !== 36) return;
-		goTop(e);
+		if ($scrolling_elem === $main)
+			goTop(e);
+		else
+			smoothScrollTo(0);
 	}).on('keydown', function(e) {
 		if (e.keyCode !== 35) return;
 		e.preventDefault();
-		var $win = $(window);
-		var event;
-		var times = ($main[0].scrollHeight - $main.height() - $main.scrollTop())/ 120;
-		for (var i = 0; i < times; i++) {
-			event = new Event('keydown');
-			event.keyCode = 40;
-			dispatchEvent(event);
-		}
+		var full_height = $scrolling_elem[0].scrollHeight;
+		var page_height = $scrolling_elem[0].clientHeight;
+		var destination = full_height - page_height;
+		if ($scrolling_elem.scrollTop() < destination)
+			smoothScrollTo(destination);
 	}).on('keydown', function(e) {
 		switch (e.keyCode) {
 			case 34: case 33:
@@ -724,8 +742,8 @@ function cutStream() {
 }
 
 function computePosition(data) {
-	var left = parseInt(($body[0].clientWidth - data.width) / 2);
-	var top = parseInt(($body[0].clientHeight - data.height) / 2);
+	var left = parseInt(($body[0].clientWidth - data.width) / 2, 10);
+	var top = parseInt(($body[0].clientHeight - data.height) / 2, 10);
 	data.left = Math.max(0, left);
 	data.top = Math.max(0, top);
 	for (var key in data) {
@@ -774,8 +792,8 @@ function showPicture(img_url) {
 		if ($picture[0].naturalWidth > 400) {
 			$picture.css('width', '400px');
 		}
-		var width = parseInt($picture.css('width'));
-		var height = parseInt($picture.css('height'));
+		var width = parseInt($picture.css('width'), 10);
+		var height = parseInt($picture.css('height'), 10);
 		$picture.css(computePosition({
 			width: width / 2,
 			height: height / 2
@@ -802,8 +820,8 @@ function hidePicture() {
 	$scrolling_elem = $main;
 	var $picture = $('#picture');
 	$picture.animate(computePosition({
-		width: parseInt($picture.css('width')) / 2,
-		height: parseInt($picture.css('height')) / 2
+		width: parseInt($picture.css('width'), 10) / 2,
+		height: parseInt($picture.css('height'), 10) / 2
 	})({
 		opacity: 0
 	})).animate({
