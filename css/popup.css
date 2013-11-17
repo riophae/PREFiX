@@ -1019,6 +1019,14 @@ html.panel-mode #new-window {
 	border-bottom: 1px solid #ddd;
 	height: 21px;
 }
+#topic-selector {
+	position: absolute;
+	right: 415px;
+	top: 50%;
+	margin: 0;
+	-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
 #usage-tip {
 	position: absolute;
 	left: 400px;

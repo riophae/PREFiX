@@ -514,6 +514,7 @@ function unload() {
 		messages: [],
 		scrollTop: 0
 	};
+	PREFiX.keyword = '';
 	PREFiX.friends = [];
 	stopSavedSearches();
 	chrome.browserAction.setBadgeText({
@@ -813,6 +814,7 @@ var PREFiX = this.PREFiX = {
 	loaded: false,
 	interval: null,
 	current: 'tl_model',
+	keyword: '',
 	compose: {
 		text: '',
 		type: '',

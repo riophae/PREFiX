@@ -607,8 +607,12 @@ function initMainUI() {
 			goTop(e);
 		}
 		if ($main[0].scrollTop < 30) {
-			cutStream();
-			PREFiX.update();
+			if (PREFiX.current === 'searches_model') {
+				$('#topic-selector').trigger('change');
+			} else {
+				cutStream();
+				PREFiX.update();
+			}
 		}
 	});
 
@@ -919,7 +923,42 @@ function insertKeepScrollTop(insert) {
 
 function loadOldder() {
 	var model = getCurrent();
-	if (model.statuses) {
+	if (model === searches_model) {
+		var oldest_status = searches_model.statuses[searches_model.statuses.length - 1];
+		if (! oldest_status) return;
+		var $selector = $('#topic-selector');
+		var k = $selector.val();
+		if (k === '##PUBLIC_TIMELINE##') {
+			r.getPublicTimeline({
+				max_id: oldest_status.id
+			}).setupAjax({
+				lock: loadOldder,
+				send: function() {
+					loading = true;
+				},
+				oncomplete: function() {
+					loading = false;
+				}
+			}).next(function(statuses) {
+				push(searches_model.statuses, statuses);
+			});
+		} else {
+			r.searchPublicTimeline({
+				q: k,
+				max_id: oldest_status.id,
+			}).setupAjax({
+				lock: loadOldder,
+				send: function() {
+					loading = true;
+				},
+				oncomplete: function() {
+					loading = false;
+				}
+			}).next(function(statuses) {
+				push(searches_model.statuses, statuses);
+			});
+		}
+	} else if (model.statuses) {
 		var oldest_status = model.statuses[model.statuses.length - 1];
 		if (! oldest_status) return;
 		var id = oldest_status.id;
@@ -1115,6 +1154,12 @@ var nav_model = avalon.define('navigation', function(vm) {
 	vm.$watch('current', function(new_value, old_value) {
 		if (old_value == 'privatemsgs_model') {
 			composebar_model.type = '';
+		}
+		if (old_value == 'searches_model') {
+			$('#topic-selector').hide();
+		}
+		if (new_value == 'searches_model') {
+			$('#topic-selector').show();
 		}
 		window[old_value] && window[old_value].unload();
 		$('#navigation-bar li').removeClass('current');
@@ -1497,15 +1542,116 @@ var searches_model = avalon.define('saved-searches', function(vm) {
 
 	vm.showContextTimeline = showContextTimeline;
 
+	vm.keyword = PREFiX.keyword;
+
 	vm.statuses = [];
+});
+searches_model.$watch('keyword', function() {
+	PREFiX.keyword = searches_model.keyword;
 });
 searches_model.initialize = function() {
 	$('#navigation-bar .saved-searches').addClass('current');
 	$('#title h2').text('Discover');
 	$('#saved-searches').addClass('current');
 
-	this.interval = setInterval(function() {
-	}, 100);
+	function showPublicTimeline() {
+		searches_model.statuses = [];
+		r.getPublicTimeline().next(function(statuses) {
+			unshift(searches_model.statuses, statuses);
+		});
+	}
+
+	function search() {
+		var keyword = searches_model.keyword;
+		searches_model.statuses = [];
+		r.searchPublicTimeline({
+			q: keyword
+		}).next(function(statuses) {
+			unshift(searches_model.statuses, statuses);
+			lscache.set('saved-search-' + keyword + '-rawid', searches_model.statuses[0].rawid);
+			bg_win.saved_searches_items.some(function(item) {
+				if (item.keyword === searches_model.keyword) {
+					item.unread_count = 0;
+					return true;
+				}
+			});
+		});
+	}
+
+	function refreshCount() {
+		bg_win.saved_searches_items.some(function(item) {
+			$selector.find('option').each(function() {
+				var $item = $(this);
+				if ($item.val() === item.keyword) {
+					var text = item.keyword;
+					if (item.unread_count) {
+						text += ' (' + item.unread_count + ')'
+					}
+					if (text !== $item.text()) {
+						$item.text(text);
+					}
+				}
+			});
+		});
+	}
+
+	if (! $('#topic-selector').length) {
+		var public_tl_id = '##PUBLIC_TIMELINE##';
+
+		var $selector = $('<select />');
+		$selector.prop('id', 'topic-selector');
+
+		var $public_tl = $('<option />');
+		$public_tl.text('随便看看');
+		$public_tl.prop('value', public_tl_id);
+		$selector.append($public_tl);
+
+		bg_win.saved_searches_items.some(function(item) {
+			var $item = $('<option />');
+			$item.val(item.keyword);
+			$item.text(item.keyword);
+			$selector.append($item);
+		});
+
+		$selector.val(public_tl_id);
+		$selector.appendTo('#title');
+
+		$selector.on('change', function(e) {
+			if (this.value === public_tl_id) {
+				searches_model.keyword = '';
+				showPublicTimeline();
+			} else {
+				searches_model.keyword = this.value;
+				search();
+			}
+		});
+
+		refreshCount();
+	}
+
+
+	var last = bg_win.saved_searches_items.some(function(item) {
+		if (item.keyword === searches_model.keyword) {
+			return !! item.unread_count;
+		}
+	});
+
+	var $selector = $('#topic-selector');
+	if (last) {
+		$selector.val(searches_model.keyword);
+	} else if (! last && bg_win.getSavedSearchStatusesCount()) {
+		bg_win.saved_searches_items.some(function(item) {
+			if (item.unread_count) {
+				$selector.val(item.keyword);
+				return true;
+			}
+		});
+	} else if (searches_model.keyword) {
+		$selector.val(searches_model.keyword);
+	}
+	$selector.trigger('change');
+
+	this.interval = setInterval(refreshCount, 100);
 }
 searches_model.unload = function() {
 	clearInterval(this.interval);
