@@ -152,8 +152,8 @@
 }
 @-webkit-keyframes slide-in-from-right-1 {
 	0% {
-		-webkit-transform: translateX(120px);
-		transform: translateX(120px);
+		-webkit-transform: translateX(160px);
+		transform: translateX(160px);
 	}
 	100% {
 		-webkit-transform: translateX(0);
@@ -162,8 +162,8 @@
 }
 @keyframes slide-in-from-right-1 {
 	0% {
-		-webkit-transform: translateX(120px);
-		transform: translateX(120px);
+		-webkit-transform: translateX(160px);
+		transform: translateX(160px);
 	}
 	100% {
 		-webkit-transform: translateX(0);
@@ -172,8 +172,8 @@
 }
 @-webkit-keyframes slide-in-from-right-2 {
 	0% {
-		-webkit-transform: translateX(80px);
-		transform: translateX(80px);
+		-webkit-transform: translateX(120px);
+		transform: translateX(120px);
 	}
 	100% {
 		-webkit-transform: translateX(0);
@@ -181,6 +181,16 @@
 	}
 }
 @keyframes slide-in-from-right-2 {
+	0% {
+		-webkit-transform: translateX(120px);
+		transform: translateX(120px);
+	}
+	100% {
+		-webkit-transform: translateX(0);
+		transform: translateX(0);
+	}
+}
+@-webkit-keyframes slide-in-from-right-3 {
 	0% {
 		-webkit-transform: translateX(80px);
 		transform: translateX(80px);
@@ -190,7 +200,17 @@
 		transform: translateX(0);
 	}
 }
-@-webkit-keyframes slide-in-from-right-3 {
+@keyframes slide-in-from-right-3 {
+	0% {
+		-webkit-transform: translateX(80px);
+		transform: translateX(80px);
+	}
+	100% {
+		-webkit-transform: translateX(0);
+		transform: translateX(0);
+	}
+}
+@-webkit-keyframes slide-in-from-right-4 {
 	0% {
 		-webkit-transform: translateX(40px);
 		transform: translateX(40px);
@@ -200,7 +220,7 @@
 		transform: translateX(0);
 	}
 }
-@keyframes slide-in-from-right-3 {
+@keyframes slide-in-from-right-4 {
 	0% {
 		-webkit-transform: translateX(40px);
 		transform: translateX(40px);
@@ -881,6 +901,11 @@ html.panel-mode #new-window {
 	background-image: url('/images/privatemsg.png');
 	-webkit-animation: slide-in-from-right-3 ease-in-out .4s;
 	animation: slide-in-from-right-3 ease-in-out .4s;
+}
+#navigation-bar li.saved-searches {
+	background-image: url('/images/list.png');
+	-webkit-animation: slide-in-from-right-4 ease-in-out .4s;
+	animation: slide-in-from-right-4 ease-in-out .4s;
 }
 #navigation-bar li .count {
 	display: none;

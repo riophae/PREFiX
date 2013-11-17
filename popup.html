@@ -76,6 +76,7 @@
           <li class="home-timeline" title="首页 (快捷键 1)" ms-click="showHomeTimeline"><span class="count"></span></li>
           <li class="mentions" title="提到我的 (快捷键 2)" ms-click="showMentions"><span class="count"></span></li>
           <li class="privatemsgs" title="私信 (快捷键 3)" ms-click="showPrivateMsgs"><span class="count"></span></li>
+          <li class="saved-searches" title="随便看看 & 关注的话题 (快捷键 4)" ms-click="showSavedSearches"><span class="count"></span></li>
         </ul>
       </div>
       <div id="compose-bar" ms-controller="composebar-textarea">
@@ -173,6 +174,37 @@
                 </div>
                 <div class="status-content" ms-html="message.fixedText"></div>
                 <div ms-if="!! message.in_reply_to" ms-html="message.in_reply_to && message.in_reply_to.text" class="in-reply-to-message"></div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <ul id="saved-searches" class="status-list fix" ms-controller="saved-searches" ms-each-status="statuses">
+          <li ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
+            <div class="status fix">
+              <div class="action-icons">
+                <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
+                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
+                <a ms-click="repost" class="repost" title="转发"></a>
+                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
+              </div>
+              <div class="avatar">
+                <a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
+                  <img ms-src="status.user.profile_image_url" />
+                </a>
+              </div>
+              <div class="content">
+                <div class="info fix">
+                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
+                  <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
+                  <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
+                </div>
+                <div class="status-content" ms-html="status.fixedText"></div>
+                <div class="photo" ms-if="!! status.photo">
+                  <img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+                </div>
+              </div>
+              <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
+                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息"></span>
               </div>
             </div>
           </li>

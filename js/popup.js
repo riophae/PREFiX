@@ -665,6 +665,9 @@ function initMainUI() {
 			case 51:
 				$link = $('#navigation-bar .privatemsgs');
 				break;
+			case 52:
+				$link = $('#navigation-bar .saved-searches');
+				break;
 			default:
 				return;
 		}
@@ -1094,6 +1097,13 @@ var nav_model = avalon.define('navigation', function(vm) {
 		PREFiX.current = vm.current = 'privatemsgs_model';
 		privatemsgs_model.initialize();
 	}
+	vm.showSavedSearches = function(e) {
+		if (loading) return;
+		if (vm.current == 'searches_model' && $main.scrollTop())
+			return goTop(e);
+		PREFiX.current = vm.current = 'searches_model';
+		searches_model.initialize();
+	}
 	vm.$watch('current', function(new_value, old_value) {
 		if (old_value == 'privatemsgs_model') {
 			composebar_model.type = '';
@@ -1465,6 +1475,31 @@ privatemsgs_model.initialize = function() {
 	this.interval = setInterval(check, 100);
 }
 privatemsgs_model.unload = function() {
+	clearInterval(this.interval);
+}
+
+var searches_model = avalon.define('saved-searches', function(vm) {
+	vm.remove = remove;
+
+	;[ 'reply', 'repost' ].forEach(function(type) {
+		vm[type] = generateMethod(type);
+	});
+
+	vm.toggleFavourite = toggleFavourite;
+
+	vm.showContextTimeline = showContextTimeline;
+
+	vm.statuses = [];
+});
+searches_model.initialize = function() {
+	$('#navigation-bar .saved-searches').addClass('current');
+	$('#title h2').text('Discover');
+	$('#saved-searches').addClass('current');
+
+	this.interval = setInterval(function() {
+	}, 100);
+}
+searches_model.unload = function() {
 	clearInterval(this.interval);
 }
 
