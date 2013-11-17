@@ -213,6 +213,75 @@ function detectFriendBirthday() {
 	});
 }
 
+var saved_searches_items = [];
+function initSavedSearches() {
+	stopSavedSearches();
+	function SavedSearchItem(q) {
+		this.keyword = q;
+		this.statuses = [];
+		this.unread_count = 0;
+		this.interval = setInterval(this.check.bind(this), 3 * 60 * 1000);
+		this.ajax = null;
+		this.check();
+	}
+	SavedSearchItem.prototype.check = function() {
+		if (this.ajax) {
+			this.ajax.cancel();
+		}
+		var self = this;
+		var q = this.keyword;
+		var last_status_id;
+		var last_read_status_rawid = lscache.get('saved-search-' + q + '-rawid');
+		if (this.statuses.length) {
+			last_status_id = this.statuses[0].id;
+		}
+		this.ajax = PREFiX.user.searchPublicTimeline({
+			q: q,
+			count: 60,
+			since_id: last_status_id
+		}).next(function(statuses) {
+			if (! statuses.length) return;
+			unshift(self.statuses, statuses);
+			if (! last_read_status_rawid) {
+				last_read_status_rawid = statuses[0].rawid;
+				lscache.set('saved-search-' + q + '-rawid', statuses[0].rawid)
+			}
+			self.unread_count = self.statuses.filter(function(s) {
+				return s.user.id !== PREFiX.account.id &&
+					s.rawid > last_read_status_rawid;
+			}).length;
+		});
+	}
+	SavedSearchItem.prototype.stop = function() {
+		if (this.ajax) {
+			this.ajax.cancel();
+		}
+		clearInterval(this.interval);
+	}
+	PREFiX.user.getSavedSearches().next(function(data) {
+		data.forEach(function(saved_search) {
+			saved_search = new SavedSearchItem(saved_search.query);
+			saved_searches_items.push(saved_search);
+		});
+	});
+	setTimeout(initSavedSearches, 60 * 60 * 1000);
+}
+
+function stopSavedSearches() {
+	saved_searches_items.forEach(function(item) {
+		item.stop();
+	});
+	saved_searches_items = [];
+}
+
+function getSavedSearchStatusesCount() {
+	var count = 0;
+	saved_searches_items.forEach(function(item) {
+		count += item.unread_count;
+	});
+	return count;
+}
+
 function createTab(url) {
 	ct.create({
 		url: url,
@@ -407,6 +476,7 @@ function load() {
 	init_data();
 	update();
 	loadFriends();
+	initSavedSearches();
 	chrome.omnibox.onInputStarted.addListener(onInputStarted);
 	chrome.omnibox.onInputChanged.addListener(onInputChanged);
 	chrome.omnibox.onInputEntered.addListener(onInputEntered);
@@ -445,6 +515,7 @@ function unload() {
 		scrollTop: 0
 	};
 	PREFiX.friends = [];
+	stopSavedSearches();
 	chrome.browserAction.setBadgeText({
 		text: ''
 	});
@@ -715,7 +786,8 @@ var settings = {
 		birthdayNoticeType: 'only_friends',
 		autoFlushCache: false,
 		zoomRatio: '1',
-		drawAttention: true
+		drawAttention: true,
+		showSavedSearchCount: true
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };

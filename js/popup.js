@@ -850,6 +850,7 @@ function checkCount() {
 	var $home_tl = $('#navigation-bar .home-timeline .count');
 	var $mentions = $('#navigation-bar .mentions .count');
 	var $privatemsgs = $('#navigation-bar .privatemsgs .count');
+	var $saved_searchs = $('#navigation-bar .saved-searches .count');
 	if (count.mentions) {
 		title_contents.push(count.mentions + ' @');
 		$mentions.text(count.mentions).fadeIn(120);
@@ -876,6 +877,13 @@ function checkCount() {
 		$home_tl.text(Math.min(buffered, 99)).fadeIn(120);
 	} else {
 		$home_tl.text('').fadeOut(120);
+	}
+	var search_statuses_count = bg_win.getSavedSearchStatusesCount();
+	if (search_statuses_count && PREFiX.settings.current.showSavedSearchCount) {
+		title_contents.push(search_statuses_count + ' 关注话题消息');
+		$saved_searchs.text(search_statuses_count).fadeIn(120);
+	} else {
+		$saved_searchs.text('').fadeOut(120);
 	}
 	var title = 'PREFiX';
 	if (title_contents.length) {
