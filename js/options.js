@@ -53,5 +53,6 @@ $(function() {
 		});
 		PREFiX.settings.save();
 		bg_win.detectFriendBirthday();
+		bg_win.initSavedSearches();
 	}
 });

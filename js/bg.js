@@ -250,6 +250,9 @@ function initSavedSearches() {
 				return s.user.id !== PREFiX.account.id &&
 					s.rawid > last_read_status_rawid;
 			}).length;
+			if (! settings.current.showSavedSearchCount) {
+				self.unread_count = 0;
+			}
 		});
 	}
 	SavedSearchItem.prototype.stop = function() {

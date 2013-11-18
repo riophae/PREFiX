@@ -883,7 +883,7 @@ function checkCount() {
 		$home_tl.text('').fadeOut(120);
 	}
 	var search_statuses_count = bg_win.getSavedSearchStatusesCount();
-	if (search_statuses_count && PREFiX.settings.current.showSavedSearchCount) {
+	if (search_statuses_count) {
 		title_contents.push(search_statuses_count + ' 关注话题消息');
 		$saved_searchs.text(search_statuses_count).fadeIn(120);
 	} else {
