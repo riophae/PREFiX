@@ -219,8 +219,8 @@ function initFixSize(width, height) {
 		size.height = Math.max(size.height, outerHeight);
 		resizeTo(size.width, size.height);
 		setTimeout(function() {
-			var _height = Math.max(outerHeight, target_height);
-			resizeBy(target_width - innerWidth, _height - outerHeight);
+			var _height = Math.max(innerHeight, target_height);
+			resizeBy(target_width - innerWidth, _height - innerHeight);
 			setTimeout(function() {
 				window.setViewHeight && setViewHeight(innerHeight / ratio);
 				fixing_size = false;
@@ -228,7 +228,7 @@ function initFixSize(width, height) {
 		}, 36);
 	}, 24);
 	setInterval(function() {
-		if (innerWidth !== target_width || innerHeight !== target_height)
+		if (innerWidth !== target_width || innerHeight < target_height)
 			onresize();
 	}, 250);
 }
