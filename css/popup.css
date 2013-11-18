@@ -854,13 +854,6 @@ html.panel-mode #new-window {
 	cursor: pointer;
 	opacity: 0;
 }
-#app:not(.on-top) #new-window {
-	opacity: 0 !important;
-	width: 0;
-	height: 0;
-	padding: 0;
-	overflow: hidden;
-}
 #top-bar:hover #new-window {
 	opacity: 1;
 }
