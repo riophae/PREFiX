@@ -33,8 +33,7 @@ var usage_tips = [
 	'如果您觉得字体太小, 可以在设置页启用<b>放大功能</b>. ',
 	'点击 PREFiX 回到页面顶部或刷新. ',
 	'在地址栏输入 f 按空格键, 然后输入内容即可直接发送消息. ',
-	'在上传图片窗口, 双击输入框发送. ',
-	'按 1/2/3 键在 首页/提到我的/私信 页面间切换. ',
+	'按 1/2/3/4 键在 首页/提到我的/私信/随便看看 页面间切换. ',
 	'左击上下文图标展开回复和转发, 右击显示上下文. ',
 	'右击消息中的图片小图, 将在新窗口打开大图. ',
 	'将鼠标指针放在用户头像上, 可以显示用户 ID. ',
@@ -203,6 +202,7 @@ function showUsageTip() {
 		return;
 	}
 	var pos = lscache.get('usage_tip_pos') || 0;
+	pos = Math.min(pos, usage_tips.length);
 	var tip = usage_tips[pos];
 	if (! tip) {
 		$('#usage-tip').remove();
