@@ -235,25 +235,27 @@ function initSavedSearches() {
 		if (this.statuses.length) {
 			last_status_id = this.statuses[0].id;
 		}
-		this.ajax = PREFiX.user.searchPublicTimeline({
-			q: q,
-			count: 60,
-			since_id: last_status_id
-		}).next(function(statuses) {
-			if (! statuses.length) return;
-			unshift(self.statuses, statuses);
-			if (! last_read_status_rawid) {
-				last_read_status_rawid = statuses[0].rawid;
-				lscache.set('saved-search-' + q + '-rawid', statuses[0].rawid)
-			}
-			self.unread_count = self.statuses.filter(function(s) {
-				return s.user.id !== PREFiX.account.id &&
-					s.rawid > last_read_status_rawid;
-			}).length;
-			if (! settings.current.showSavedSearchCount) {
-				self.unread_count = 0;
-			}
-		});
+		this.ajax = getDataSince(
+				'searchPublicTimeline',
+				last_status_id,
+				this,
+				{ q: q }
+			).next(function(statuses) {
+				if (! statuses.length) return;
+				unshift(self.statuses, statuses);
+				if (! last_read_status_rawid) {
+					last_read_status_rawid = statuses[0].rawid;
+					lscache.set('saved-search-' + q + '-rawid', statuses[0].rawid)
+				}
+				if (! settings.current.showSavedSearchCount) {
+					self.unread_count = 0;
+				} else {
+					self.unread_count = self.statuses.filter(function(s) {
+							return s.user.id !== PREFiX.account.id &&
+								s.rawid > last_read_status_rawid;
+						}).length;
+				}
+			});
 	}
 	SavedSearchItem.prototype.stop = function() {
 		if (this.ajax) {
@@ -300,7 +302,7 @@ function closeWindow(id) {
 	chrome.windows.remove(id);
 }
 
-function getDataSince(method, since_id, lock) {
+function getDataSince(method, since_id, lock, extra_data) {
 	if (lock) {
 		if (lock._ajax_active_) {
 			return new Deferred;
@@ -309,19 +311,26 @@ function getDataSince(method, since_id, lock) {
 	}
 
 	var d = new Deferred;
-	var statuses = [];
+	var list = [];
 	var get = PREFiX.user[method].bind(PREFiX.user);
 	var count = 60;
 
+	var data = extra_data || { };
+	if (since_id) {
+		data.since_id = since_id;
+	}
+	data.count = count;
+
 	function getBetween() {
-		return get({
-				max_id: statuses[ statuses.length - 1 ].id,
-				since_id: since_id,
-				count: count
-			}).next(function(data) {
-				push(statuses, data);
+		if (! since_id) {
+			d.call(list);
+			return;
+		}
+		data.max_id = list[ list.length - 1 ].id;
+		return get(data).next(function(data) {
+				push(list, data);
 				if (data.length < count) {
-					d.call(statuses);
+					d.call(list);
 				} else {
 					getBetween();
 				}
@@ -330,13 +339,10 @@ function getDataSince(method, since_id, lock) {
 			});
 	}
 
-	get({
-		since_id: since_id,
-		count: count
-	}).next(function(data) {
-		statuses = fixStatusList(data);
+	get(data).next(function(data) {
+		list = fixStatusList(data);
 		if (data.length < count) {
-			d.call(statuses);
+			d.call(list);
 		} else {
 			getBetween();
 		}
