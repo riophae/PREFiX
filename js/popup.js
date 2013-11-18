@@ -928,21 +928,7 @@ function loadOldder() {
 		if (! oldest_status) return;
 		var $selector = $('#topic-selector');
 		var k = $selector.val();
-		if (k === '##PUBLIC_TIMELINE##') {
-			r.getPublicTimeline({
-				max_id: oldest_status.id
-			}).setupAjax({
-				lock: loadOldder,
-				send: function() {
-					loading = true;
-				},
-				oncomplete: function() {
-					loading = false;
-				}
-			}).next(function(statuses) {
-				push(searches_model.statuses, statuses);
-			});
-		} else {
+		if (k !== '##PUBLIC_TIMELINE##') {
 			r.searchPublicTimeline({
 				q: k,
 				max_id: oldest_status.id,
@@ -1555,13 +1541,16 @@ searches_model.initialize = function() {
 	$('#saved-searches').addClass('current');
 
 	function showPublicTimeline() {
+		$('#loading').show();
 		searches_model.statuses = [];
 		r.getPublicTimeline().next(function(statuses) {
 			unshift(searches_model.statuses, statuses);
+			$('#loading').hide();
 		});
 	}
 
 	function search() {
+		$('#loading').show();
 		var keyword = searches_model.keyword;
 		searches_model.statuses = [];
 		r.searchPublicTimeline({
