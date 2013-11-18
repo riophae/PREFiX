@@ -797,6 +797,10 @@ var settings = {
 			current[key] = local_settings[key] === undefined ?
 				settings.default[key] : local_settings[key];
 		}
+		if (current.zoomRatio === '1.11') {
+			current.zoomRatio = '1.125';
+			settings.save();
+		}
 	},
 	save: function() {
 		lscache.set('settings', settings.current);

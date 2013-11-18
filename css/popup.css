@@ -927,6 +927,7 @@ html.panel-mode #new-window {
 	position: absolute;
 	left: 0;
 	top: 35px;
+	overflow: hidden;
 }
 #compose-bar textarea {
 	width: 370px;
