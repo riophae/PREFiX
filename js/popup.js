@@ -1547,7 +1547,9 @@ searches_model.initialize = function() {
 	function showPublicTimeline() {
 		$('#loading').show();
 		searches_model.statuses = [];
-		r.getPublicTimeline().next(function(statuses) {
+		r.getPublicTimeline({
+			count: 60
+		}).next(function(statuses) {
 			unshift(searches_model.statuses, statuses);
 			$('#loading').hide();
 		});
