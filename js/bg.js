@@ -297,6 +297,63 @@ function closeWindow(id) {
 	chrome.windows.remove(id);
 }
 
+function getDataSince(method, since_id, lock) {
+	if (lock) {
+		if (lock._ajax_active_) {
+			return new Deferred;
+		}
+		lock._ajax_active_ = true;
+	}
+
+	var d = new Deferred;
+	var statuses = [];
+	var get = PREFiX.user[method].bind(PREFiX.user);
+	var count = 60;
+
+	function getBetween() {
+		return get({
+				max_id: statuses[ statuses.length - 1 ].id,
+				since_id: since_id,
+				count: count
+			}).next(function(data) {
+				push(statuses, data);
+				if (data.length < count) {
+					d.call(statuses);
+				} else {
+					getBetween();
+				}
+			}).error(function(err) {
+				d.fail(err);
+			});
+	}
+
+	get({
+		since_id: since_id,
+		count: count
+	}).next(function(data) {
+		statuses = fixStatusList(data);
+		if (data.length < count) {
+			d.call(statuses);
+		} else {
+			getBetween();
+		}
+	}).error(function(err) {
+		d.fail(err);
+	});
+
+	return d.error(function(err) {
+			if (lock) {
+				delete lock._ajax_active_;
+			}
+			throw err;
+		}).next(function(data) {
+			if (lock) {
+				delete lock._ajax_active_;
+			}
+			return data;
+		});
+}
+
 function updateTitle() {
 	var need_notify = false;
 	var title = [ 'PREFiX' ];
@@ -358,35 +415,32 @@ function update(retry_chances, new_status_id) {
 	});
 
 	if (newest_status) {
-		deferred_new = PREFiX.user.getHomeTimeline({
-			since_id: newest_status.id
-		}).setupAjax({
-			lock: update
-		}).next(function(statuses) {
-			if (retry_chances) {
-				var new_status_found = statuses.some(function(s) {
-					return s.id === new_status_id;
-				});
-				if (! new_status_found) {
-					setTimeout(function() {
-						update(--retry_chances, new_status_id);
+		deferred_new = getDataSince('getHomeTimeline', newest_status.id, update).
+			next(function(statuses) {
+				if (retry_chances) {
+					var new_status_found = statuses.some(function(s) {
+						return s.id === new_status_id;
 					});
-				}
-			}
-			unshift(tl.buffered, statuses);
-			if (! settings.current.autoFlushCache)
-				return;
-			if (! PREFiX.popupActive && tl.scrollTop < 30) {
-				var buffered_count = tl.buffered.length;
-				var read_count = tl.statuses.length;
-				if (buffered_count + read_count > 20) {
-					tl.statuses.splice(Math.max(0, 20 - buffered_count));
-					if (buffered_count > 20) {
-						tl.buffered.splice(20);
+					if (! new_status_found) {
+						setTimeout(function() {
+							update(--retry_chances, new_status_id);
+						});
 					}
 				}
-			}
-		});
+				unshift(tl.buffered, statuses);
+				if (! settings.current.autoFlushCache)
+					return;
+				if (! PREFiX.popupActive && tl.scrollTop < 30) {
+					var buffered_count = tl.buffered.length;
+					var read_count = tl.statuses.length;
+					if (buffered_count + read_count > 20) {
+						tl.statuses.splice(Math.max(0, 20 - buffered_count));
+						if (buffered_count > 20) {
+							tl.buffered.splice(20);
+						}
+					}
+				}
+			});
 	}
 	var deferred_notification = PREFiX.user.getNotification().next(function(data) {
 		PREFiX.previous_count = PREFiX.count;
@@ -815,6 +869,7 @@ var PREFiX = this.PREFiX = {
 	initialize: initialize,
 	reset: reset,
 	update: update,
+	getDataSince: getDataSince,
 	loaded: false,
 	interval: null,
 	current: 'tl_model',

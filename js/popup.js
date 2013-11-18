@@ -1398,14 +1398,16 @@ mentions_model.initialize = function() {
 	}
 
 	function update() {
-		var data = { };
+		var ajax;
 		if (mentions.statuses.length) {
 			var statuses = fixStatusList(mentions.statuses);
-			data.since_id = statuses[0].id;
+			ajax = PREFiX.getDataSince('getMentions', statuses[0].id, update);
+		} else {
+			ajax = r.getMentions().setupAjax({
+				lock: update
+			});
 		}
-		r.getMentions(data).setupAjax({
-			lock: update
-		}).next(function(statuses) {
+		ajax.next(function(statuses) {
 			if (mentions_model.statuses.length) {
 				insertKeepScrollTop(function() {
 					unshift(mentions_model.statuses, statuses);
@@ -1485,14 +1487,16 @@ privatemsgs_model.initialize = function() {
 	}
 
 	function update() {
-		var data = { };
+		var ajax;
 		if (privatemsgs.messages.length) {
 			var messages = fixStatusList(privatemsgs.messages);
-			data.since_id = messages[0].id;
+			ajax = PREFiX.getDataSince('showInbox', messages[0].id, update);
+		} else {
+			ajax = r.showInbox().setupAjax({
+				lock: update
+			});
 		}
-		r.showInbox(data).setupAjax({
-			lock: update
-		}).next(function(messages) {
+		ajax.next(function(messages) {
 			if (privatemsgs_model.messages.length) {
 				insertKeepScrollTop(function() {
 					unshift(privatemsgs_model.messages, messages);
