@@ -892,6 +892,8 @@ body.show-context-timeline #context-timeline {
 }
 #context-timeline ul li .avatar {
 	float: left;
+}
+#context-timeline ul li .avatar img {
 	width: 48px;
 	height: 48px;
 }
