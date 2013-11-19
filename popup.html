@@ -50,7 +50,7 @@
     </div>
   	<div id="context-timeline">
   		<ul ms-controller="context-timeline" ms-each-status="statuses">
-  			<li class="fix">
+        <li class="fix" ms-class-protected="status.user.protected">
           <div class="avatar">
             <a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
               <img ms-src="status.user.profile_image_url_large" />

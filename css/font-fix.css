@@ -4,6 +4,18 @@
 	font-weight: normal;
 	font-style: normal;
 }
+#context-timeline ul li .timestamp-client {
+	height: 15px;
+}
+[platform="linux"] #context-timeline ul li.protected .timestamp-client {
+	background-position: right 5px !important;
+}
+[platform="mac"] #context-timeline ul .content .timestamp-client {
+	line-height: 20px;
+}
+[platform="mac"] #context-timeline ul li.protected .timestamp-client {
+	background-position: right 7px !important;
+}
 .status-list li .timestamp-client {
 	height: 15px;
 }
