@@ -558,6 +558,12 @@ b {
 	-webkit-transform: translateX(-50%);
 	z-index: 9999;
 }
+#birthday-cake span {
+	width: 256px;
+	height: 256px;
+	display: block;
+	background: url('/images/birthday-cake.png');
+}
 #follow-author {
 	z-index: 99;
 	position: fixed;
@@ -784,6 +790,11 @@ body.show-context-timeline #context-timeline {
 }
 #context-timeline ul li .status-content a {
 	text-decoration: underline !important;
+}
+#context-timeline ul li .status-content a[href^="https"]::before {
+	content: url('/images/protected.png');
+	margin: 0 5px;
+	pointer-events: none;
 }
 #context-timeline ul li .photo img {
 	margin-top: 3px;

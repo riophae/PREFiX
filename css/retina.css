@@ -1,0 +1,78 @@
+#birthday-cake span {
+	background-image: url('/images/birthday-cake@2x.png');
+	background-size: 256px;
+}
+#context-timeline ul li .status-content a[href^="https"]::before,
+.status-list .status-content a[href^="https"]::before {
+	content: url('/images/protected@2x.png');
+	zoom: .5;
+}
+#header {
+	background-image: url('/images/header-bg@2x.png');
+	background-size: 400px 45px;
+}
+h1 b {
+	background-image: url('/images/logo@2x.png');
+	background-size: 92px 24px;
+}
+#back-to-top {
+	background-image: url('/images/back-to-top@2x.png');
+	background-size: 16px;
+	margin-bottom: -9px;
+}
+#new-window {
+	background-image: url('/images/new-window@2x.png');
+	background-size: 16px;
+}
+#navigation-bar li.home-timeline {
+	background-image: url('/images/home@2x.png');
+	background-size: 24px;
+}
+#navigation-bar li.mentions {
+	background-image: url('/images/mentions@2x.png');
+	background-size: 24px;
+}
+#navigation-bar li.privatemsgs {
+	background-image: url('/images/privatemsg@2x.png');
+	background-size: 24px;
+}
+#navigation-bar li.saved-searches {
+	background-image: url('/images/list@2x.png');
+	background-size: 24px;
+}
+#uploading-photo {
+	background-size: 25px 38px;
+	background-image: url('/images/uploading-photo@2x.png');
+}
+.status-list li:hover {
+	background-image: url('/images/status-bg@2x.png');
+	background-size: 100px;
+}
+.status-list li .action-icons .remove {
+	background-image: url('/images/remove@2x.png');
+	background-size: 36px 68px;
+}
+.status-list li .action-icons .reply {
+	background-image: url('/images/reply@2x.png');
+	background-size: 36px 68px;
+}
+.status-list li .action-icons .repost {
+	background-image: url('/images/repost@2x.png');
+	background-size: 36px 68px;
+}
+.status-list li .action-icons .favourite {
+	background-image: url('/images/favourite@2x.png');
+	background-size: 36px 102px;
+}
+.status-list .context span {
+	background-image: url('/images/conversation@2x.png');
+	background-size: 22px 36px;
+}
+.status-list li.protected .timestamp-client {
+	background-image: url('/images/protected@2x.png');
+	background-size: 9px 10px;
+}
+#donation {
+	background-image: url('/images/donate@2x.png');
+	background-size: 16px;
+}

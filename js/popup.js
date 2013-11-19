@@ -404,6 +404,10 @@ function initMainUI() {
 	var ratio = +PREFiX.settings.current.zoomRatio;
 	if (ratio !== 1 && is_panel_mode) {
 		$body.css('zoom', ratio);
+		$('<link />').
+		prop('rel', 'stylesheet').
+		prop('href', 'css/retina.css').
+		appendTo('head');
 		if (ratio > 1.4) {
 			$('h2').css('letter-spacing', '.5px');
 		}
