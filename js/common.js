@@ -199,10 +199,11 @@ function getDefaultWindowSize(width, height) {
 	var ratio = +PREFiX.settings.current.zoomRatio;
 	width = Math.round(width * ratio);
 	height = Math.round(height * ratio);
-	return PREFiX.is_mac ? {
-		width: width, height: height + 36
-	} : {
-		width: width + 16, height: height + 38
+	var delta_x = lscache.get('delta_x') || outerWidth - innerWidth;
+	var delta_y = lscache.get('delta_x') || outerHeight - innerHeight;
+	return {
+		width: width + delta_x,
+		height: height + delta_y
 	};
 }
 
@@ -222,6 +223,8 @@ function initFixSize(width, height) {
 			var _height = Math.max(innerHeight, target_height);
 			resizeBy(target_width - innerWidth, _height - innerHeight);
 			setTimeout(function() {
+				lscache.set('delta_x', outerWidth - innerWidth);
+				lscache.set('delta_y', outerHeight - innerHeight);
 				window.setViewHeight && setViewHeight(innerHeight / ratio);
 				fixing_size = false;
 			}, 48);
