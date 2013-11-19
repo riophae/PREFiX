@@ -28,19 +28,20 @@
     <div id="birthday-cake" class="fix">
       <span title="生日快乐! :)"></span>
     </div>
-    <div id="follow-author" class="fix">
-      <div id="author-avator"><a href="http://fanfou.com/ruif" target="_blank"><img src="images/avatar.png" /></a></div>
+    <div id="follow-author" class="fix notify-box">
+      <div id="author-avator"><a href="http://fanfou.com/ruif" target="_blank"></a></div>
       <div id="follow-tip">
         <p>您是否想要关注 <a href="https://github.com/riophae/PREFiX" target="_blank">PREFiX</a> 的作者 <a href="http://fanfou.com/ruif" target="_blank">@锐风</a> ?</p>
-        <p><a id="confirm-following">是</a> / <a id="deny-following">否</a></p>
+        <div class="buttons"><a class="confirm-btn" id="confirm-following">好的</a><br /><a class="reject-btn" id="deny-following">不</a></div>
       </div>
     </div>
-    <div id="rating-tip" class="fix">
-      <p>您是否愿意为 PREFiX 评分?<span id="rating-links"><a id="show-rating-page">是</a> / <a id="hide-rating-tip">否</a></span></p>
-    </div>
-    <div id="birthday-tip" class="fix">
+    <div id="rating-tip" class="fix notify-box">
+      <p>您是否愿意为 PREFiX 评分?</p>
+      <div class="buttons"><a class="confirm-btn" id="show-rating-page">好的</a><br /><a class="reject-btn" id="hide-rating-tip">不用了</a></div>
+   </div>
+    <div id="birthday-tip" class="fix notify-box">
       <p>今天是 <span id="birthday-friend-list"></span> 的生日, 快去送上生日祝福吧! </p>
-      <p style="margin-top: 5px;"><a id="send-birthday-message">是</a> / <a id="hide-birthday-tip">否</a></p>
+      <div class="buttons"><a class="confirm-btn" id="send-birthday-message">好的</a><br /><a class="reject-btn" id="hide-birthday-tip">不用了</a></div>
     </div>
     <div id="notification"></div>
     <div id="picture-overlay">

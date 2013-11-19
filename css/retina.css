@@ -2,6 +2,14 @@
 	background-image: url('/images/birthday-cake@2x.png');
 	background-size: 256px;
 }
+#author-avator a {
+	background-image: url('/images/avatar@2x.png');
+	background-size: 48px;
+}
+#birthday-tip p {
+	background-image: url('/images/birthday-gift@2x.png');
+	background-size: 48px;
+}
 #context-timeline ul li .status-content a[href^="https"]::before,
 .status-list .status-content a[href^="https"]::before {
 	content: url('/images/protected@2x.png');
