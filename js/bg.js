@@ -867,6 +867,16 @@ var settings = {
 	},
 	save: function() {
 		lscache.set('settings', settings.current);
+	},
+	onSettingsUpdated: function() {
+		detectFriendBirthday();
+		initSavedSearches();
+		chrome.extension.getViews().forEach(function(view) {
+			if (view.location.pathname === '/popup.html' &&
+				view.location.search === '?new_window=true') {
+				view.location.reload();
+			}
+		});
 	}
 };
 
