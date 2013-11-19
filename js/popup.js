@@ -573,6 +573,10 @@ function initMainUI() {
 
 	$main = $scrolling_elem = $('#main');
 
+	$main[0].onscroll = function(e) {
+		this.scrollLeft = 0;
+	}
+
 	$main.scroll(_.throttle(function(e) {
 		var scroll_top = $main.scrollTop();
 		getCurrent().scrollTop = scroll_top;
