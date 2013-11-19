@@ -803,18 +803,20 @@ Ripple.events.observe('process_status', function(status) {
 	var created_at = status.created_at;
 	status.fullTime = getFullTime(created_at);
 
-	status.source = $temp.html(status.source).text();
-	status.source = ({
-		'网页': 'Web',
-		'手机上网': 'Wap',
-		'iPhone版': 'iPhone'
-	})[status.source] || status.source;
-	status.source = status.source.replace('客户端', '');
-	status.source = status.source.replace(/[a-zA-Z0-0]+/g, function(en) {
-		return '<span class="en">' + en + '</span>'
-	}).replace(chs_re, function(chs) {
-		return '<span class="chs">' + chs + '</span>';
-	});
+	if (status.source) {
+		status.source = $temp.html(status.source).text();
+		status.source = ({
+			'网页': 'Web',
+			'手机上网': 'Wap',
+			'iPhone版': 'iPhone'
+		})[status.source] || status.source;
+		status.source = status.source.replace('客户端', '');
+		status.source = status.source.replace(/[a-zA-Z0-0]+/g, function(en) {
+			return '<span class="en">' + en + '</span>'
+		}).replace(chs_re, function(chs) {
+			return '<span class="chs">' + chs + '</span>';
+		});
+	}
 
 	var html = status.text;
 	$temp.html(html);
@@ -836,6 +838,10 @@ Ripple.events.observe('process_status', function(status) {
 			img.src = '';
 			delete img;
 		});
+	}
+
+	if (status.repost_status) {
+		arguments.callee.call(this, status.repost_status);
 	}
 });
 
