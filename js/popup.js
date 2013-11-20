@@ -1184,7 +1184,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			e.preventDefault && e.preventDefault();
 		}
 		var value = $textarea.val();
-		if (! value || vm.submitting) return;
+		if ((! value && ! PREFiX.image) || vm.submitting) return;
 		if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
 			vm.submitting = true;
 			showNotification('正在提交..');
