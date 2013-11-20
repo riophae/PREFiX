@@ -2,17 +2,11 @@ $(function() {
 	var ce = chrome.extension;
 	var bg_win = ce.getBackgroundPage();
 	var PREFiX = bg_win.PREFiX;
-	var account = PREFiX.account || {
-		profile_image_url_large: '/images/unknown-user.jpg'
-	};
+	var lscache = bg_win.lscache;
 
-	$('#avatar img').prop('src', account.profile_image_url_large).prop('title', account.name);
-	$('#switchAccount').click(function(e) {
+	$('#switch-account').click(function(e) {
 		PREFiX.reset();
 		close();
-	});
-	$('#setCustomConsumer').click(function(e) {
-		location.href = '/set-custom-consumer.html';
 	});
 	$('#version').text(PREFiX.version);
 
@@ -32,9 +26,49 @@ $(function() {
 		}
 	});
 
-	if (! PREFiX.account) {
-		$('#switchAccount').text('登入账号');
+	if (PREFiX.account) {
+		$('#username').
+		text('@' + PREFiX.account.name + ' (' + PREFiX.account.id + ')').
+		prop('href', 'http://fanfou.com/' + PREFiX.account.id);
+	} else {
+		$('#user-info').text('您还没有登录饭否账号，请点击下面的按钮继续。')
+		$('#switch-account').text('登入账号');
 	}
+
+	var last_used_page = lscache.get('last_used_page') || 0;
+	$('#navbar li').each(function(i) {
+		var $item = $(this);
+		$item.click(function(e) {
+			$('#navbar li').removeClass('current');
+			$('.page').removeClass('current');
+			$item.addClass('current');
+			var page = $item.prop('id') + '-page';
+			$('#' + page).addClass('current');
+			lscache.set('last_used_page', i);
+		});
+	}).eq(last_used_page).click();
+
+	var custom_consumer = lscache.get('custom_consumer');
+	if (custom_consumer) {
+		$('#key').val(custom_consumer.key);
+		$('#secret').val(custom_consumer.secret);
+	}
+	$('#set-consumer').click(function(e) {
+		var key = $('#key').val().trim();
+		var secret = $('#secret').val().trim();
+		if (! key || ! secret) return;
+		if (key === custom_consumer.key ||
+			secret === custom_consumer.secret) {
+			alert('您已经成功设置了尾巴, 不需要重复设置. :)');
+			return;
+		}
+		bg_win.enableCustomConsumer(key, secret);
+	});
+	$('#reset-consumer').click(function(e) {
+		bg_win.disableCustomConsumer();
+		location.reload();
+	});
+
 
 	onunload = function(e) {
 		$('[key]').each(function() {

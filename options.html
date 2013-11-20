@@ -4,54 +4,115 @@
 		<meta charset="utf-8">
 		<title>PREFiX - 选项</title>
 		<link id="favicon" rel="shortcut icon" type="image/png" sizes="16x16" href="/icons/16.png" />
-		<link rel="stylesheet" href="css/fonts.css"/>
 		<link rel="stylesheet" href="css/options.css"/>
+		<link rel="stylesheet" href="css/chrome-shared.css"/>
 		<script src="js/lib/jquery-min.js"></script>
 		<script src="js/options.js"></script>
 	</head>
 	<body>
 	<div id="wrapper">
-		<div id="settings">
-			<div id="account">
-				<div id="avatar">
-					<img />
-				</div>
-				<div>
-					<button id="switchAccount">切换账号</button>
-					<button id="setCustomConsumer">自定义尾巴</button>
-				</div>
-			</div>
-			<ul>
-				<li><label><input type="checkbox" key="playSound" />有新的未读 @ 消息或未读私信时播放提示音</label></li>
-				<li>
-					<label>
-						<input type="checkbox" key="birthdayNotice" />好友生日提醒
-					</label>
-					<select key="birthdayNoticeType" type="select">
-						<option value="only_friends">仅我关注的人</option>
-						<option value="friends_and_followers">我关注的人和粉丝</option>
-					</select>
-				</li>
-				<li><label><input type="checkbox" key="autoFlushCache" />自动抛弃较旧的消息 (改善性能, 当关注的人较多时建议启用)</label></li>
-				<li><label><input type="checkbox" key="drawAttention" />TL 有新消息时闪烁任务栏图标 (关闭后有新@时仍会闪烁)</label></li>
-				<li><label><input type="checkbox" key="showSavedSearchCount" />关注的话题有新消息时在图标上显示数字</label></li>
-				<li><label><input type="checkbox" key="smoothScroll" />启用平滑滚动</label></li>
-				<li>
-					<label>放大比率
-						<select key="zoomRatio" type="select">
-							<option value="1">100%</option>
-							<option value="1.125">110%</option><!-- 放大 111% 解决放大 110% 时页面元素抖动的 bug -->
-							<option value="1.25">125%</option>
-							<option value="1.5">150%</option>
-						</select>
-						(仅独立窗口模式有效)
-					</label>
-				</li>
+		<div id="navbar-container">
+			<h1>PREFiX</h1>
+			<ul id="navbar">
+				<li id="basics" class="navbar-item navbar-item-selected">基本设置</li>
+				<li id="advanced" class="navbar-item">高级设置</li>
+				<li id="about" class="navbar-item">关于</li>
+				<li id="usage-tip" style="margin-top: 26px;">使用技巧</li>
 			</ul>
 		</div>
-		<div id="about">
-			PREFiX v<span id="version"></span>. Powered by <a href="https://github.com/riophae/Ripple" target="_blank">Ripple</a>.<br />
-			Logo designed by <a href="http://fanfou.com/anegie" target="_blank">@Kevin</a>.
+		<div id="mainview">
+			<div id="mainview-content">
+				<div id="page-container">
+					<div id="basics-page" class="page">
+						<header>
+							<h2>基本设置</h2>
+						</header>
+						<ul>
+							<h3>账号</h3>
+							<li><span id="user-info">您已以 <a target="_blank" id="username"></a> 的身份登录。</span><br /><button id="switch-account">切换到另一个账号…</button></li>
+						</ul>
+						<ul>
+							<h3>界面</h3>
+							<li>
+								<label><input type="checkbox" key="smoothScroll" />启用平滑滚动</label>
+							</li>
+							<li>
+								<label>放大比率
+									<select key="zoomRatio" type="select">
+										<option value="1">100%</option>
+										<option value="1.125">110%</option><!-- 放大 111% 解决放大 110% 时页面元素抖动的 bug -->
+										<option value="1.25">125%</option>
+										<option value="1.5">150%</option>
+									</select>
+									仅独立窗口模式有效
+								</label>
+							</li>
+						</ul>
+						<ul>
+							<h3>提醒</h3>
+							<li>
+								<label><input type="checkbox" key="playSound" />有新的未读 @ 消息或未读私信时播放提示音</label>
+							</li>
+							<li>
+								<label><input type="checkbox" key="drawAttention" />Timeline 上有新消息时闪烁任务栏图标 (禁用后有新@和私信时仍会闪烁)</label>
+							</li>
+							<li>
+								<label><input type="checkbox" key="showSavedSearchCount" />关注的话题有新消息时在图标上显示统计数字</label>
+							</li>
+							<li>
+								<label>
+									<input type="checkbox" key="birthdayNotice" />好友生日提醒
+								</label>
+								<select key="birthdayNoticeType" type="select">
+									<option value="only_friends">仅我关注的人</option>
+									<option value="friends_and_followers">我关注的人和粉丝</option>
+								</select>
+							</li>
+						</ul>
+					</div>
+					<div id="advanced-page" class="page">
+						<header>
+							<h2>高级设置</h2>
+						</header>
+						<ul>
+							<h3>内部处理规则</h3>
+							<li><label><input type="checkbox" key="autoFlushCache" />自动抛弃缓存中较旧的数据</li>
+							<li>可以改善性能, 但仅建议当关注的人较多时启用。</li>
+						</ul>
+						<ul id="custom-consumer">
+							<h3>自定义尾巴 (修改“通过…发送”字样)</h3>
+							<li>关于设置尾巴的详细步骤请参考<a href="https://github.com/riophae/PREFiX/wiki/PREFiX-自定义尾巴的详细步骤" target="_blank">这里</a>。</li>
+							<li>您可以直接在<a href="http://fanfou.com/apps" target="_blank">应用管理页面</a>设置尾巴，前提是您已经成功创建了应用。</li>
+							<li><span>Consumer Key:</span><input type="text" id="key" /></li>
+							<li><span>Consumer Secret:</span><input type="text" id="secret" /></li>
+							<li><button id="set-consumer">设置尾巴</button> <button id="reset-consumer">恢复默认尾巴</button></li>
+						</ul>
+					</div>
+					<div id="about-page" class="page">
+						<header>
+							<h2>关于</h2>
+						</header>
+						<ul id="about-prefix">
+							<h4>PREFiX</h4>
+							<li>简洁、易用的 Chrome 饭否客户端</li>
+						</ul>
+						<ul>
+							<li>版本 <span id="version"></span></li>
+							<li>作者 <a href="http://fanfou.com/ruif" target="_blank">@锐风</a></li>
+							<li>基于开源项目 <a href="https://github.com/riophae/Ripple" target="_blank">Ripple</a> 开发。</li>
+							<li>感谢 <a href="http://fanfou.com/anegie" target="_blank">@太空小孩</a> 为 <a href="https://github.com/riophae/PREFiX" target="_blank">PREFiX</a> 设计了精致的 Logo。</li>
+						</ul>
+						<ul>
+							<li>如果您喜欢 PREFiX, 请考虑 <a href="https://me.alipay.com/riophae" target="_blank" title="感谢你的点击! :)">捐助作者</a> 让它变得更好更强大!</li>
+						</ul>
+					</div>
+					<div id="usage-tip-page" class="page">
+						<header>
+							<h2>使用技巧</h2>
+						</header>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	</body>
