@@ -100,6 +100,14 @@ var getFullTime = Ripple.helpers.generateTimeFormater(function(table) {
 	];
 });
 
+var getYMD = Ripple.helpers.generateTimeFormater(function(table) {
+	return [
+		function(c) {
+			return c._yr() + '-' + c._ms(2) + 　 '-' + c._d(2);
+		}
+	];
+});
+
 function fixStatusList(statuses) {
 	statuses.forEach(function(status) {
 		status.relativeTime = getRelativeTime(status.created_at);

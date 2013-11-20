@@ -773,6 +773,14 @@ function hideNotification(notification) {
 	}
 }
 
+function getStatusCount() {
+	return lscache.get('status_count') || 0;
+}
+
+function getPhotoCount() {
+	return lscache.get('photo_count') || 0;
+}
+
 var playSound = (function() {
 	var audio = new Audio;
 	audio.src = 'dongdong.mp3';
@@ -844,6 +852,22 @@ Ripple.events.observe('process_status', function(status) {
 		arguments.callee.call(this, status.repost_status);
 	}
 });
+
+Ripple.events.addGlobalObserver('after', function(data, e) {
+	if (! e || e.type !== 'after.ajax_success')
+		return;
+	e = e.srcEvent;
+	if (! e) return;
+	if (e.url === 'http://api.fanfou.com/statuses/update.json') {
+		lscache.set('status_count', getStatusCount() + 1);
+	} else if (e.url === 'http://api.fanfou.com/photos/upload.json') {
+		lscache.set('photo_count', getPhotoCount() + 1);
+	}
+});
+
+if (! lscache.get('install_time')) {
+	lscache.set('install_time', Date.now());
+}
 
 var is_mac = navigator.platform.indexOf('Mac') > -1;
 

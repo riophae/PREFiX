@@ -76,6 +76,13 @@ $(function() {
 		$li.appendTo($usage_tip_list);
 	});
 
+	$('#status-count').text(bg_win.getStatusCount());
+	$('#photo-count').text(bg_win.getPhotoCount());
+
+	var install_time = lscache.get('install_time');
+	install_time = bg_win.getYMD(install_time);
+	$('#install-time').text(install_time);
+
 	onunload = function(e) {
 		$('[key]').each(function() {
 			var $item = $(this);
