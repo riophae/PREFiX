@@ -83,6 +83,17 @@ $(function() {
 	install_time = bg_win.getYMD(install_time);
 	$('#install-time').text(install_time);
 
+	$('#show-updates').click(function(e) {
+		var update = [];
+		var history = bg_win.history;
+		Object.keys(history).forEach(function(version) {
+			update.push('# ' + version + ' #');
+			update.push.apply(update, history[version]);
+			update.push('');
+		});
+		alert(update.join('\n'));
+	});
+
 	onunload = function(e) {
 		$('[key]').each(function() {
 			var $item = $(this);

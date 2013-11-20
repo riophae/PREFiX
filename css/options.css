@@ -188,3 +188,6 @@ ol li {
 b {
 	font-weight: bold;
 }
+#show-updates {
+	cursor: pointer;
+}
