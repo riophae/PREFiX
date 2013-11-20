@@ -177,6 +177,9 @@ select {
 #about-prefix h4 {
 	font-size: 1.3em;
 }
+#about-page ul:not(#about-prefix) li {
+	margin-left: 0;
+}
 ol li {
 	margin: 6px 0 6px 26px;
 	padding-left: 2px;
