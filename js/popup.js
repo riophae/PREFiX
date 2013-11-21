@@ -1688,7 +1688,8 @@ $(function() {
 		setTimeout(showUsageTip, 100);
 	}, 100);
 	var msg = '您可以将图片文件拖拽至本窗口, 或粘贴 (Ctrl + V) 图像数据' +
-		', 或点击图标选择文件以上传. '
+		', 或点击图标选择文件以上传. \n' +
+		'Mac OS X 和 Linux 用户需使用独立窗口模式选择图片. ';
 	var shown = lscache.get('uploading_photo_tip');
 	if (! shown) {
 		alert(msg);
