@@ -54,6 +54,22 @@
 		opacity: 1;
 	}
 }
+@-webkit-keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
 @-webkit-keyframes wobbleIn {
 	0% {
 		-webkit-transform: perspective(300px) rotateX(-90deg) scale(.8) translateY(-10px);
@@ -636,6 +652,9 @@
 		transform: translate(0, 0) scale(1);
 		opacity: 1;
 	}
+	90% {
+		opacity: .75;
+	}
 	to {
 		-webkit-transform: translate(0, 100px) scale(1.5);
 		transform: translate(0, 100px) scale(1.5);
@@ -647,6 +666,9 @@
 		-webkit-transform: translate(0, 0) scale(1);
 		transform: translate(0, 0) scale(1);
 		opacity: 1;
+	}
+	90% {
+		opacity: .75;
 	}
 	to {
 		-webkit-transform: translate(0, 100px) scale(1.5);
@@ -706,6 +728,10 @@
 	transform-origin: top center;
 	-webkit-animation: focusInFromBottom .25s ease-out;
 	animation: focusInFromBottom .25s ease-out;
+}
+.fadeOut {
+	-webkit-animation: fadeOut .25s ease-in-out;
+	animation: fadeOut .25s ease-in-out;
 }
 * {
 	font: 13px "Lucida Grande for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
@@ -1037,6 +1063,9 @@ body.show-context-timeline #context-timeline {
 }
 #context-timeline ul li {
 	clear: both;
+	display: none;
+	-webkit-animation: wobbleIn .2s ease-in-out;
+	animation: wobbleIn .2s ease-in-out;
 	margin-bottom: 15px;
 }
 #context-timeline ul li .avatar {

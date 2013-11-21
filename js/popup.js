@@ -632,7 +632,7 @@ function initMainUI() {
 			setTimeout(function() {
 				$scrolling_elem = $main;
 				$('body').removeClass('show-context-timeline');
-			}, 150);
+			}, 250);
 			if (showContextTimeline.ajax) {
 				showContextTimeline.ajax.cancel();
 			}
@@ -1060,13 +1060,12 @@ function showContextTimeline(e) {
 	context_tl_model.statuses = [];
 	var context_statuses = [ status ];
 	var $context_tl = $scrolling_elem = $('#context-timeline');
-	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom');
+	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom loading');
 	$context_tl.scrollTop(0);
 	if (status.repost_status) {
 		context_statuses.push(status.repost_status);
 		id = status.repost_status.id;
 	}
-	$context_tl.addClass('loading');
 	(function get() {
 		showContextTimeline.ajax = r.getContextTimeline({
 			id: id
@@ -1088,9 +1087,10 @@ function showRelatedStatuses(e) {
 	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom loading');
 	$context_tl.scrollTop(0);
 	context_tl_model.statuses = [];
+	var statuses = [];
 	var status = this.$vmodel.status.$model;
 	(function get() {
-		unshift(context_tl_model.statuses, [ status ]);
+		unshift(statuses, [ status ]);
 		var id = status.repost_status_id || status.in_reply_to_status_id;
 		if (id) {
 			showRelatedStatuses.ajax = r.showStatus({ id: id }).next(function(s) {
@@ -1098,9 +1098,11 @@ function showRelatedStatuses(e) {
 				get();
 			}).error(function() {
 				$context_tl.removeClass('loading');
+				unshift(context_tl_model.statuses, statuses);
 			});
 		} else {
 			$context_tl.removeClass('loading');
+			unshift(context_tl_model.statuses, statuses);
 		}
 	})();
 }
@@ -1652,6 +1654,15 @@ searches_model.unload = function() {
 
 var context_tl_model = avalon.define('context-timeline', function(vm) {
 	vm.statuses = [];
+});
+context_tl_model.statuses.$watch('length', function(length) {
+	if (! length) return;
+	var $context_tl = $('#context-timeline');
+	$context_tl.find('li').each(function(i) {
+		setTimeout(function() {
+			$(this).show();
+		}.bind(this), i * 100);
+	});
 });
 
 $(function() {
