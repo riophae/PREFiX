@@ -746,8 +746,8 @@ div.notify-box .reject-btn {
 }
 div.notify-box .confirm-btn:hover,
 div.notify-box .reject-btn:hover {
-	-webkit-animation: btnBlinking ease-in-out infinite 1s;
-	animation: btnBlinking ease-in-out infinite 1s;
+	-webkit-animation: btnBlinking 1s ease-in-out infinite;
+	animation: btnBlinking 1s ease-in-out infinite;
 }
 div.notify-box .confirm-btn:active,
 div.notify-box .reject-btn:active {
