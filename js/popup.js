@@ -757,9 +757,7 @@ function computePosition(data) {
 	for (var key in data) {
 		data[key] += 'px';
 	}
-	return function(param) {
-		return $.extend(data, param);
-	}
+	return data;
 }
 
 function createPanel(width, height, url) {
@@ -782,7 +780,7 @@ function showPicture(img_url) {
 	if ($picture.prop('src') != img_url) {
 		$picture.prop('src', img_url);
 	}
-	$picture.hide().css({
+	$picture.hide().removeClass('run-animation').css({
 		'width': '',
 		'height': ''
 	});
@@ -805,21 +803,21 @@ function showPicture(img_url) {
 		$picture.css(computePosition({
 			width: width / 2,
 			height: height / 2
-		})({
-			opacity: 0,
-			display: 'block'
-		})).animate(computePosition({
+		})).
+		css({
+			opacity: .5,
+			display: 'block',
+			'transition-timing-function': 'ease-in'
+		}).
+		show().
+		addClass('run-animation').
+		css(computePosition({
 			width: width,
 			height: height
-		})({
-			opacity: 1
-		}), 250);
-		$picture.css('margin-top', (-$body[0].clientWidth / 3) + 'px').animate({
-			'margin-top': '0px'
-		}, {
-			duration: 250,
-			queue: false,
-			easing: 'easeOutBack'
+		})).
+		css({
+			opacity: 1,
+			animation: 'pictureSlideIn .25s both'
 		});
 	});
 }
@@ -827,21 +825,20 @@ function showPicture(img_url) {
 function hidePicture() {
 	$scrolling_elem = $main;
 	var $picture = $('#picture');
-	$picture.animate(computePosition({
+	$picture.
+	css(computePosition({
 		width: parseInt($picture.css('width'), 10) / 2,
 		height: parseInt($picture.css('height'), 10) / 2
-	})({
-		opacity: 0
-	})).animate({
-		'margin-top': (-$body[0].clientWidth / 3) + 'px'
-	}, {
-		duration: 250,
-		queue: false,
-		easing: 'easeInBack',
-		complete: function() {
-			$('body').removeClass('show-picture');
-		}
+	})).
+	css({
+		opacity: .5,
+		animation: 'pictureSlideOut .25s both',
+		'transition-timing-function': 'ease-out'
 	});
+	setTimeout(function() {
+		$('body').removeClass('show-picture');
+		$picture.removeClass('run-animation');
+	}, 300);
 }
 
 var pre_count = {
