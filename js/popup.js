@@ -509,7 +509,12 @@ function initMainUI() {
 	});
 
 	$('#uploading-photo').click(function(e) {
-		if (! PREFiX.image) return;
+		if (! PREFiX.image) {
+			if (! is_panel_mode) {
+				$('#new-window').click();
+			}
+			return;
+		};
 		setImage(null);
 		var $copy = $file.clone(true);
 		$file.replaceWith($copy);
@@ -529,6 +534,10 @@ function initMainUI() {
 			setImage(file);
 		}
 	});
+
+	if (navigator.platform.indexOf('Win') === -1 && ! is_panel_mode) {
+		$file.hide();
+	}
 
 	$(window).on('paste', function(e) {
 		var e = e.originalEvent;
