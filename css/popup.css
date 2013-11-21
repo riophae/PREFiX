@@ -78,6 +78,12 @@
 	}
 	75% {
 		opacity: 1;
+		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+	}
+	87.5% {
+		-webkit-transform: perspective(300px) rotateX(15deg) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(15deg) scale(1) translateY(0);
 	}
 	100% {
 		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
@@ -92,6 +98,12 @@
 	}
 	75% {
 		opacity: 1;
+		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+	}
+	87.5% {
+		-webkit-transform: perspective(300px) rotateX(15deg) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(15deg) scale(1) translateY(0);
 	}
 	100% {
 		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
@@ -103,15 +115,19 @@
 		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
 		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
 	}
-	75% {
+	12.5% {
+		-webkit-transform: perspective(300px) rotateX(-15deg) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(-15deg) scale(1) translateY(0);
+	}
+	25% {
 		opacity: 1;
-		-webkit-transform: perspective(300px) rotateX(90deg) scale(1.15) translateY(-10px);
-		transform: perspective(300px) rotateX(90deg) scale(1.15) translateY(-10px);
+		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
 	}
 	100% {
-		opacity: 0;
-		-webkit-transform: perspective(300px) rotateX(120deg) scale(1.2) translateY(-10px);
-		transform: perspective(300px) rotateX(120deg) scale(1.2) translateY(-10px);
+		-webkit-transform: perspective(300px) rotateX(90deg) scale(.8) translateY(-20px);
+		transform: perspective(300px) rotateX(90deg) scale(.8) translateY(-20px);
+		opacity: .5;
 	}
 }
 @keyframes wobbleOut {
@@ -119,15 +135,19 @@
 		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
 		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
 	}
-	75% {
+	12.5% {
+		-webkit-transform: perspective(300px) rotateX(-15deg) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(-15deg) scale(1) translateY(0);
+	}
+	25% {
 		opacity: 1;
-		-webkit-transform: perspective(300px) rotateX(90deg) scale(1.15) translateY(-10px);
-		transform: perspective(300px) rotateX(90deg) scale(1.15) translateY(-10px);
+		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
 	}
 	100% {
-		opacity: 0;
-		-webkit-transform: perspective(300px) rotateX(120deg) scale(1.2) translateY(-10px);
-		transform: perspective(300px) rotateX(120deg) scale(1.2) translateY(-10px);
+		-webkit-transform: perspective(300px) rotateX(90deg) scale(.8) translateY(-20px);
+		transform: perspective(300px) rotateX(90deg) scale(.8) translateY(-20px);
+		opacity: .5;
 	}
 }
 @-webkit-keyframes pictureSlideIn {
@@ -894,8 +914,8 @@ div.notify-box .reject-btn:active {
 }
 #follow-author {
 	padding: 6px;
-	-webkit-animation: wobbleIn both .2s;
-	animation: wobbleIn both .2s;
+	-webkit-animation: wobbleIn both .25s;
+	animation: wobbleIn both .25s;
 	-webkit-transform-origin: center top;
 	transform-origin: center top;
 }
@@ -926,8 +946,8 @@ div.notify-box .reject-btn:active {
 #rating-tip {
 	display: none;
 	padding: 6px;
-	-webkit-animation: wobbleIn both .2s;
-	animation: wobbleIn both .2s;
+	-webkit-animation: wobbleIn both .25s;
+	animation: wobbleIn both .25s;
 	-webkit-transform-origin: center top;
 	transform-origin: center top;
 }
@@ -936,8 +956,8 @@ div.notify-box .reject-btn:active {
 }
 #birthday-tip {
 	display: none;
-	-webkit-animation: wobbleIn both .2s;
-	animation: wobbleIn both .2s;
+	-webkit-animation: wobbleIn both .25s;
+	animation: wobbleIn both .25s;
 	-webkit-transform-origin: center top;
 	transform-origin: center top;
 }

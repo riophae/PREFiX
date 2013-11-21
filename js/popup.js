@@ -296,7 +296,10 @@ function denyFollowing() {
 }
 
 function hideFollowingTip() {
-	$('#follow-author').css('animation-name', 'wobbleOut').delay(200).hide(0, function() {
+	$('#follow-author').css({
+		'animation-name': 'wobbleOut',
+		'animation-duration': 400
+	}).delay(400).hide(0, function() {
 		$(this).remove();
 		lscache.set('hide-following-tip', true);
 	});
@@ -313,7 +316,10 @@ function showRatingTip() {
 }
 
 function hideRatingTip() {
-	$('#rating-tip').css('animation-name', 'wobbleOut').delay(200).hide(0, function() {
+	$('#rating-tip').css({
+		'animation-name': 'wobbleOut',
+		'animation-duration': 400
+	}).delay(400).hide(0, function() {
 		$(this).remove();
 		lscache.set('hide-rating-tip', true);
 	});
@@ -437,7 +443,10 @@ function initMainUI() {
 				});
 			}
 			function hideBirthdayTip() {
-				$('#birthday-tip').css('animation-name', 'wobbleOut').delay(200).hide(0, function() {
+				$('#birthday-tip').css({
+					'animation-name': 'wobbleOut',
+					'animation-duration': 400
+				}).delay(400).hide(0, function() {
 					$(this).remove();
 					lscache.set(today + '-friends-birthday', true);
 				});
