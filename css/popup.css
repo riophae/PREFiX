@@ -41,7 +41,7 @@
 @-webkit-keyframes fadeIn {
 	0% {
 		opacity: 0;
-	};
+	}
 	100% {
 		opacity: 1;
 	}
@@ -52,6 +52,46 @@
 	}
 	100% {
 		opacity: 1;
+	}
+}
+@-webkit-keyframes wobbleIn {
+	0% {
+		-webkit-transform: perspective(300px) rotateX(-90deg) translateX(-50%);
+		transform: perspective(300px) rotateX(-90deg) translateX(-50%);
+	}
+	100% {
+		-webkit-transform: perspective(300px) rotateX(0) translateX(-50%);
+		transform: perspective(300px) rotateX(0) translateX(-50%);
+	}
+}
+@keyframes wobbleIn {
+	0% {
+		-webkit-transform: perspective(300px) rotateX(-90deg) translateX(-50%);
+		transform: perspective(300px) rotateX(-90deg) translateX(-50%);
+	}
+	100% {
+		-webkit-transform: perspective(300px) rotateX(0) translateX(-50%);
+		transform: perspective(300px) rotateX(0) translateX(-50%);
+	}
+}
+@-webkit-keyframes wobbleOut {
+	0% {
+		-webkit-transform: perspective(300px) rotateX(0) translateX(-50%);
+		transform: perspective(300px) rotateX(0) translateX(-50%);
+	}
+	100% {
+		-webkit-transform: perspective(300px) rotateX(90deg) translateX(-50%);
+		transform: perspective(300px) rotateX(90deg) translateX(-50%);
+	}
+}
+@keyframes wobbleOut {
+	0% {
+		-webkit-transform: perspective(300px) rotateX(0) translateX(-50%);
+		transform: perspective(300px) rotateX(0) translateX(-50%);
+	}
+	100% {
+		-webkit-transform: perspective(300px) rotateX(90deg) translateX(-50%);
+		transform: perspective(300px) rotateX(90deg) translateX(-50%);
 	}
 }
 @-webkit-keyframes shake {
@@ -737,6 +777,10 @@ div.notify-box .reject-btn:active {
 }
 #follow-author {
 	padding: 6px;
+	-webkit-animation: wobbleIn both .2s;
+	animation: wobbleIn both .2s;
+	-webkit-transform-origin: left top;
+	transform-origin: left top;
 }
 #author-avator {
 	float: left;
@@ -765,12 +809,20 @@ div.notify-box .reject-btn:active {
 #rating-tip {
 	display: none;
 	padding: 6px;
+	-webkit-animation: wobbleIn both .2s;
+	animation: wobbleIn both .2s;
+	-webkit-transform-origin: left top;
+	transform-origin: left top;
 }
 #rating-tip p {
 	padding: 2px 0;
 }
 #birthday-tip {
 	display: none;
+	-webkit-animation: wobbleIn both .2s;
+	animation: wobbleIn both .2s;
+	-webkit-transform-origin: left top;
+	transform-origin: left top;
 }
 #birthday-tip p {
 	line-height: 20px;

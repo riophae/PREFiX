@@ -296,8 +296,10 @@ function denyFollowing() {
 }
 
 function hideFollowingTip() {
-	$('#follow-author').fadeOut();
-	lscache.set('hide-following-tip', true);
+	$('#follow-author').css('animation-name', 'wobbleOut').delay(200).hide(0, function() {
+		$(this).remove();
+		lscache.set('hide-following-tip', true);
+	});
 }
 
 function showRatingPage() {
@@ -307,12 +309,14 @@ function showRatingPage() {
 }
 
 function showRatingTip() {
-	$('#rating-tip').fadeIn();
+	$('#rating-tip').show();
 }
 
 function hideRatingTip() {
-	$('#rating-tip').fadeOut();
-	lscache.set('hide-rating-tip', true);
+	$('#rating-tip').css('animation-name', 'wobbleOut').delay(200).hide(0, function() {
+		$(this).remove();
+		lscache.set('hide-rating-tip', true);
+	});
 }
 
 function accumulateTime() {
@@ -433,10 +437,10 @@ function initMainUI() {
 				});
 			}
 			function hideBirthdayTip() {
-				$('#birthday-tip').fadeOut(function() {
+				$('#birthday-tip').css('animation-name', 'wobbleOut').delay(200).hide(0, function() {
 					$(this).remove();
 					lscache.set(today + '-friends-birthday', true);
-				})
+				});
 			}
 			var friends = [];
 			var total = birthday_friends.length;
@@ -450,7 +454,7 @@ function initMainUI() {
 			$('#birthday-friend-list').html(friends.join(' 和 '));
 			$('#send-birthday-message').click(sendBirthdayMessage).click(hideBirthdayTip);
 			$('#hide-birthday-tip').click(hideBirthdayTip);
-			$birthday_tip.fadeIn();
+			$birthday_tip.show();
 		}
 	} else {
 		$birthday_tip.remove();
