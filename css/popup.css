@@ -56,42 +56,62 @@
 }
 @-webkit-keyframes wobbleIn {
 	0% {
-		-webkit-transform: perspective(300px) rotateX(-90deg) translateX(-50%);
-		transform: perspective(300px) rotateX(-90deg) translateX(-50%);
+		-webkit-transform: perspective(300px) rotateX(-90deg) scale(.8) translateY(-10px);
+		transform: perspective(300px) rotateX(-90deg) scale(.8) translateY(-10px);
+		opacity: .5;
+	}
+	75% {
+		opacity: 1;
 	}
 	100% {
-		-webkit-transform: perspective(300px) rotateX(0) translateX(-50%);
-		transform: perspective(300px) rotateX(0) translateX(-50%);
+		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
 	}
 }
 @keyframes wobbleIn {
 	0% {
-		-webkit-transform: perspective(300px) rotateX(-90deg) translateX(-50%);
-		transform: perspective(300px) rotateX(-90deg) translateX(-50%);
+		-webkit-transform: perspective(300px) rotateX(-90deg) scale(.8) translateY(-10px);
+		transform: perspective(300px) rotateX(-90deg) scale(.8) translateY(-10px);
+		opacity: .5;
+	}
+	75% {
+		opacity: 1;
 	}
 	100% {
-		-webkit-transform: perspective(300px) rotateX(0) translateX(-50%);
-		transform: perspective(300px) rotateX(0) translateX(-50%);
+		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
 	}
 }
 @-webkit-keyframes wobbleOut {
 	0% {
-		-webkit-transform: perspective(300px) rotateX(0) translateX(-50%);
-		transform: perspective(300px) rotateX(0) translateX(-50%);
+		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+	}
+	75% {
+		opacity: 1;
+		-webkit-transform: perspective(300px) rotateX(90deg) scale(1.15) translateY(-10px);
+		transform: perspective(300px) rotateX(90deg) scale(1.15) translateY(-10px);
 	}
 	100% {
-		-webkit-transform: perspective(300px) rotateX(90deg) translateX(-50%);
-		transform: perspective(300px) rotateX(90deg) translateX(-50%);
+		opacity: 0;
+		-webkit-transform: perspective(300px) rotateX(120deg) scale(1.2) translateY(-10px);
+		transform: perspective(300px) rotateX(120deg) scale(1.2) translateY(-10px);
 	}
 }
 @keyframes wobbleOut {
 	0% {
-		-webkit-transform: perspective(300px) rotateX(0) translateX(-50%);
-		transform: perspective(300px) rotateX(0) translateX(-50%);
+		-webkit-transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+		transform: perspective(300px) rotateX(0) scale(1) translateY(0);
+	}
+	75% {
+		opacity: 1;
+		-webkit-transform: perspective(300px) rotateX(90deg) scale(1.15) translateY(-10px);
+		transform: perspective(300px) rotateX(90deg) scale(1.15) translateY(-10px);
 	}
 	100% {
-		-webkit-transform: perspective(300px) rotateX(90deg) translateX(-50%);
-		transform: perspective(300px) rotateX(90deg) translateX(-50%);
+		opacity: 0;
+		-webkit-transform: perspective(300px) rotateX(120deg) scale(1.2) translateY(-10px);
+		transform: perspective(300px) rotateX(120deg) scale(1.2) translateY(-10px);
 	}
 }
 @-webkit-keyframes shake {
@@ -687,8 +707,7 @@ div.notify-box {
 			rgba(255, 255, 255, .9) 50%,
 			rgba(255, 255, 255, .8)
 		);
-	-webkit-transform: translateX(-50%);
-	transform: translateX(-50%);
+	margin-left: -150px;
 	border-radius: 5px;
 	box-shadow:
 		0 1px 0 #fff inset,
@@ -779,8 +798,8 @@ div.notify-box .reject-btn:active {
 	padding: 6px;
 	-webkit-animation: wobbleIn both .2s;
 	animation: wobbleIn both .2s;
-	-webkit-transform-origin: left top;
-	transform-origin: left top;
+	-webkit-transform-origin: center top;
+	transform-origin: center top;
 }
 #author-avator {
 	float: left;
@@ -811,8 +830,8 @@ div.notify-box .reject-btn:active {
 	padding: 6px;
 	-webkit-animation: wobbleIn both .2s;
 	animation: wobbleIn both .2s;
-	-webkit-transform-origin: left top;
-	transform-origin: left top;
+	-webkit-transform-origin: center top;
+	transform-origin: center top;
 }
 #rating-tip p {
 	padding: 2px 0;
@@ -821,8 +840,8 @@ div.notify-box .reject-btn:active {
 	display: none;
 	-webkit-animation: wobbleIn both .2s;
 	animation: wobbleIn both .2s;
-	-webkit-transform-origin: left top;
-	transform-origin: left top;
+	-webkit-transform-origin: center top;
+	transform-origin: center top;
 }
 #birthday-tip p {
 	line-height: 20px;
