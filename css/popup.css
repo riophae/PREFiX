@@ -928,6 +928,17 @@ div.notify-box .reject-btn:active {
 		0 1px 0 rgba(255, 255, 255, 1) inset,
 		0 1px 0 rgba(0, 0, 0, .09);
 }
+#uploading-photo-tip {
+	padding: 6px;
+	-webkit-animation: wobbleIn both .25s;
+	animation: wobbleIn both .25s;
+	-webkit-transform-origin: center top;
+	transform-origin: center top;
+}
+#uploading-photo-tip p {
+	width: 238px;
+	float: left;
+}
 #follow-author {
 	padding: 6px;
 	-webkit-animation: wobbleIn both .25s;
