@@ -1117,7 +1117,7 @@ function showRelatedStatuses(e) {
 	var statuses = [];
 	var status = this.$vmodel.status.$model;
 	(function get() {
-		unshift(statuses, [ status ]);
+		push(statuses, [ status ]);
 		var id = status.repost_status_id || status.in_reply_to_status_id;
 		if (id) {
 			showRelatedStatuses.ajax = r.showStatus({ id: id }).next(function(s) {
@@ -1125,11 +1125,11 @@ function showRelatedStatuses(e) {
 				get();
 			}).error(function() {
 				$context_tl.removeClass('loading');
-				unshift(context_tl_model.statuses, statuses);
+				unshift(context_tl_model.statuses, statuses, true);
 			});
 		} else {
 			$context_tl.removeClass('loading');
-			unshift(context_tl_model.statuses, statuses);
+			unshift(context_tl_model.statuses, statuses, true);
 		}
 	})();
 }
