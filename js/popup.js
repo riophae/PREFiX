@@ -456,7 +456,7 @@ function initMainUI() {
 		if (! lscache.get(today + '-friends-birthday')) {
 			function getHTML(friends) {
 				return friends.map(function(friend) {
-					return '<a href="http://fanfou.com/' +
+					return '<a href="http://fanfou.com/privatemsg.create/' +
 						friend.id + '">@' + friend.name + '</a>';
 				});
 			}
