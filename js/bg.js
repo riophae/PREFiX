@@ -242,19 +242,24 @@ function initSavedSearches() {
 				this,
 				{ q: q }
 			).next(function(statuses) {
-				if (! statuses.length) return;
-				unshift(self.statuses, statuses);
-				if (! last_read_status_rawid) {
-					last_read_status_rawid = statuses[0].rawid;
-					lscache.set('saved-search-' + q + '-rawid', statuses[0].rawid)
+				if (statuses.length) {
+					unshift(self.statuses, statuses);
+					if (! last_read_status_rawid) {
+						last_read_status_rawid = statuses[0].rawid;
+						lscache.set('saved-search-' + q + '-rawid', statuses[0].rawid)
+					}
 				}
 				if (! settings.current.showSavedSearchCount) {
 					self.unread_count = 0;
+					self.statuses.map(function(s) {
+						s.is_unread = false;
+					});
 				} else {
 					self.unread_count = self.statuses.filter(function(s) {
-							return s.user.id !== PREFiX.account.id &&
+							s.is_unread = s.user.id !== PREFiX.account.id &&
 								s.rawid > last_read_status_rawid &&
 								! re.test(s.text);
+							return s.is_unread;
 						}).length;
 				}
 			});

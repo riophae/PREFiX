@@ -1568,18 +1568,16 @@ searches_model.initialize = function() {
 		$('#loading').show();
 		var keyword = searches_model.keyword;
 		searches_model.statuses = [];
-		r.searchPublicTimeline({
-			q: keyword
-		}).next(function(statuses) {
-			unshift(searches_model.statuses, statuses);
-			lscache.set('saved-search-' + keyword + '-rawid', searches_model.statuses[0].rawid);
-			bg_win.saved_searches_items.some(function(item) {
-				if (item.keyword === searches_model.keyword) {
-					item.unread_count = 0;
-					return true;
-				}
-			});
+		var statuses;
+		bg_win.saved_searches_items.some(function(item) {
+			if (item.keyword !== keyword) return;
+			statuses = JSON.parse(JSON.stringify(item.statuses));
+			lscache.set('saved-search-' + keyword + '-rawid', statuses[0].rawid);
+			item.unread_count = 0;
+			item.check();
+			return true;
 		});
+		unshift(searches_model.statuses, statuses);
 	}
 
 	function refreshCount() {
@@ -1589,7 +1587,7 @@ searches_model.initialize = function() {
 				if ($item.val() === item.keyword) {
 					var text = item.keyword;
 					if (item.unread_count) {
-						text += ' (' + item.unread_count + ')'
+						text += ' (' + item.unread_count + ')';
 					}
 					if (text !== $item.text()) {
 						$item.text(text);
@@ -1632,7 +1630,6 @@ searches_model.initialize = function() {
 
 		refreshCount();
 	}
-
 
 	var last = bg_win.saved_searches_items.some(function(item) {
 		if (item.keyword === searches_model.keyword) {
