@@ -338,12 +338,30 @@ function accumulateTime() {
 }
 
 function sendBirthdayMessage() {
-	var text = [];
-	PREFiX.birthdayFriends.forEach(function(friend) {
-		text.push('@' + friend.name + ' ');
-	});
-	text.push('生日快乐! :)');
-	composebar_model.text = text.join('');
+	var type = PREFiX.settings.current.birthdayGreetingType;
+	if (PREFiX.birthdayFriends.length > 1)
+		type = 'post_status';
+
+	switch (type) {
+		case 'post_status':
+			var text = [];
+			PREFiX.birthdayFriends.forEach(function(friend) {
+				text.push('@' + friend.name + ' ');
+			});
+			text.push('生日快乐! :)');
+			composebar_model.text = text.join('');
+			break;
+
+		case 'send_pm':
+			var friend = PREFiX.birthdayFriends[0];
+			composebar_model.text = '';
+			composebar_model.type = 'reply-pm';
+			composebar_model.id = '';
+			composebar_model.user = friend.id;
+			composebar_model.username = friend.name;
+			break;
+	}
+
 	focusToEnd();
 }
 
@@ -1176,7 +1194,13 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 		} else {
 			placeholder = lyric = lyric || getLyric();
 		}
-		placeholder = vm.username ? '回复 @' + vm.username + ' 的私信' : placeholder;
+		if (vm.username) {
+			if (! vm.id && PREFiX.birthdayFriends.length) {
+				placeholder = '发送私信给 @' + vm.username + ', 为 TA 送上生日祝福';
+			} else {
+				placeholder = '回复 @' + vm.username + ' 的私信';
+			}
+		}
 		$textarea.prop('placeholder', placeholder);
 	}
 	vm.onblur = function(e) {

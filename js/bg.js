@@ -894,6 +894,7 @@ var settings = {
 		smoothScroll: true,
 		birthdayNotice: true,
 		birthdayNoticeType: 'only_friends',
+		birthdayGreetingType: 'post_status',
 		autoFlushCache: false,
 		zoomRatio: '1',
 		drawAttention: true,
