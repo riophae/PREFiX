@@ -1553,6 +1553,8 @@ searches_model.initialize = function() {
 	$('#title h2').text('Discover');
 	$('#saved-searches').addClass('current');
 
+	$main.scrollTop(0);
+
 	function showPublicTimeline() {
 		$('#loading').show();
 		searches_model.statuses = [];
