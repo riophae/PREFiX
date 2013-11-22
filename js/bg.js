@@ -240,7 +240,8 @@ function initSavedSearches() {
 				'searchPublicTimeline',
 				last_status_id,
 				this,
-				{ q: q }
+				{ q: q },
+				90
 			).next(function(statuses) {
 				if (statuses.length) {
 					unshift(self.statuses, statuses);
@@ -309,11 +310,17 @@ function closeWindow(id) {
 	chrome.windows.remove(id);
 }
 
-function getDataSince(method, since_id, lock, extra_data) {
+function getDataSince(method, since_id, lock, extra_data, timeout) {
 	if (lock) {
 		if (lock._ajax_active_) {
 			return new Deferred;
 		}
+		lock.timeout = setTimeout(function() {
+			d.fail({
+				exceptionType: 'timeout'
+			});
+			d = new Deferred;
+		}, timeout * 1000);
 		lock._ajax_active_ = true;
 	}
 
@@ -360,11 +367,13 @@ function getDataSince(method, since_id, lock, extra_data) {
 	return d.error(function(err) {
 			if (lock) {
 				delete lock._ajax_active_;
+				clearTimeout(lock.timeout);
 			}
 			throw err;
 		}).next(function(data) {
 			if (lock) {
 				delete lock._ajax_active_;
+				clearTimeout(lock.timeout);
 			}
 			return data;
 		});
@@ -431,7 +440,7 @@ function update(retry_chances, new_status_id) {
 	});
 
 	if (newest_status) {
-		deferred_new = getDataSince('getHomeTimeline', newest_status.id, update).
+		deferred_new = getDataSince('getHomeTimeline', newest_status.id, update, null, 45).
 			next(function(statuses) {
 				if (retry_chances) {
 					var new_status_found = statuses.some(function(s) {

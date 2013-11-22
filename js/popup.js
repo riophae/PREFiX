@@ -1410,7 +1410,7 @@ mentions_model.initialize = function() {
 		var ajax;
 		if (mentions.statuses.length) {
 			var statuses = fixStatusList(mentions.statuses);
-			ajax = PREFiX.getDataSince('getMentions', statuses[0].id, update);
+			ajax = PREFiX.getDataSince('getMentions', statuses[0].id, update, null, 45);
 		} else {
 			ajax = r.getMentions().setupAjax({
 				lock: update
@@ -1499,7 +1499,7 @@ privatemsgs_model.initialize = function() {
 		var ajax;
 		if (privatemsgs.messages.length) {
 			var messages = fixStatusList(privatemsgs.messages);
-			ajax = PREFiX.getDataSince('showInbox', messages[0].id, update);
+			ajax = PREFiX.getDataSince('showInbox', messages[0].id, update, null, 45);
 		} else {
 			ajax = r.showInbox().setupAjax({
 				lock: update
