@@ -389,6 +389,12 @@ function updateTitle() {
 	});
 	if (new_statuses.length) {
 		title.push(new_statuses.length + ' 条新消息');
+		switchTo('tl_model');
+	}
+	var saved_searches_count = getSavedSearchStatusesCount();
+	if (saved_searches_count) {
+		title.push(saved_searches_count + ' 条关注的话题消息');
+		switchTo('searches_model');
 	}
 	if (PREFiX.count.mentions) {
 		switchTo('mentions_model');
@@ -408,6 +414,7 @@ function updateTitle() {
 		if (PREFiX.count.direct_messages > PREFiX.previous_count.direct_messages)
 			need_notify = true;
 	}
+
 	chrome.browserAction.setBadgeText({
 		text: (PREFiX.count.direct_messages || PREFiX.count.mentions || '') + ''
 	});
