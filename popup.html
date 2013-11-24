@@ -115,7 +115,7 @@
               </div>
               <div class="content">
                 <div class="info fix">
-                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
+                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name"></a>
                   <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
@@ -146,7 +146,7 @@
               </div>
               <div class="content">
                 <div class="info fix">
-                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name"></a>
+                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name"></a>
                   <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
@@ -175,7 +175,7 @@
               </div>
               <div class="content">
                 <div class="info fix">
-                  <a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name"></a>
+                  <a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name" ms-data-send-pm="message.sender.id + ':' + message.sender.name"></a>
                   <span class="timestamp-client" ms-html="message.relativeTime"></span>
                 </div>
                 <div class="status-content" ms-html="message.fixedText"></div>

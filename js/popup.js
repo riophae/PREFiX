@@ -361,12 +361,16 @@ function sendBirthdayMessage() {
 }
 
 function sendBirthdayMessageViaPM(id, name) {
+	composebar_model.birthdayGreeting = true;
+	sendPM(id, name);
+}
+
+function sendPM(id, name) {
 	composebar_model.text = '';
-	composebar_model.type = 'reply-pm';
+	composebar_model.type = 'send-pm';
 	composebar_model.id = '';
 	composebar_model.user = id;
 	composebar_model.username = name;
-	composebar_model.birthdayGreeting = true;
 	focusToEnd();
 }
 
@@ -627,7 +631,12 @@ function initMainUI() {
 			loadOldder();
 	}, 100));
 
-	$('#app').delegate('a', 'click', function(e) {
+	$('#app').delegate('[data-send-pm]', 'click', function(e) {
+		e.stopImmediatePropagation();
+		e.preventDefault();
+		var data = $(this).data('send-pm').split(':');
+		sendPM(data[0], data[1]);
+	}).delegate('a', 'click', function(e) {
 		if (e.currentTarget.href.indexOf('http://') !== 0 &&
 			e.currentTarget.href.indexOf('https://') !== 0)
 			return;
@@ -1214,8 +1223,11 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			placeholder = lyric = lyric || getLyric();
 		}
 		if (vm.username) {
-			if (! vm.id && vm.birthdayGreeting) {
-				placeholder = '发送私信给 @' + vm.username + ', 为 TA 送上生日祝福';
+			if (! vm.id) {
+				placeholder = '发送私信给 @' + vm.username;
+				if (vm.birthdayGreeting) {
+					placeholder += ', 为 TA 送上生日祝福';
+				}
 			} else {
 				placeholder = '回复 @' + vm.username + ' 的私信';
 			}
@@ -1261,7 +1273,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			} else if (vm.type === 'repost') {
 				data.repost_status_id = vm.id;
 			}
-			if (vm.type === 'reply-pm') {
+			if (vm.type === 'reply-pm' || vm.type === 'send-pm') {
 				shorten().next(function() {
 					r.postDirectMessage({
 						user: vm.user,
