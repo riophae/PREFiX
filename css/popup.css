@@ -802,7 +802,7 @@ a {
 	cursor: pointer;
 	outline: 0 !important;
 }
-b {
+b, .bold, .bold * {
 	font-weight: bold;
 }
 #birthday-cake {

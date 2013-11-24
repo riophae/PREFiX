@@ -204,7 +204,7 @@
                   <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
-                <div class="status-content" ms-html="status.fixedText" ms-css-font-weight="status.is_unread ? 'bold' : 'normal'"></div>
+                <div class="status-content" ms-html="status.fixedText" ms-class-bold="status.is_unread"></div>
                 <div class="photo" ms-if="!! status.photo">
                   <img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
                 </div>
