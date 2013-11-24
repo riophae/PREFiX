@@ -24,7 +24,7 @@
 			function e() {
 				a ||
 				(a = d(f), $("body").append(a));
-				var e = f.val();
+				var e = f.val() || f.prop('placeholder') || '';
 				e != j && (j = e, a.text(e), f.height(a.height()))
 			}
 			var f = $(this),
