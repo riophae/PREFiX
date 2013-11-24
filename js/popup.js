@@ -350,18 +350,22 @@ function sendBirthdayMessage() {
 			});
 			text.push('生日快乐! :)');
 			composebar_model.text = text.join('');
+			focusToEnd();
 			break;
 
 		case 'send_pm':
 			var friend = PREFiX.birthdayFriends[0];
-			composebar_model.text = '';
-			composebar_model.type = 'reply-pm';
-			composebar_model.id = '';
-			composebar_model.user = friend.id;
-			composebar_model.username = friend.name;
+			sendBirthdayMessageViaPM(friend.id, friend.name)
 			break;
 	}
+}
 
+function sendBirthdayMessageViaPM(id, name) {
+	composebar_model.text = '';
+	composebar_model.type = 'reply-pm';
+	composebar_model.id = '';
+	composebar_model.user = id;
+	composebar_model.username = name;
 	focusToEnd();
 }
 
@@ -456,8 +460,10 @@ function initMainUI() {
 		if (! lscache.get(today + '-friends-birthday')) {
 			function getHTML(friends) {
 				return friends.map(function(friend) {
-					return '<a href="http://fanfou.com/privatemsg.create/' +
-						friend.id + '">@' + friend.name + '</a>';
+					return '<a href="http://fanfou.com/' +
+						friend.id + '" send-birthday-message-to="' +
+						friend.id + ':' + friend.name +
+						'">@' + friend.name + '</a>';
 				});
 			}
 			function hideBirthdayTip() {
@@ -478,7 +484,18 @@ function initMainUI() {
 			if (birthday_friends.length) {
 				friends.push(getHTML(birthday_friends).join(' 和 '));
 			}
-			$('#birthday-friend-list').html(friends.join(' 和 '));
+			$('#birthday-friend-list').html(friends.join(' 和 ')).
+			delegate('[send-birthday-message-to]', 'click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				var $item = $(this);
+				var data = $item.attr('send-birthday-message-to').split(':');
+				$item.removeAttr('send-birthday-message-to');
+				sendBirthdayMessageViaPM(data[0], data[1]);
+				if (! $('[send-birthday-message-to]').length) {
+					hideBirthdayTip();
+				}
+			});
 			$('#send-birthday-message').click(sendBirthdayMessage).click(hideBirthdayTip);
 			$('#hide-birthday-tip').click(hideBirthdayTip);
 			$birthday_tip.show();
