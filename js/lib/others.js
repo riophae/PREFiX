@@ -24,6 +24,7 @@
 			function e() {
 				a ||
 				(a = d(f), $("body").append(a));
+				a.css('text-indent', f.css('text-indent'));
 				var e = f.val() || f.prop('placeholder') || '';
 				e != j && (j = e, a.text(e), f.height(a.height()))
 			}
