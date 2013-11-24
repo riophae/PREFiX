@@ -361,11 +361,13 @@ function sendBirthdayMessage() {
 }
 
 function sendBirthdayMessageViaPM(id, name) {
+	if (id === PREFiX.account.id) return;
 	composebar_model.birthdayGreeting = true;
 	sendPM(id, name);
 }
 
 function sendPM(id, name) {
+	if (id === PREFiX.account.id) return;
 	composebar_model.text = '';
 	composebar_model.type = 'send-pm';
 	composebar_model.id = '';
