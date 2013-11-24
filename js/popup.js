@@ -366,6 +366,7 @@ function sendBirthdayMessageViaPM(id, name) {
 	composebar_model.id = '';
 	composebar_model.user = id;
 	composebar_model.username = name;
+	composebar_model.birthdayGreeting = true;
 	focusToEnd();
 }
 
@@ -1201,6 +1202,7 @@ var nav_model = avalon.define('navigation', function(vm) {
 
 var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	vm.text = vm.type = vm.id = vm.user = vm.username = '';
+	vm.birthdayGreeting = false;
 	vm.submitting = false;
 	vm.onfocus = function(e) {
 		var placeholder;
@@ -1212,7 +1214,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			placeholder = lyric = lyric || getLyric();
 		}
 		if (vm.username) {
-			if (! vm.id && PREFiX.birthdayFriends.length) {
+			if (! vm.id && vm.birthdayGreeting) {
 				placeholder = '发送私信给 @' + vm.username + ', 为 TA 送上生日祝福';
 			} else {
 				placeholder = '回复 @' + vm.username + ' 的私信';
@@ -1227,6 +1229,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			vm.id = '';
 			vm.user = '';
 			vm.username = '';
+			vm.birthdayGreeting = false;
 		}
 	}
 	vm.ondblclick = function(e) {
