@@ -152,20 +152,12 @@
 }
 @-webkit-keyframes pictureSlideIn {
 	0% {
-		-webkit-transform: translateY(-250px) perspective(400px) rotateX(-15deg) scale(.5);
-		transform: translateY(-250px) perspective(400px) rotateX(-15deg) scale(.5);
+		-webkit-transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
+		transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
 	}
-	45% {
+	35% {
 		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
-	}
-	75% {
-		-webkit-transform: translateY(25px) perspective(400px) rotateX(7deg) scale(.9);
-		transform: translateY(25px) perspective(400px) rotateX(7deg) scale(.9);
-	}
-	90% {
-		-webkit-transform: translateY(0) perspective(400px) rotateX(7deg) scale(1);
-		transform: translateY(0) perspective(400px) rotateX(7deg) scale(1);
 	}
 	100% {
 		-webkit-transform: translateY(0) perspective(400px) rotateX(0) scale(1);
@@ -174,20 +166,12 @@
 }
 @keyframes pictureSlideIn {
 	0% {
-		-webkit-transform: translateY(-250px) perspective(400px) rotateX(-15deg) scale(.5);
-		transform: translateY(-250px) perspective(400px) rotateX(-15deg) scale(.5);
+		-webkit-transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
+		transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
 	}
-	45% {
+	35% {
 		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
-	}
-	75% {
-		-webkit-transform: translateY(25px) perspective(400px) rotateX(7deg) scale(.9);
-		transform: translateY(25px) perspective(400px) rotateX(7deg) scale(.9);
-	}
-	90% {
-		-webkit-transform: translateY(0) perspective(400px) rotateX(7deg) scale(1);
-		transform: translateY(0) perspective(400px) rotateX(7deg) scale(1);
 	}
 	100% {
 		-webkit-transform: translateY(0) perspective(400px) rotateX(0) scale(1);
@@ -199,21 +183,13 @@
 		-webkit-transform: translateY(0) perspective(400px) rotateX(0) scale(1);
 		transform: translateY(0) perspective(400px) rotateX(0) scale(1);
 	}
-	10% {
-		-webkit-transform: translateY(0) perspective(400px) rotateX(7deg) scale(1);
-		transform: translateY(0) perspective(400px) rotateX(7deg) scale(1);
-	}
-	25% {
-		-webkit-transform: translateY(25px) perspective(400px) rotateX(7deg) scale(.9);
-		transform: translateY(25px) perspective(400px) rotateX(7deg) scale(.9);
-	}
-	55% {
+	65% {
 		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 	}
 	100% {
-		-webkit-transform: translateY(-250px) perspective(400px) rotateX(-15deg) scale(.5);
-		transform: translateY(-250px) perspective(400px) rotateX(-15deg) scale(.5);
+		-webkit-transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
+		transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
 	}
 }
 @keyframes pictureSlideOut {
@@ -221,21 +197,13 @@
 		-webkit-transform: translateY(0) perspective(400px) rotateX(0) scale(1);
 		transform: translateY(0) perspective(400px) rotateX(0) scale(1);
 	}
-	10% {
-		-webkit-transform: translateY(0) perspective(400px) rotateX(7deg) scale(1);
-		transform: translateY(0) perspective(400px) rotateX(7deg) scale(1);
-	}
-	25% {
-		-webkit-transform: translateY(25px) perspective(400px) rotateX(7deg) scale(.9);
-		transform: translateY(25px) perspective(400px) rotateX(7deg) scale(.9);
-	}
-	55% {
+	65% {
 		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 	}
 	100% {
-		-webkit-transform: translateY(-250px) perspective(400px) rotateX(-15deg) scale(.5);
-		transform: translateY(-250px) perspective(400px) rotateX(-15deg) scale(.5);
+		-webkit-transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
+		transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
 	}
 }
 @-webkit-keyframes shake {
@@ -1053,8 +1021,8 @@ body.show-context-timeline #context-timeline {
 	-webkit-transition-duration: 225ms;
 	transition-property: opacity, left, top, width, height;
 	transition-duration: 225ms;
-	-webkit-transform-origin: center bottom;
-	transform-origin: center bottom;
+	-webkit-transform-origin: center;
+	transform-origin: center;
 }
 #picture-overlay .tip {
 	display: none;

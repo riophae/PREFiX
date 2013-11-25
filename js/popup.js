@@ -865,7 +865,7 @@ function showPicture(img_url) {
 		css({
 			opacity: .5,
 			display: 'block',
-			'transition-timing-function': 'ease-in'
+			'transition-timing-function': 'linear'
 		}).
 		show().
 		addClass('run-animation').
@@ -875,7 +875,7 @@ function showPicture(img_url) {
 		})).
 		css({
 			opacity: 1,
-			animation: 'pictureSlideIn .25s both'
+			animation: 'pictureSlideIn .3s both'
 		});
 	});
 }
@@ -890,13 +890,13 @@ function hidePicture() {
 	})).
 	css({
 		opacity: .5,
-		animation: 'pictureSlideOut .25s both',
-		'transition-timing-function': 'ease-out'
+		animation: 'pictureSlideOut .3s both',
+		'transition-timing-function': 'linear'
 	});
 	setTimeout(function() {
 		$('body').removeClass('show-picture');
 		$picture.removeClass('run-animation');
-	}, 300);
+	}, 350);
 }
 
 var pre_count = {
