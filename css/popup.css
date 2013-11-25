@@ -1350,9 +1350,9 @@ html.panel-mode #new-window {
 	position: absolute;
 	left: 8px;
 	top: 0;
-	width: 25px;
+	width: 26px;
 	height: 19px;
-	border-width: 12px 5px 2px 6px;
+	border-width: 12px 4px 2px 6px;
 	border-style: solid;
 	border-color: white;
 	background-image: url('/images/uploading-photo.png');

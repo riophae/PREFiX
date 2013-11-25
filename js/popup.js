@@ -15,6 +15,8 @@ var is_panel_mode = false;
 var is_focused = true;
 var $scrolling_elem;
 
+var is_windows = navigator.platform.indexOf('Win') > -1;
+
 var loading = false;
 var is_on_top = true;
 PREFiX.popupActive = true;
@@ -565,7 +567,7 @@ function initMainUI() {
 
 	$('#uploading-photo').click(function(e) {
 		if (! PREFiX.image) {
-			if (! is_panel_mode) {
+			if (! is_panel_mode && ! is_windows) {
 				$('#new-window').click();
 			}
 			return;
@@ -590,7 +592,7 @@ function initMainUI() {
 		}
 	});
 
-	if (navigator.platform.indexOf('Win') === -1 && ! is_panel_mode) {
+	if (! is_windows && ! is_panel_mode) {
 		$file.hide();
 	}
 
