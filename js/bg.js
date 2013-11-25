@@ -847,6 +847,9 @@ Ripple.events.observe('process_status', function(status) {
 		}).replace(chs_re, function(chs) {
 			return '<span class="chs">' + chs + '</span>';
 		});
+		status.is_breakpoint = false;
+		status.loaded_at = null;
+		status.loaded_at_relative = '';
 	}
 
 	var html = status.text;

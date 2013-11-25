@@ -279,6 +279,11 @@ function updateRelativeTime() {
 	});
 }
 
+var breakpoints = [];
+function markBreakpoint() {
+	breakpoints.push(Date.now());
+}
+
 function createTab(url, active) {
 	chrome.tabs.create({
 		url: url,
@@ -526,6 +531,7 @@ function initMainUI() {
 	$(window).on('focus', function(e) {
 		is_focused = true;
 		stopDrawingAttention();
+		markBreakpoint();
 	}).on('blur', function(e) {
 		is_focused = false;
 	});
@@ -633,6 +639,8 @@ function initMainUI() {
 		$app.toggleClass('on-top', scroll_top === 0);
 		if (scroll_top + $main.height() >= $main[0].scrollHeight - ($main[0].clientHeight/2))
 			loadOldder();
+		if (scroll_top < 30)
+			markBreakpoint();
 	}, 100));
 
 	$('#app').delegate('[data-send-pm]', 'click', function(e) {
@@ -1397,6 +1405,7 @@ tl_model.initialize = function() {
 		return tl.statuses.length;
 	}, function() {
 		tl_model.statuses = tl.statuses;
+		markBreakpoint();
 		setTimeout(function() {
 			$main.scrollTop(PREFiX.homeTimeline.scrollTop);
 		}, 50);
@@ -1421,6 +1430,17 @@ tl_model.initialize = function() {
 		} else {
 			setTimeout(function() {
 				insertKeepScrollTop(function() {
+					if (buffered.length >= 50) {
+						var now = Date.now();
+						var is_breakpoint = breakpoints.some(function(time) {
+							return Math.abs(time - now) < 500;
+						});
+						if (is_breakpoint) {
+							var oldest_status = fixStatusList(buffered).reverse()[0];
+							oldest_status.is_breakpoint = true;
+							oldest_status.loaded_at = 'Loaded @ ' + getShortTime(now) + '.';
+						}
+					}
 					unshift(tl_model.statuses, buffered);
 				});
 			}, 50);
