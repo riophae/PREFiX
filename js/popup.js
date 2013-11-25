@@ -1754,7 +1754,6 @@ context_tl_model.statuses.$watch('length', function(length) {
 });
 
 $(function() {
-	avalon.scan();
 	initMainUI();
 	setTimeout(function() {
 		$textarea.focus();
