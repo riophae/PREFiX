@@ -1307,12 +1307,30 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 					});
 				});
 			} else {
+				var $compose_bar = $('#compose-bar');
+				var full_length = $compose_bar.width();
 				shorten().next(function() {
 					data.status = vm.text;
 					data.photo = PREFiX.image;
 					r[ PREFiX.image ? 'postPhoto' : 'postStatus' ](data).
 					setupAjax({
-						timeout: PREFiX.image ? 180000 : 30000
+						timeout: PREFiX.image ? 180000 : 30000,
+						onstart: function(e) {
+							if (data.photo) {
+								$textarea.css('background-size', '48px 1px');
+								$compose_bar.addClass('uploading');
+							}
+						},
+						onprogress: function(e) {
+							if (! data.photo || ! e.lengthComputable) return;
+							var percent = e.loaded / e.total;
+							var green_length = Math.round(percent * full_length);
+							$textarea.css('background-size', Math.max(48, green_length) + 'px 1px');
+						},
+						oncomplete: function(e) {
+							$compose_bar.removeClass('uploading');
+							$textarea.css('background-size', '');
+						}
 					}).next(function(status) {
 						showNotification('发表成功!');
 						vm.text = '';

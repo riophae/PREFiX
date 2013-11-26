@@ -1295,10 +1295,10 @@ html.panel-mode #new-window {
 	box-shadow: 0 0 6px rgba(0, 0, 0, .15);
 	overflow: hidden;
 	resize: none;
-	-webkit-transition-property: box-shadow, height;
+	-webkit-transition-property: box-shadow, height, background-size;
 	-webkit-transition-timing-function: ease-in-out;
 	-webkit-transition-duration: .2s;
-	transition-property: box-shadow, height;
+	transition-property: box-shadow, height, background-size;
 	transition-timing-function: ease-in-out;
 	transition-duration: .2s;
 }
@@ -1312,6 +1312,16 @@ html.panel-mode #new-window {
 }
 #compose-bar textarea:focus {
 	box-shadow: 0 0px 5px 0 rgba(83, 186, 237, .5);
+}
+.uploading textarea {
+	background-image: url('/images/progress-bar-bg.gif');
+	background-size: 48px 1px;
+	background-position: left top;
+	background-repeat: repeat-y;
+}
+.uploading #uploading-photo {
+	background-color: #90cb73 !important;
+	border-color: #90cb73 !important;
 }
 #uploading-photo {
 	display: block;
