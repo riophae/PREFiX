@@ -47,5 +47,6 @@ PREFiX
 * 全新的设置界面
 * 点击用户名发送私信
 * 加载较多消息时显示加载时间点提示
+* 上传图片显示进度
 
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
