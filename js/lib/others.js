@@ -34,6 +34,7 @@
 				clearInterval(h);
 				h = setInterval(e, 30)
 			}).on("blur", function () {
+				setTimeout(e, 30);
 				clearInterval(h);
 				e()
 			});
