@@ -45,5 +45,7 @@ PREFiX
 * Retina 支持
 * 添加随便看看/关注的话题界面
 * 全新的设置界面
+* 点击用户名发送私信
+* 加载较多消息时显示加载时间点提示
 
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
