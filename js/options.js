@@ -52,6 +52,8 @@ $(function() {
 	if (custom_consumer) {
 		$('#key').val(custom_consumer.key);
 		$('#secret').val(custom_consumer.secret);
+	} else {
+		custom_consumer = { };
 	}
 	$('#set-consumer').click(function(e) {
 		var key = $('#key').val().trim();
