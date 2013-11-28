@@ -435,6 +435,7 @@ function update(retry_chances, new_status_id) {
 	var statuses = fixStatusList(tl.statuses.concat(tl.buffered));
 	var newest_status = statuses[0];
 	var deferred_new = Deferred.next();
+	new_status_id = new_status_id || newest_status.id;
 
 	chrome.browserAction.setBadgeText({
 		text: '...'
@@ -447,7 +448,7 @@ function update(retry_chances, new_status_id) {
 	});
 
 	if (newest_status) {
-		deferred_new = getDataSince('getHomeTimeline', newest_status.id, update, null, 45).
+		deferred_new = getDataSince('getHomeTimeline', new_status_id, update, null, 45).
 			next(function(statuses) {
 				if (retry_chances) {
 					var new_status_found = statuses.some(function(s) {
