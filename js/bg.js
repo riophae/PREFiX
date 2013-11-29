@@ -435,7 +435,9 @@ function update(retry_chances, new_status_id) {
 	var statuses = fixStatusList(tl.statuses.concat(tl.buffered));
 	var newest_status = statuses[0];
 	var deferred_new = Deferred.next();
-	new_status_id = new_status_id || newest_status.id;
+	if (newest_status) {
+		new_status_id = newest_status.id;
+	}
 
 	chrome.browserAction.setBadgeText({
 		text: '...'
