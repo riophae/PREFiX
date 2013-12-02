@@ -425,7 +425,7 @@ function updateTitle() {
 	return need_notify;
 }
 
-function update(retry_chances, status_id) {
+function update(retry_chances, new_status_id) {
 	var d = new Deferred;
 
 	clearInterval(PREFiX.interval);
@@ -434,7 +434,6 @@ function update(retry_chances, status_id) {
 	var tl = PREFiX.homeTimeline;
 	var statuses = fixStatusList(tl.statuses.concat(tl.buffered));
 	var latest_status = statuses[0];
-	var latest_status_id = latest_status && latest_status.id;
 	var deferred_new = Deferred.next();
 
 	chrome.browserAction.setBadgeText({
@@ -448,15 +447,15 @@ function update(retry_chances, status_id) {
 	});
 
 	if (latest_status) {
-		deferred_new = getDataSince('getHomeTimeline', latest_status_id, update, null, 45).
+		deferred_new = getDataSince('getHomeTimeline', latest_status.id, update, null, 45).
 			next(function(statuses) {
-				if (retry_chances) {
+				if (retry_chances && new_status_id) {
 					var new_status_found = statuses.some(function(s) {
-						return s.id === status_id;
+						return s.id === new_status_id;
 					});
 					if (! new_status_found) {
 						setTimeout(function() {
-							update(--retry_chances, status_id, update, null, 45);
+							update(--retry_chances, new_status_id);
 						});
 					}
 				}
