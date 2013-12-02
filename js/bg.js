@@ -872,8 +872,7 @@ Ripple.events.observe('process_status', function(status) {
 		}, function() {
 			status.photo.thumb_width = img.naturalWidth;
 			status.photo.thumb_height = img.naturalHeight;
-			img.src = '';
-			delete img;
+			img.src = status.photo.largeurl;
 		});
 	}
 
