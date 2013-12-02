@@ -425,7 +425,7 @@ function updateTitle() {
 	return need_notify;
 }
 
-function update(retry_chances, new_status_id) {
+function update(retry_chances, status_id) {
 	var d = new Deferred;
 
 	clearInterval(PREFiX.interval);
@@ -433,11 +433,9 @@ function update(retry_chances, new_status_id) {
 
 	var tl = PREFiX.homeTimeline;
 	var statuses = fixStatusList(tl.statuses.concat(tl.buffered));
-	var newest_status = statuses[0];
+	var latest_status = statuses[0];
+	var latest_status_id = latest_status && latest_status.id;
 	var deferred_new = Deferred.next();
-	if (newest_status) {
-		new_status_id = newest_status.id;
-	}
 
 	chrome.browserAction.setBadgeText({
 		text: '...'
@@ -449,16 +447,16 @@ function update(retry_chances, new_status_id) {
 		title: 'PREFiX - 正在刷新'
 	});
 
-	if (newest_status) {
-		deferred_new = getDataSince('getHomeTimeline', new_status_id, update, null, 45).
+	if (latest_status) {
+		deferred_new = getDataSince('getHomeTimeline', latest_status_id, update, null, 45).
 			next(function(statuses) {
 				if (retry_chances) {
 					var new_status_found = statuses.some(function(s) {
-						return s.id === new_status_id;
+						return s.id === status_id;
 					});
 					if (! new_status_found) {
 						setTimeout(function() {
-							update(--retry_chances, new_status_id);
+							update(--retry_chances, status_id, update, null, 45);
 						});
 					}
 				}
