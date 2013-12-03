@@ -1269,12 +1269,10 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	}
 	vm.onkeydown = function(e) {
 		e.stopPropagation && e.stopPropagation();
-		if (e.keyCode === 13) {
-			e.preventDefault && e.preventDefault();
-		}
-		var value = $textarea.val();
+		var value = $textarea.val().trim();
 		if ((! value && ! PREFiX.image) || vm.submitting) return;
 		if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
+			e.preventDefault && e.preventDefault();
 			vm.submitting = true;
 			showNotification('正在提交..');
 			var data = {
