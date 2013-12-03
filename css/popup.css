@@ -1293,6 +1293,7 @@ html.panel-mode #new-window {
 	border: 0;
 	outline: 0 !important;
 	box-shadow: 0 0 6px rgba(0, 0, 0, .15);
+	text-indent: 30px;
 	overflow: hidden;
 	resize: none;
 	-webkit-transition-property: box-shadow, height, background-size;
@@ -1301,9 +1302,6 @@ html.panel-mode #new-window {
 	transition-property: box-shadow, height, background-size;
 	transition-timing-function: ease-in-out;
 	transition-duration: .2s;
-}
-#compose-bar textarea:not(:focus):not(.filled) {
-	text-indent: 30px;
 }
 .over #compose-bar textarea,
 .over #uploading-photo {
@@ -1357,10 +1355,6 @@ html.panel-mode #new-window {
 	cursor: pointer;
 	right: 0;
 	top: 0;
-}
-#compose-bar textarea:focus + #uploading-photo:not(.file-selected),
-#compose-bar textarea.filled + #uploading-photo:not(.file-selected) {
-	display: none;
 }
 #main {
 	position: absolute;
