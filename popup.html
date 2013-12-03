@@ -103,7 +103,7 @@
           <li ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
             <div class="status fix">
               <div class="action-icons">
-                <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
+                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除"></a>
                 <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
                 <a ms-click="repost" class="repost" title="转发"></a>
                 <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
@@ -135,7 +135,7 @@
           <li ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
             <div class="status fix">
               <div class="action-icons">
-                <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
+                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除"></a>
                 <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
                 <a ms-click="repost" class="repost" title="转发"></a>
                 <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
@@ -166,7 +166,7 @@
           <li>
             <div class="status fix">
               <div class="action-icons">
-                <a ms-click="remove" class="remove" title="删除"></a>
+                <a ms-dblclick="remove" class="remove" title="双击删除"></a>
                 <a ms-click="reply" class="reply" title="回复"></a>
               </div>
               <div class="avatar">
@@ -189,7 +189,7 @@
           <li ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
             <div class="status fix">
               <div class="action-icons">
-                <a ms-if="status.is_self" ms-click="remove" class="remove" title="删除"></a>
+                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除"></a>
                 <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
                 <a ms-click="repost" class="repost" title="转发"></a>
                 <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
