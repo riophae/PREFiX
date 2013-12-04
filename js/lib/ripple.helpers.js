@@ -212,7 +212,7 @@ Deferred.call = function (fun) {
 
 Deferred.parallel = function (dl) {
 	if (arguments.length > 1) dl = Array.prototype.slice.call(arguments);
-	var ret = new Deferred(), values = {}, num = 0;
+	var ret = new Deferred(), values = {}, num = 0, failed = false;
 	for (var i in dl) if (dl.hasOwnProperty(i)) (function (d, i) {
 		if (typeof d == "function") d = Deferred.next(d);
 		d.next(function (v) {
@@ -222,10 +222,17 @@ Deferred.parallel = function (dl) {
 					values.length = dl.length;
 					values = Array.prototype.slice.call(values, 0);
 				}
-				ret.call(values);
+				if (failed) {
+					ret.fail();
+				} else {
+					ret.call(values);
+				}
 			}
 		}).error(function (e) {
-			ret.fail(e);
+			failed = true;
+			if (--num <= 0) {
+				ret.fail();
+			}
 		});
 		num++;
 	})(dl[i], i);
