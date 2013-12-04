@@ -949,7 +949,7 @@ function checkCount() {
 	var search_statuses_count = bg_win.getSavedSearchStatusesCount();
 	if (search_statuses_count) {
 		title_contents.push(search_statuses_count + ' 关注话题消息');
-		$saved_searchs.text(search_statuses_count).fadeIn(120);
+		$saved_searchs.text(Math.min(search_statuses_count, 99)).fadeIn(120);
 	} else {
 		$saved_searchs.text('').fadeOut(120);
 	}
