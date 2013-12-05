@@ -1440,7 +1440,8 @@ tl_model.initialize = function() {
 				drawAttention();
 			pre_count.timeline = tl.buffered.length;
 		}
-		if (! is_focused || $main[0].scrollTop) return;
+		if (! is_focused || $main[0].scrollTop > $body.height / 2)
+			return;
 		var buffered = tl.buffered;
 		tl.buffered = [];
 		if (! tl.statuses.length) {
