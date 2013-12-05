@@ -626,6 +626,30 @@
 		background: #ddd;
 	}
 }
+@-webkit-keyframes remove {
+	from {
+		-webkit-transform: rotateX(0);
+		transform: rotateX(0);
+		opacity: 1;
+	}
+	to {
+		-webkit-transform: rotateX(-30deg);
+		transform: rotateX(-30deg);
+		opacity: .5;
+	}
+}
+@keyframes remove {
+	from {
+		-webkit-transform: rotateX(0);
+		transform: rotateX(0);
+		opacity: 1;
+	}
+	to {
+		-webkit-transform: rotateX(-30deg);
+		transform: rotateX(-30deg);
+		opacity: .5;
+	}
+}
 @-webkit-keyframes focusInFromBottom {
 	from {
 		-webkit-transform: translate(0, 100px) scale(1.5);
@@ -1419,6 +1443,10 @@ html.panel-mode #new-window {
 	text-shadow: 0 1px 0 #fff;
 	border-bottom: 1px solid #ddd;
 	box-shadow: 0 1px 0 #fff inset;
+	-webkit-perspective: 400px;
+	perspective: 400px;
+	-webkit-perspective-origin: top center;
+	perspective-origin: top center;
 }
 .status-list li:hover {
 	background: url('/images/status-bg.png') repeat;
@@ -1427,6 +1455,8 @@ html.panel-mode #new-window {
 .status-list li .status {
 	padding: 8px 0;
 	position: relative;
+	-webkit-transform-origin: top center;
+	transform-origin: top center;
 }
 .status-list li .action-icons a {
 	-webkit-transform: translateY(-2px);
