@@ -995,7 +995,7 @@ function loadOldder() {
 		if (k === '##MY_FAVORITES##') {
 			r.getFavorites({
 				id: PREFiX.account.id,
-				page: searches_model.page + 1,
+				page: searches_model.page + 1
 			}).setupAjax({
 				lock: loadOldder,
 				send: function() {
@@ -1677,6 +1677,7 @@ searches_model.initialize = function() {
 	$main.scrollTop(0);
 
 	function showPublicTimeline() {
+		$('#topic-selector').prop('disabled', true);
 		$('#loading').show();
 		searches_model.statuses = [];
 		r.getPublicTimeline({
@@ -1684,10 +1685,13 @@ searches_model.initialize = function() {
 		}).next(function(statuses) {
 			unshift(searches_model.statuses, statuses);
 			$('#loading').hide();
+		}).hold(function() {
+			$('#topic-selector').prop('disabled', false);
 		});
 	}
 
 	function showFavorites() {
+		$('#topic-selector').prop('disabled', true);
 		$('#loading').show();
 		searches_model.statuses = [];
 		searches_model.page = 1;
@@ -1696,6 +1700,8 @@ searches_model.initialize = function() {
 		}).next(function(statuses) {
 			searches_model.statuses = statuses;
 			updateRelativeTime();
+		}).hold(function() {
+			$('#topic-selector').prop('disabled', false);
 		});
 	}
 
