@@ -833,6 +833,7 @@ Ripple.events.observe('process_status', function(status) {
 
 	var created_at = status.created_at;
 	status.fullTime = getFullTime(created_at);
+	status.relativeTime = '';
 
 	if (status.source) {
 		status.source = $temp.html(status.source).text();

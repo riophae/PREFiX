@@ -992,7 +992,25 @@ function loadOldder() {
 		if (! oldest_status) return;
 		var $selector = $('#topic-selector');
 		var k = $selector.val();
-		if (k !== '##PUBLIC_TIMELINE##') {
+		if (k === '##MY_FAVORITES##') {
+			r.getFavorites({
+				id: PREFiX.account.id,
+				page: searches_model.page + 1,
+			}).setupAjax({
+				lock: loadOldder,
+				send: function() {
+					loading = true;
+				},
+				oncomplete: function() {
+					loading = false;
+				}
+			}).next(function(statuses) {
+				searches_model.page++;
+				var list = searches_model.statuses;
+				list.push.apply(list, statuses);
+				updateRelativeTime();
+			});
+		} else if (k !== '##PUBLIC_TIMELINE##') {
 			r.searchPublicTimeline({
 				q: k,
 				max_id: oldest_status.id,
@@ -1669,6 +1687,18 @@ searches_model.initialize = function() {
 		});
 	}
 
+	function showFavorites() {
+		$('#loading').show();
+		searches_model.statuses = [];
+		searches_model.page = 1;
+		r.getFavorites({
+			id: PREFiX.account.id
+		}).next(function(statuses) {
+			searches_model.statuses = statuses;
+			updateRelativeTime();
+		});
+	}
+
 	function search() {
 		$('#loading').show();
 		var keyword = searches_model.keyword;
@@ -1704,6 +1734,7 @@ searches_model.initialize = function() {
 
 	if (! $('#topic-selector').length) {
 		var public_tl_id = '##PUBLIC_TIMELINE##';
+		var fav_id ='##MY_FAVORITES##';
 
 		var $selector = $('<select />');
 		$selector.prop('id', 'topic-selector');
@@ -1712,6 +1743,11 @@ searches_model.initialize = function() {
 		$public_tl.text('随便看看');
 		$public_tl.prop('value', public_tl_id);
 		$selector.append($public_tl);
+
+		var $fav = $('<option />');
+		$fav.text('我的收藏');
+		$fav.prop('value', fav_id);
+		$selector.append($fav);
 
 		bg_win.saved_searches_items.some(function(item) {
 			var $item = $('<option />');
@@ -1727,6 +1763,9 @@ searches_model.initialize = function() {
 			if (this.value === public_tl_id) {
 				searches_model.keyword = '';
 				showPublicTimeline();
+			} else if (this.value === fav_id) {
+				searches_model.keyword = '';
+				showFavorites();
 			} else {
 				searches_model.keyword = this.value;
 				search();
