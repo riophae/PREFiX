@@ -861,7 +861,7 @@ Ripple.events.observe('process_status', function(status) {
 	html = jEmoji.docomoToUnified(html);
 	html = jEmoji.kddiToUnified(html);
 	html = jEmoji.unifiedToHTML(html);
-	status.fixedText = html.replace(/\n+/g, '<br />');
+	status.fixedText = html.replace(/\s*\n+\s*/g, '<br />');
 
 	if (status.photo) {
 		var img = new Image;
