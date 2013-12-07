@@ -1327,6 +1327,12 @@ html.panel-mode #new-window {
 	transition-timing-function: ease-in-out;
 	transition-duration: .2s;
 }
+#compose-bar.uploading-not-supported textarea {
+	text-indent: 0;
+}
+#compose-bar.uploading-not-supported #uploading-photo {
+	display: none;
+}
 .over #compose-bar textarea,
 .over #uploading-photo {
 	background-color: #ffe5e5;

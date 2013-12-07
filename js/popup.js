@@ -1267,6 +1267,8 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			}
 		}
 		$textarea.prop('placeholder', placeholder);
+		var is_sending_pm = [ 'send-pm', 'reply-pm' ].indexOf(vm.type) > -1;
+		$('#compose-bar').toggleClass('uploading-not-supported', is_sending_pm);
 	}
 	vm.onblur = function(e) {
 		$textarea.prop('placeholder', '');
@@ -1277,6 +1279,8 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			vm.username = '';
 			vm.birthdayGreeting = false;
 		}
+		var is_sending_pm = [ 'send-pm', 'reply-pm' ].indexOf(vm.type) > -1;
+		$('#compose-bar').toggleClass('uploading-not-supported', is_sending_pm);
 	}
 	vm.ondblclick = function(e) {
 		if (e.ctrlKey || e.metaKey) {
