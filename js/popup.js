@@ -32,10 +32,6 @@ if (! r) {
 
 var usage_tips = bg_win.usage_tips;
 
-function getViewHeight() {
-	return lscache.get('popup_view_height') || 600;
-}
-
 function setViewHeight(height) {
 	lscache.set('popup_view_height', Math.round(Math.max(600, height)));
 	applyViewHeight();
@@ -684,7 +680,7 @@ function initMainUI() {
 	});
 
 	$('#new-window').click(function(e) {
-		createPanel(400, getViewHeight(), '/popup.html?new_window=true');
+		createPopup();
 		close();
 	});
 
@@ -824,20 +820,6 @@ function computePosition(data) {
 		data[key] += 'px';
 	}
 	return data;
-}
-
-function createPanel(width, height, url) {
-	var size = getDefaultWindowSize(width, height);
-	var options = {
-		url: url,
-		focused: true,
-		type: 'panel',
-		width: Math.round(size.width),
-		height: Math.round(size.height),
-		left: Math.round((screen.width - size.width) / 2),
-		top: Math.round((screen.height - size.height) / 2)
-	};
-	chrome.windows.create(options);
 }
 
 function showPicture(img_url) {

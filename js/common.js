@@ -22,6 +22,27 @@ function disableCustomConsumer() {
 	PREFiX.reset();
 }
 
+function getViewHeight() {
+	return lscache.get('popup_view_height') || 600;
+}
+
+function createPopup() {
+	var width = 400;
+	var height = getViewHeight();
+	var url = '/popup.html?new_window=true';
+	var size = getDefaultWindowSize(width, height);
+	var options = {
+		url: url,
+		focused: true,
+		type: 'panel',
+		width: Math.round(size.width),
+		height: Math.round(size.height),
+		left: Math.round((screen.width - size.width) / 2),
+		top: Math.round((screen.height - size.height) / 2)
+	};
+	chrome.windows.create(options);
+}
+
 var waitFor = (function() {
 	var waiting_list = [];
 

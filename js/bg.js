@@ -566,6 +566,10 @@ function load() {
 	chrome.omnibox.onInputStarted.addListener(onInputStarted);
 	chrome.omnibox.onInputChanged.addListener(onInputChanged);
 	chrome.omnibox.onInputEntered.addListener(onInputEntered);
+	if (startup && settings.current.createPopAtStartup) {
+		createPopup();
+	}
+	startup = false;
 }
 
 function unload() {
@@ -909,7 +913,8 @@ var settings = {
 		autoFlushCache: false,
 		zoomRatio: '1',
 		drawAttention: true,
-		showSavedSearchCount: true
+		showSavedSearchCount: true,
+		createPopAtStartup: false
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
@@ -1013,3 +1018,5 @@ var PREFiX = this.PREFiX = {
 initialize();
 var is_first_run = lscache.get('is_first_run') !== false;
 lscache.set('is_first_run', false);
+
+var startup = true;
