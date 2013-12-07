@@ -654,7 +654,9 @@ function initMainUI() {
 	}).delegate('a[href^="/q/"]', 'click', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
-		createTab('http://fanfou.com' + $(e.target).attr('href'));
+		var keyword = $(e.target).attr('href').replace('/q/', '');
+		searches_model.search_keyword = decodeURIComponent(keyword);
+		$('#navigation-bar .saved-searches').trigger('click');
 	}).delegate('.photo img', 'contextmenu', function(e) {
 		var large_url = e.target.dataset.largeImg;
 		if (large_url) {
@@ -993,6 +995,9 @@ function loadOldder() {
 				updateRelativeTime();
 			});
 		} else if (k !== '##PUBLIC_TIMELINE##') {
+			if (k === null) {
+				k = searches_model.keyword;
+			}
 			r.searchPublicTimeline({
 				q: k,
 				max_id: oldest_status.id,
@@ -1704,7 +1709,7 @@ searches_model.initialize = function() {
 		var keyword = searches_model.keyword;
 		searches_model.statuses = [];
 		var statuses;
-		bg_win.saved_searches_items.some(function(item) {
+		var is_saved = bg_win.saved_searches_items.some(function(item) {
 			if (item.keyword !== keyword) return;
 			statuses = JSON.parse(JSON.stringify(item.statuses));
 			lscache.set('saved-search-' + keyword + '-rawid', statuses[0].rawid);
@@ -1712,7 +1717,17 @@ searches_model.initialize = function() {
 			item.check();
 			return true;
 		});
-		unshift(searches_model.statuses, statuses);
+		if (is_saved) {
+			unshift(searches_model.statuses, statuses);
+		} else {
+			r.searchPublicTimeline({
+				q: keyword
+			}).setupAjax({
+				lock: search
+			}).next(function(statuses) {
+				unshift(searches_model.statuses, statuses);
+			});
+		}
 	}
 
 	function refreshCount() {
@@ -1732,8 +1747,8 @@ searches_model.initialize = function() {
 		});
 	}
 
+	var public_tl_id = '##PUBLIC_TIMELINE##';
 	if (! $('#topic-selector').length) {
-		var public_tl_id = '##PUBLIC_TIMELINE##';
 		var fav_id ='##MY_FAVORITES##';
 
 		var $selector = $('<select />');
@@ -1756,6 +1771,12 @@ searches_model.initialize = function() {
 			$selector.append($item);
 		});
 
+		var $search = $('<option />');
+		$search.text('搜索');
+		$search.prop('value', '##SEARCH##');
+		$search.prop('disabled', true);
+		$selector.append($search);
+
 		$selector.val(public_tl_id);
 		$selector.appendTo('#title');
 
@@ -1766,6 +1787,10 @@ searches_model.initialize = function() {
 			} else if (this.value === fav_id) {
 				searches_model.keyword = '';
 				showFavorites();
+			} else if (this.value === '##SEARCH##') {
+				searches_model.keyword = searches_model.search_keyword;
+				delete searches_model.search_keyword;
+				search();
 			} else {
 				searches_model.keyword = this.value;
 				search();
@@ -1782,7 +1807,9 @@ searches_model.initialize = function() {
 	});
 
 	var $selector = $('#topic-selector');
-	if (last) {
+	if (searches_model.search_keyword) {
+		$selector.val('##SEARCH##');
+	} else if (last) {
 		$selector.val(searches_model.keyword);
 	} else if (! last && bg_win.getSavedSearchStatusesCount()) {
 		bg_win.saved_searches_items.some(function(item) {
@@ -1792,7 +1819,14 @@ searches_model.initialize = function() {
 			}
 		});
 	} else if (searches_model.keyword) {
-		$selector.val(searches_model.keyword);
+		var keyword = searches_model.keyword;
+		var is_saved = [].slice.call($selector.find('option')).
+			some(function(option) {
+				return option.value === keyword;
+			});
+		$selector.val(is_saved ? keyword : public_tl_id);
+	} else {
+		$selector.val(public_tl_id);
 	}
 	$selector.trigger('change');
 
