@@ -53,5 +53,6 @@ PREFiX
 * 查看收藏
 * 启动时打开 PREFiX 窗口
 * 扩展内搜索话题消息
+* 查看自己的消息
 
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
