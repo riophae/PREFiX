@@ -49,4 +49,9 @@ PREFiX
 * 加载较多消息时显示加载时间点提示
 * 上传图片显示进度
 
+**ver 0.5.0**
+* 查看收藏
+* 启动时打开 PREFiX 窗口
+* 扩展内搜索话题消息
+
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
