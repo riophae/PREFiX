@@ -107,14 +107,14 @@ var getRelativeTime = Ripple.helpers.generateTimeFormater(function(table) {
 				return h + ' hr' + (h === '1' ? '' : 's') + ' ago';
 			}
 		], function(c) {
-			return c._MS(3) +　' ' + c._d(true) + ' ' + c._h(2) + ':' + c._m(2);
+			return c._MS(3) +　' ' + c._d() + ', ' + c._h(2) + ':' + c._m(2);
 		}
 	];
 });
 
 var getShortTime = Ripple.helpers.generateTimeFormater(function(table) {
 	return [ function(c) {
-		return c._MS(3) +　' ' + c._d(true) + ' ' + c._h(2) + ':' + c._m(2);
+		return c._MS(3) +　' ' + c._d() + ', ' + c._h(2) + ':' + c._m(2);
 	} ];
 });
 
