@@ -370,7 +370,6 @@ function sendBirthdayMessageViaPM(id, name) {
 }
 
 function sendPM(id, name) {
-	if (id === PREFiX.account.id) return;
 	composebar_model.text = '';
 	composebar_model.type = 'send-pm';
 	composebar_model.id = '';
@@ -643,7 +642,13 @@ function initMainUI() {
 		e.stopImmediatePropagation();
 		e.preventDefault();
 		var data = $(this).data('send-pm').split(':');
-		sendPM(data[0], data[1]);
+		var id = data[0];
+		if (id === PREFiX.account.id) {
+			searches_model.show_my_timeline = true;
+			$('#navigation-bar .saved-searches').trigger('click');
+		} else {
+			sendPM(id, data[1]);
+		}
 	}).delegate('a', 'click', function(e) {
 		if (e.currentTarget.href.indexOf('http://') !== 0 &&
 			e.currentTarget.href.indexOf('https://') !== 0)
@@ -993,6 +998,21 @@ function loadOldder() {
 				var list = searches_model.statuses;
 				list.push.apply(list, statuses);
 				updateRelativeTime();
+			});
+		} else if (k === '##MY_TIMELINE##') {
+			r.getUserTimeline({
+				id: PREFiX.account.id,
+				max_id: oldest_status.id,
+			}).setupAjax({
+				lock: loadOldder,
+				send: function() {
+					loading = true;
+				},
+				oncomplete: function() {
+					loading = false;
+				}
+			}).next(function(statuses) {
+				push(searches_model.statuses, statuses);
 			});
 		} else if (k !== '##PUBLIC_TIMELINE##') {
 			if (k === null) {
@@ -1689,6 +1709,19 @@ searches_model.initialize = function() {
 		});
 	}
 
+	function showMyTimeline() {
+		$('#topic-selector').prop('disabled', true);
+		$('#loading').show();
+		searches_model.statuses = [];
+		r.getUserTimeline({
+			id: PREFiX.account.id
+		}).next(function(statuses) {
+			unshift(searches_model.statuses, statuses);
+		}).hold(function() {
+			$('#topic-selector').prop('disabled', false);
+		});
+	}
+
 	function showFavorites() {
 		$('#topic-selector').prop('disabled', true);
 		$('#loading').show();
@@ -1747,21 +1780,23 @@ searches_model.initialize = function() {
 		});
 	}
 
-	var public_tl_id = '##PUBLIC_TIMELINE##';
 	if (! $('#topic-selector').length) {
-		var fav_id ='##MY_FAVORITES##';
-
 		var $selector = $('<select />');
 		$selector.prop('id', 'topic-selector');
 
 		var $public_tl = $('<option />');
 		$public_tl.text('随便看看');
-		$public_tl.prop('value', public_tl_id);
+		$public_tl.prop('value', '##PUBLIC_TIMELINE##');
 		$selector.append($public_tl);
+
+		var $my_tl = $('<option />');
+		$my_tl.text('我的消息');
+		$my_tl.prop('value', '##MY_TIMELINE##');
+		$selector.append($my_tl);
 
 		var $fav = $('<option />');
 		$fav.text('我的收藏');
-		$fav.prop('value', fav_id);
+		$fav.prop('value', '##MY_FAVORITES##');
 		$selector.append($fav);
 
 		bg_win.saved_searches_items.some(function(item) {
@@ -1777,14 +1812,18 @@ searches_model.initialize = function() {
 		$search.prop('disabled', true);
 		$selector.append($search);
 
-		$selector.val(public_tl_id);
+		$selector.val('##PUBLIC_TIMELINE##');
 		$selector.appendTo('#title');
 
 		$selector.on('change', function(e) {
-			if (this.value === public_tl_id) {
+			if (this.value === '##PUBLIC_TIMELINE##') {
 				searches_model.keyword = '';
 				showPublicTimeline();
-			} else if (this.value === fav_id) {
+			} else if (this.value === '##MY_TIMELINE##') {
+				searches_model.keyword = '';
+				delete searches_model.show_my_timeline;
+				showMyTimeline();
+			} else if (this.value === '##MY_FAVORITES##') {
 				searches_model.keyword = '';
 				showFavorites();
 			} else if (this.value === '##SEARCH##') {
@@ -1807,7 +1846,9 @@ searches_model.initialize = function() {
 	});
 
 	var $selector = $('#topic-selector');
-	if (searches_model.search_keyword) {
+	if (searches_model.show_my_timeline) {
+		$selector.val('##MY_TIMELINE##');
+	} else if (searches_model.search_keyword) {
 		$selector.val('##SEARCH##');
 	} else if (last) {
 		$selector.val(searches_model.keyword);
@@ -1824,9 +1865,9 @@ searches_model.initialize = function() {
 			some(function(option) {
 				return option.value === keyword;
 			});
-		$selector.val(is_saved ? keyword : public_tl_id);
+		$selector.val(is_saved ? keyword : '##PUBLIC_TIMELINE##');
 	} else {
-		$selector.val(public_tl_id);
+		$selector.val('##PUBLIC_TIMELINE##');
 	}
 	$selector.trigger('change');
 
