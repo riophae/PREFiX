@@ -103,10 +103,10 @@
           <li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
             <div class="status fix">
               <div class="action-icons">
-                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除"></a>
-                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
-                <a ms-click="repost" class="repost" title="转发"></a>
-                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
+                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+                <a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
               </div>
               <div class="avatar">
                 <a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
@@ -120,12 +120,12 @@
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
                 <div class="status-content" ms-html="status.fixedText"></div>
-                <div class="photo" ms-if="!! status.photo">
+                <div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
                   <img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
                 </div>
               </div>
               <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
-                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息"></span>
+                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息 (快捷键 C)"></span>
               </div>
             </div>
           </li>
@@ -135,10 +135,10 @@
           <li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
             <div class="status fix">
               <div class="action-icons">
-                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除"></a>
-                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
-                <a ms-click="repost" class="repost" title="转发"></a>
-                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
+                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+                <a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
               </div>
               <div class="avatar">
                 <a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
@@ -152,12 +152,12 @@
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
                 <div class="status-content" ms-html="status.fixedText"></div>
-                <div class="photo" ms-if="!! status.photo">
+                <div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
                   <img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
                 </div>
               </div>
               <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
-                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息"></span>
+                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息 (快捷键 C)"></span>
               </div>
             </div>
           </li>
@@ -166,8 +166,8 @@
           <li ms-data-id="message.id">
             <div class="status fix">
               <div class="action-icons">
-                <a ms-dblclick="remove" class="remove" title="双击删除"></a>
-                <a ms-click="reply" class="reply" title="回复"></a>
+                <a ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+                <a ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
               </div>
               <div class="avatar">
                 <a ms-title="{{message.sender.name}} ({{message.sender.id}})" ms-href="'http://fanfou.com/' + message.sender.id">
@@ -189,10 +189,10 @@
           <li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected">
             <div class="status fix">
               <div class="action-icons">
-                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除"></a>
-                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复"></a>
-                <a ms-click="repost" class="repost" title="转发"></a>
-                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏' : '收藏'"></a>
+                <a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+                <a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+                <a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+                <a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
               </div>
               <div class="avatar">
                 <a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
@@ -206,12 +206,12 @@
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
                 <div class="status-content" ms-html="status.fixedText" ms-class-bold="status.is_unread"></div>
-                <div class="photo" ms-if="!! status.photo">
+                <div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
                   <img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
                 </div>
               </div>
               <div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
-                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息"></span>
+                <span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息 (快捷键 C)"></span>
               </div>
             </div>
           </li>
