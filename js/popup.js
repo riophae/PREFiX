@@ -912,13 +912,8 @@ function initMainUI() {
 				return;
 		}
 		e.preventDefault();
-		var page_height = innerHeight / ratio;
-		if ($scrolling_elem === $main) {
-			page_height -= parseInt($main.css('top'), 10);
-		}
-		var current_pos = $scrolling_elem.scrollTop();
-		var direction = e.keyCode === 40 ? 1 : -1;
-		smoothScrollTo(current_pos + (page_height * direction));
+		var direction = e.keyCode === 40 ? -1 : 1;
+		$scrolling_elem.trigger('mousewheel', direction);
 	}).on('keydown', function(e) {
 		if (e.keyCode !== 36) return;
 		if ($scrolling_elem === $main)
