@@ -157,12 +157,16 @@ function smoothScrollTo(destination) {
 }
 
 function findView(model, id) {
-	return model.$elem.find('[data-id=' + id + ']');
+	if (id) {
+		return model.$elem.find('[data-id=' + id + ']');
+	} else {
+		return model.$elem.children().first();
+	}
 }
 
 function findModel(model, id) {
 	if (! id) {
-		return model.$elem.children().first();
+		return (model.statuses || model.messages)[0];
 	}
 	var list = model.statuses || model.messages;
 	var model;
@@ -245,6 +249,59 @@ function initKeyboardControlEvents() {
 			setCurrent(current_model, list[list.length - 1].id);
 		}
 		smoothScrollTo(target);
+	}).keydown(function(e) {
+		switch (e.keyCode) {
+			case 86 /* V */: case 67 /* C */:
+			case 70 /* F */: case 81 /* Q */:
+			case 82 /* R */: case 68 /* D */:
+			case 32 /* Space */:
+				e.preventDefault();
+				break;
+			default:
+				return;
+		}
+		var current_model = getCurrent();
+		var $view = findView(current_model, current_model.current);
+		var current = findModel(current_model, current_model.current);
+		if (e.keyCode === 86) {
+			if ($('body.show-picture').length) {
+				hidePicture();
+			} else {
+				$view.find('.photo img').click();
+			}
+		} else if (e.keyCode === 67) {
+			if ($('body.show-context-timeline').length) {
+				$('#context-timeline').trigger('click');
+			} else {
+				$view.find('.context span').click();
+			}
+		} else if (e.keyCode === 70) {
+			var $fav = $view.find('a.favourite');
+			if (e.shiftKey && current.favorited) {
+				$fav[0].click();
+			} else if (! e.shiftKey && ! current.favorited) {
+				$fav[0].click();
+			}
+		} else if (e.keyCode === 81) {
+			var $repost = $view.find('a.repost');
+			if ($repost.length) {
+				$repost[0].click();
+			}
+		} else if (e.keyCode === 82) {
+			var $reply = $view.find('a.reply');
+			if ($reply.length) {
+				$reply[0].click();
+			}
+		} else if (e.keyCode === 68 && e.shiftKey) {
+			var $remove = $view.find('a.remove');
+			if ($remove.length) {
+				var event = new Event('dblclick');
+				$remove[0].dispatchEvent(event);
+			}
+		} else if (e.keyCode === 32 &&
+			! (e.shiftKey || e.ctrlKey || e.metaKey)) {
+			$textarea.focus();
+		}
 	});
 }
 
@@ -883,6 +940,15 @@ function initMainUI() {
 			event = new Event('keydown');
 			event.keyCode = e.keyCode === 33 ? 38 : 40;
 			dispatchEvent(event);
+		}
+	}).on('keydown', function(e) {
+		if (e.keyCode !== 8) return;
+		if ($('body.show-context-timeline').length) {
+			e.preventDefault();
+			$('#context-timeline').trigger('click');
+		} else if ($('body.show-picture').length) {
+			e.preventDefault();
+			hidePicture();
 		}
 	});
 
