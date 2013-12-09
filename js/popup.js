@@ -941,13 +941,10 @@ function initMainUI() {
 				return;
 		}
 		e.preventDefault();
-		var $win = $(window);
-		var event;
-		for (var i = 0; i < 4; i++) {
-			event = new Event('keydown');
-			event.keyCode = e.keyCode === 33 ? 38 : 40;
-			dispatchEvent(event);
-		}
+		var current_pos = $scrolling_elem.scrollTop();
+		var height = $scrolling_elem.height();
+		smoothScrollTo(e.keyCode === 34 ?
+			current_pos + height : current_pos - height);
 	}).on('keydown', function(e) {
 		if (e.keyCode !== 8) return;
 		if ($('body.show-context-timeline').length) {
@@ -1963,6 +1960,7 @@ searches_model.initialize = function() {
 	if (! $('#topic-selector').length) {
 		var $selector = $('<select />');
 		$selector.prop('id', 'topic-selector');
+		$selector.prop('tabIndex', 2);
 
 		var $public_tl = $('<option />');
 		$public_tl.text('随便看看');
