@@ -23,7 +23,27 @@ $(function() {
 			case 'select':
 				$item.val(value);
 				break;
+			case 'range':
+				$item.val(value + '');
+				break;
 		}
+	});
+
+	var $volume = $('#volume');
+	$('[key="volume"]').on('change', function(e) {
+		var volume = +$(this).val();
+		$volume.text(parseInt(volume * 100, 10) + '%');
+		PREFiX.settings.current.volume = volume;
+	}).trigger('change');
+
+	var $play_sound = $('[key="playSound"]');
+	$play_sound.on('change', function(e) {
+		var checked = $play_sound.prop('checked');
+		$('[key="volume"]').prop('disabled', ! checked);
+	}).trigger('change');
+
+	$('#playSound').click(function(e) {
+		bg_win.playSound(true);
 	});
 
 	if (PREFiX.account) {
@@ -107,6 +127,9 @@ $(function() {
 					break;
 				case 'select':
 					value = $item.val();
+					break;
+				case 'range':
+					value = +$item.val();
 					break;
 			}
 			current[key] = value;
