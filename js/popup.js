@@ -1238,7 +1238,22 @@ function loadOldder() {
 }
 
 function remove(e) {
-	showNotification('正在删除..')
+	showNotification('正在删除..');
+	var current_model = getCurrent();
+	var current = current_model.current;
+	var next;
+	if (current) {
+		var index;
+		current_model.statuses.some(function(status, i) {
+			if (status.id === current) {
+				index = i;
+				return true;
+			}
+		});
+		if (index === current_model.statuses.length - 1) {
+			index--;
+		}
+	}
 	var self = this;
 	var status_id = self.$vmodel.status.id;
 	r.destroyStatus({ 
@@ -1257,6 +1272,9 @@ function remove(e) {
 		$item.parents('li').
 		slideUp(function() {
 			self.$vmodel.$remove();
+			if (index >= 0) {
+				setCurrent(current_model, current_model.statuses[index].id);
+			}
 		});
 		if (self.$vmodel.status.is_self && PREFiX.count.mentions) {
 			PREFiX.update();
@@ -1757,6 +1775,21 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 
 	vm.remove = function() {
 		showNotification('正在删除..')
+		var current_model = privatemsgs_model;
+		var current = current_model.current;
+		var next;
+		if (current) {
+			var index;
+			current_model.messages.some(function(message, i) {
+				if (message.id === current) {
+					index = i;
+					return true;
+				}
+			});
+			if (index === current_model.messages.length - 1) {
+				index--;
+			}
+		}
 		var self = this;
 		var message_id = self.$vmodel.message.id;
 		r.destroyDirectMessage({ 
@@ -1775,6 +1808,9 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 			$item.parents('li').
 			slideUp(function() {
 				self.$vmodel.$remove();
+				if (index >= 0) {
+					setCurrent(current_model, current_model.messages[index].id);
+				}
 			});
 		});
 	}
