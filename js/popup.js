@@ -255,7 +255,7 @@ function initKeyboardControlEvents() {
 			case 70 /* F */: case 81 /* Q */:
 			case 82 /* R */: case 68 /* D */:
 			case 32 /* Space */:
-			case 80 /* P */:
+			case 80 /* P */: case 85 /* U */:
 				e.preventDefault();
 				break;
 			default:
@@ -299,6 +299,12 @@ function initKeyboardControlEvents() {
 				var event = new Event('dblclick');
 				$remove[0].dispatchEvent(event);
 			}
+		} else if (e.keyCode === 68) {
+			var $name = $view.find('a.name');
+			$name.click();
+		} else if (e.keyCode === 85) {
+			var $link = $view.find('a.permanent-link');
+			$link.click();
 		} else if (e.keyCode === 32 &&
 			! (e.shiftKey || e.ctrlKey || e.metaKey)) {
 			$textarea.focus();
