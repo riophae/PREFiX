@@ -686,6 +686,13 @@ function initMainUI() {
 		data: PREFiX.friends,
 		search_key: 'string',
 		tpl: '<li data-value="${name}">${name}</li>'
+	}).keydown(function(e) {
+		if (! this.value && e.keyCode === 32 &&
+			! (e.shiftKey || e.ctrlKey || e.metaKey)) {
+			e.stopPropagation();
+			e.preventDefault();
+			$textarea.blur();
+		}
 	});
 
 	$app.on({
