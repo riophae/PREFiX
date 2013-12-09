@@ -165,18 +165,17 @@ function findView(model, id) {
 }
 
 function findModel(model, id) {
-	if (! id) {
-		return (model.statuses || model.messages)[0];
-	}
 	var list = model.statuses || model.messages;
-	var model;
-	list.some(function(item) {
-		if (item.id === id) {
-			model = item;
-			return true;
-		}
-	});
-	return model;
+	var model_found;
+	if (id) {
+		list.some(function(item) {
+			if (item.id === id) {
+				model_found = item;
+				return true;
+			}
+		});
+	}
+	return model_found || list[0];
 }
 
 function setCurrent(model, id) {
@@ -1873,11 +1872,13 @@ searches_model.initialize = function() {
 		$('#topic-selector').prop('disabled', true);
 		$('#loading').show();
 		searches_model.statuses = [];
+		searches_model.current = null;
 		r.getPublicTimeline({
 			count: 60
 		}).next(function(statuses) {
 			unshift(searches_model.statuses, statuses);
 			$('#loading').hide();
+			initKeyboardControl();
 		}).hold(function() {
 			$('#topic-selector').prop('disabled', false);
 		});
@@ -1887,10 +1888,12 @@ searches_model.initialize = function() {
 		$('#topic-selector').prop('disabled', true);
 		$('#loading').show();
 		searches_model.statuses = [];
+		searches_model.current = null;
 		r.getUserTimeline({
 			id: PREFiX.account.id
 		}).next(function(statuses) {
 			unshift(searches_model.statuses, statuses);
+			initKeyboardControl();
 		}).hold(function() {
 			$('#topic-selector').prop('disabled', false);
 		});
@@ -1900,11 +1903,13 @@ searches_model.initialize = function() {
 		$('#topic-selector').prop('disabled', true);
 		$('#loading').show();
 		searches_model.statuses = [];
+		searches_model.current = null;
 		searches_model.page = 1;
 		r.getFavorites({
 			id: PREFiX.account.id
 		}).next(function(statuses) {
 			searches_model.statuses = statuses;
+			initKeyboardControl();
 			updateRelativeTime();
 		}).hold(function() {
 			$('#topic-selector').prop('disabled', false);
@@ -1915,6 +1920,7 @@ searches_model.initialize = function() {
 		$('#loading').show();
 		var keyword = searches_model.keyword;
 		searches_model.statuses = [];
+		searches_model.current = null;
 		var statuses;
 		var is_saved = bg_win.saved_searches_items.some(function(item) {
 			if (item.keyword !== keyword) return;
@@ -1926,6 +1932,7 @@ searches_model.initialize = function() {
 		});
 		if (is_saved) {
 			unshift(searches_model.statuses, statuses);
+			initKeyboardControl();
 		} else {
 			r.searchPublicTimeline({
 				q: keyword
@@ -1933,6 +1940,7 @@ searches_model.initialize = function() {
 				lock: search
 			}).next(function(statuses) {
 				unshift(searches_model.statuses, statuses);
+				initKeyboardControl();
 			});
 		}
 	}
