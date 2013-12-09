@@ -242,6 +242,7 @@ function initKeyboardControlEvents() {
 			var list = current_model.statuses || current_model.messages;
 			target = 0;
 			setCurrent(current_model, list[0].id);
+			$('h1').click();
 		} else if (e.keyCode === 76) {
 			var list = current_model.statuses || current_model.messages;
 			target = $main[0].scrollHeight - $main.height();
