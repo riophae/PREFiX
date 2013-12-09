@@ -156,6 +156,98 @@ function smoothScrollTo(destination) {
 	});
 }
 
+function findView(model, id) {
+	return model.$elem.find('[data-id=' + id + ']');
+}
+
+function findModel(model, id) {
+	if (! id) {
+		return model.$elem.children().first();
+	}
+	var list = model.statuses || model.messages;
+	var model;
+	list.some(function(item) {
+		if (item.id === id) {
+			model = item;
+			return true;
+		}
+	});
+	return model;
+}
+
+function setCurrent(model, id) {
+	var $view = findView(model, id);
+	if ($view.length) {
+		model.current = id;
+		model.$elem.children().removeClass('current');
+		$view.addClass('current');
+	} else {
+		model.current = null;
+	}
+}
+
+function initKeyboardControl() {
+	var model = getCurrent();
+	var list = model.statuses || model.messages;
+	waitFor(function() {
+		return list.length;
+	}, function() {
+		if (! model.current) {
+			model.current = list[0].id;
+		}
+		setCurrent(model, model.current);
+	});
+}
+
+function initKeyboardControlEvents() {
+	var min_pos = 0;
+	min_pos += parseInt($main.css('top'), 0);
+	min_pos += $('#title').height();
+	$main.delegate('[data-id]', 'mouseenter', function(e) {
+		setCurrent(getCurrent(), e.currentTarget.getAttribute('data-id'));
+	});
+	$(window).keydown(function(e) {
+		switch (e.keyCode) {
+			case 74 /* J */: case 75 /* K */:
+			case 72 /* H */: case 76 /* L */:
+				e.preventDefault();
+				break;
+			default:
+				return;
+		}
+		var current_model = getCurrent();
+		var current_id = current_model.current;
+		var $current_view = findView(current_model, current_id);
+		if (e.keyCode === 74) {
+			var $next_view = $current_view.next();
+			if (! $next_view.length) return;
+			var delta = $next_view.offset().top;
+			var current_pos = $main.scrollTop();
+			var height = $current_view.height();
+			var next_view_height = $next_view.height();
+			var target = Math.max(current_pos + height, delta + current_pos - $body.height() + next_view_height);
+			setCurrent(current_model, $next_view.attr('data-id'));
+		} else if (e.keyCode === 75) {
+			var $pre_view = $current_view.prev();
+			if (! $pre_view.length) return;
+			var delta = $pre_view.offset().top;
+			var current_pos = $main.scrollTop();
+			var height = $pre_view.height();
+			var target = Math.min(current_pos - height, delta + current_pos - min_pos);
+			setCurrent(current_model, $pre_view.attr('data-id'));
+		} else if (e.keyCode === 72) {
+			var list = current_model.statuses || current_model.messages;
+			target = 0;
+			setCurrent(current_model, list[0].id);
+		} else if (e.keyCode === 76) {
+			var list = current_model.statuses || current_model.messages;
+			target = $main[0].scrollHeight - $main.height();
+			setCurrent(current_model, list[list.length - 1].id);
+		}
+		smoothScrollTo(target);
+	});
+}
+
 var showNotification = (function() {
 	var timeout;
 	return function(text) {
@@ -794,6 +886,11 @@ function initMainUI() {
 		}
 	});
 
+	tl_model.$elem = $('#home-timeline');
+	mentions_model.$elem = $('#mentions');
+	privatemsgs_model.$elem = $('#privatemsgs');
+	searches_model.$elem = $('#saved-searches');
+
 	resetLoadingEffect();
 
 	setInterval(updateRelativeTime, 15000);
@@ -813,8 +910,10 @@ function cutStream() {
 	var current = getCurrent();
 	if (current.statuses) {
 		current.statuses = current.statuses.slice(0, 20);
+		current.current = current.statuses[0].id;
 	} else {
 		current.messages = current.messages.slice(0, 20);
+		current.current = current.messages[0].id;
 	}
 }
 
@@ -956,15 +1055,6 @@ function resetLoadingEffect() {
 	}, 0);
 }
 
-function appendStatuses(statuses) {
-	var model = getCurrent();
-	push(model.statuses, statuses);
-}
-
-function bufferStatuses(statuses) {
-	push(PREFiX.homeTimeline.buffered, statuses);
-}
-
 function insertKeepScrollTop(insert) {
 	var scroll_top = $main[0].scrollTop;
 	var scroll_height = $main[0].scrollHeight;
@@ -1048,7 +1138,7 @@ function loadOldder() {
 				loading = false;
 			}
 		}).next(function(statuses) {
-			appendStatuses(statuses)
+			push(model.statuses, statuses);
 		});
 	} else {
 		var oldest_message = model.messages[model.messages.length - 1];
@@ -1423,6 +1513,8 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 });
 
 var tl_model = avalon.define('home-timeline', function(vm) {
+	vm.current = PREFiX.homeTimeline.current;
+
 	vm.remove = remove;
 
 	;[ 'reply', 'repost' ].forEach(function(type) {
@@ -1436,10 +1528,12 @@ var tl_model = avalon.define('home-timeline', function(vm) {
 	vm.statuses = [];
 
 	vm.scrollTop = 0;
-
-	vm.$watch('scrollTop', function(value) {
-		PREFiX.homeTimeline.scrollTop = value;
-	});
+});
+tl_model.$watch('current', function(value) {
+	PREFiX.homeTimeline.current = value;
+});
+tl_model.$watch('scrollTop', function(value) {
+	PREFiX.homeTimeline.scrollTop = value;
 });
 tl_model.statuses.$watch('length', function() {
 	PREFiX.homeTimeline.statuses = tl_model.$model.statuses.map(function(s) {
@@ -1459,6 +1553,7 @@ tl_model.initialize = function() {
 		markBreakpoint();
 		setTimeout(function() {
 			$main.scrollTop(PREFiX.homeTimeline.scrollTop);
+			initKeyboardControl();
 		}, 50);
 		updateRelativeTime();
 	});
@@ -1505,6 +1600,8 @@ tl_model.unload = function() {
 }
 
 var mentions_model = avalon.define('mentions', function(vm) {
+	vm.current = PREFiX.mentions.current;
+
 	vm.remove = remove;
 
 	;[ 'reply', 'repost' ].forEach(function(type) {
@@ -1518,10 +1615,12 @@ var mentions_model = avalon.define('mentions', function(vm) {
 	vm.statuses = [];
 
 	vm.scrollTop = 0;
-
-	vm.$watch('scrollTop', function(value) {
-		PREFiX.mentions.scrollTop = value;
-	});
+});
+mentions_model.$watch('current', function(value) {
+	PREFiX.mentions.current = value;
+});
+mentions_model.$watch('scrollTop', function(value) {
+	PREFiX.mentions.scrollTop = value;
 });
 mentions_model.statuses.$watch('length', function() {
 	PREFiX.mentions.statuses = mentions_model.$model.statuses.map(function(s) {
@@ -1566,6 +1665,7 @@ mentions_model.initialize = function() {
 	var mentions = PREFiX.mentions;
 	mentions_model.statuses = mentions.statuses;
 	$main.scrollTop(mentions.scrollTop);
+	initKeyboardControl();
 	updateRelativeTime();
 	update();
 
@@ -1576,6 +1676,8 @@ mentions_model.unload = function() {
 }
 
 var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
+	vm.current = PREFiX.privatemsgs.current;
+
 	vm.remove = function() {
 		showNotification('正在删除..')
 		var self = this;
@@ -1613,10 +1715,12 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 	vm.messages = [];
 
 	vm.scrollTop = 0;
-
-	vm.$watch('scrollTop', function(value) {
-		PREFiX.privatemsgs.scrollTop = value;
-	});
+});
+privatemsgs_model.$watch('current', function(value) {
+	PREFiX.privatemsgs.current = value;
+});
+privatemsgs_model.$watch('scrollTop', function(value) {
+	PREFiX.privatemsgs.scrollTop = value;
 });
 privatemsgs_model.messages.$watch('length', function() {
 	PREFiX.privatemsgs.messages = privatemsgs_model.$model.messages.map(function(m) {
@@ -1627,6 +1731,8 @@ privatemsgs_model.initialize = function() {
 	$('#navigation-bar .privatemsgs').addClass('current');
 	$('#title h2').text('Private Messages');
 	$('#privatemsgs').addClass('current');
+
+	initKeyboardControl();
 
 	function check() {
 		if (! is_focused || $main[0].scrollTop) return;
@@ -1661,6 +1767,7 @@ privatemsgs_model.initialize = function() {
 	var privatemsgs = PREFiX.privatemsgs;
 	privatemsgs_model.messages = privatemsgs.messages;
 	$main.scrollTop(privatemsgs.scrollTop);
+	initKeyboardControl();
 	updateRelativeTime();
 	update();
 
@@ -1900,6 +2007,8 @@ $(function() {
 			$textarea[0].selectionStart = $textarea[0].selectionEnd = 0;
 		}
 		getCurrent().initialize();
+		initKeyboardControl();
+		initKeyboardControlEvents();
 		setTimeout(showUsageTip, 100);
 	}, 100);
 	var $tip = $('#uploading-photo-tip');

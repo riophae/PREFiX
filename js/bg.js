@@ -594,15 +594,18 @@ function unload() {
 	PREFiX.homeTimeline = {
 		statuses: [],
 		buffered: [],
-		scrollTop: 0
+		scrollTop: 0,
+		current: ''
 	};
 	PREFiX.mentions = { 
 		statuses: [],
-		scrollTop: 0
+		scrollTop: 0,
+		current: ''
 	};
 	PREFiX.privatemsgs = { 
 		messages: [],
-		scrollTop: 0
+		scrollTop: 0,
+		current: ''
 	};
 	PREFiX.keyword = '';
 	PREFiX.friends = [];
@@ -1003,15 +1006,18 @@ var PREFiX = this.PREFiX = {
 	homeTimeline: {
 		statuses: [],
 		buffered: [],
-		scrollTop: 0
+		scrollTop: 0,
+		current: ''
 	},
 	mentions: { 
 		statuses: [],
-		scrollTop: 0
+		scrollTop: 0,
+		current: ''
 	},
 	privatemsgs: { 
 		messages: [],
-		scrollTop: 0
+		scrollTop: 0,
+		current: ''
 	},
 	friends: [],
 	settings: settings,

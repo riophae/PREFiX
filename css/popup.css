@@ -1454,7 +1454,8 @@ html.panel-mode #new-window {
 	-webkit-perspective-origin: top center;
 	perspective-origin: top center;
 }
-.status-list li:hover {
+.status-list li:hover,
+.status-list li.current {
 	background: url('/images/status-bg.png') repeat;
 	box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset;
 }
