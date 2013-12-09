@@ -772,6 +772,9 @@
     }
     avalon.parseHTML = function(html) {
         html = html.replace(rxhtml, "<$1></$2>").trim()
+        if (deleteRange.createContextualFragment && !rnest.test(html) && !/<script/.test(html)) {
+            return DOC.createRange().createContextualFragment(html)
+        }
         var fragment = documentFragment.cloneNode(false)
         var tag = (rtagName.exec(html) || ["", ""])[1].toLowerCase()
         if (!(tag in tagHooks)) {
@@ -1111,6 +1114,19 @@
     //http://www.w3.org/TR/html5/syntax.html#void-elements
     var stopScan = oneObject("area,base,basefont,br,col,command,embed,hr,img,input,link,meta,param,source,track,wbr,noscript,noscript,script,style,textarea")
 
+    //确保元素的内容被完全扫描渲染完毕才调用回调
+    function checkScan(elem, callback) {
+        var innerHTML = NaN, id = setInterval(function() {
+            var currHTML = elem.innerHTML
+            if (currHTML === innerHTML) {
+                clearInterval(id)
+                callback()
+            } else {
+                innerHTML = currHTML
+            }
+        }, 15);
+    }
+
     function scanNodes(parent, vmodels, state) {
         var nodes = aslice.call(parent.childNodes)
         for (var i = 0, node; node = nodes[i++]; ) {
@@ -1122,9 +1138,11 @@
         }
     }
 
+
+
     function scanTag(elem, vmodels, state, node) {
         vmodels = vmodels || []
-        //扫描顺序  ms-skip --> ms-important --> ms-controller --> ms-if --> ms-repeat -->...
+        //扫描顺序  ms-skip --> ms-important --> ms-controller --> ms-if --> ms-repeat -->...--〉ms-duplex垫后
         var a = elem.getAttribute(prefix + "skip")
         var b = elem.getAttributeNode(prefix + "important")
         var c = elem.getAttributeNode(prefix + "controller")
@@ -1226,7 +1244,9 @@
                             node: node,
                             value: node.nodeValue
                         }
-                        if (node.name === "ms-if") {
+                        if (binding.type === "repeat") {
+                            repeatBinding = binding
+                        } else if (node.name === "ms-if") {
                             ifBinding = binding
                         } else {
                             bindings.push(binding)
@@ -1236,6 +1256,12 @@
             }
         }
         bindings.sort(function(a, b) {
+            if (a.type === "duplex") {//确保duplex排在ms-value的后面
+                return Infinity
+            }
+            if (b.type == "duplex") {
+                return -Infinity
+            }
             return a.node.name > b.node.name
         })
         if (repeatBinding) {
@@ -1692,7 +1718,9 @@
                         }
                         avalon.innerHTML(elem, text)
                         scanNodes(elem, vmodels, data.state)
-                        rendered && rendered.call(elem)
+                        rendered && checkScan(elem, function() {
+                            rendered.call(elem)
+                        })
                     }
                     if (data.param === "src") {
                         if (includeContents[val]) {
@@ -1907,9 +1935,10 @@
                     if (method === "hover") { //在移出移入时切换类名
                         var event1 = "mouseenter"
                         var event2 = "mouseleave"
+                        var event3
                     } else { //在聚焦失焦中切换类名
                         elem.tabIndex = elem.tabIndex || -1
-                        event1 = "mousedown", event2 = "mouseup"
+                        event1 = "mousedown", event2 = "mouseup", event3 = "mouseleave"
                     }
                     $elem.bind(event1, function() {
                         toggle && $elem.addClass(className)
@@ -1917,6 +1946,11 @@
                     $elem.bind(event2, function() {
                         toggle && $elem.removeClass(className)
                     })
+                    if (event3) {
+                        $elem.bind(event3, function() {
+                            toggle && $elem.removeClass(className)
+                        })
+                    }
                 }
 
             } else if (method === "class") {
@@ -2075,10 +2109,12 @@
             }
         }
         $elem.bind("change", updateModel)
-        setTimeout(function() {
+        checkScan($elem[0], function() {
+            //先等到select里的option元素被扫描后，才根据model设置selected属性  
             registerSubscriber(updateView, data)
         })
     }
+
     modelBinding.TEXTAREA = modelBinding.INPUT
     //========================= event binding ====================
     var eventName = {
@@ -2091,12 +2127,19 @@
             break;
         }
     }
+    // 用于替换 click 的 touch 事件
+    var click2Touch = "ontouchstart" in window ? {
+        "click": "tap",
+        "dblclick": "doubletap"
+    } : {}
     "dblclick,mouseout,click,mouseover,mouseenter,mouseleave,mousemove,mousedown,mouseup,keypress,keydown,keyup,blur,focus,change,animationend".
             replace(rword, function(name) {
-        bindingHandlers[name] = function(data) {
-            data.param = name
-            bindingHandlers.on.apply(0, arguments)
-        }
+        bindingHandlers[name] = (function(dataParam) {
+            return function(data) {
+                data.param = dataParam;
+                bindingHandlers.on.apply(0, arguments)
+            }
+        })(click2Touch[name] || name)
     })
     if (!("onmouseenter" in root)) { //chrome 30  终于支持mouseenter
         var oldBind = avalon.bind
@@ -2267,9 +2310,8 @@
                     }
                 } else if (valueType === "array") {
                     target.clear().push.apply(target, val)
-                }
-                if (target !== val) {
-                    target = val
+                } else if (target !== val) {
+                    this[index] = val
                     notifySubscribers(this, "set", index, val)
                 }
             }
@@ -2352,6 +2394,7 @@
             data.parent.replaceChild(endRepeat, elem)
             data.parent.insertBefore(startRepeat, endRepeat)
             view.appendChild(elem.cloneNode(true))
+            elem.innerHTML = ""
         } else {
             while (elem.firstChild) {
                 view.appendChild(elem.firstChild)
@@ -2471,9 +2514,9 @@
                 break
         }
         var callback = getBindingCallback(data.callbackName, data.vmodels)
-        if (callback) {
+        callback && checkScan(parent, function() {
             callback.call(data.parent, method)
-        }
+        })
     }
 
     function withIterator(method, object, group, data, getter) {
@@ -2504,15 +2547,17 @@
                 break;
         }
         var callback = getBindingCallback(data.callbackName, data.vmodels)
-        if (callback) {
+        callback && checkScan(parent, function() {
             callback.call(data.parent, method)
-        }
+        })
     }
     //收集要移除的节点，第一个节点要求先放进去
 
     function gatherRemovedNodes(array, node, length) {
         for (var i = 1; i < length; i++) {
             node = node.nextSibling
+            if (!node)
+                break
             array.push(node)
         }
         return array
