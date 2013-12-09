@@ -255,6 +255,7 @@ function initKeyboardControlEvents() {
 			case 70 /* F */: case 81 /* Q */:
 			case 82 /* R */: case 68 /* D */:
 			case 32 /* Space */:
+			case 80 /* P */:
 				e.preventDefault();
 				break;
 			default:
@@ -301,6 +302,9 @@ function initKeyboardControlEvents() {
 		} else if (e.keyCode === 32 &&
 			! (e.shiftKey || e.ctrlKey || e.metaKey)) {
 			$textarea.focus();
+		} else if (e.keyCode === 80) {
+			if (is_panel_mode) return;
+			$('#new-window').click();
 		}
 	});
 }

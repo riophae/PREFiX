@@ -77,7 +77,7 @@
     <div id="header">
       <div id="top-bar" class="fix">
         <h1 title="点击回到顶部或刷新 (快捷键 H)"><b>PREFiX</b><span id="back-to-top"></span></h1>
-        <span id="new-window" title="弹出到新窗口"></span>
+        <span id="new-window" title="弹出到新窗口 (快捷键 P)"></span>
         <ul id="navigation-bar" ms-controller="navigation">
           <li class="home-timeline" title="首页 (快捷键 1)" ms-click="showHomeTimeline"><span class="count"></span></li>
           <li class="mentions" title="提到我的 (快捷键 2)" ms-click="showMentions"><span class="count"></span></li>
@@ -86,7 +86,7 @@
         </ul>
       </div>
       <div id="compose-bar" ms-controller="composebar-textarea">
-        <textarea class="content" title="Ctrl + Enter 或双击提交" ms-keydown="onkeydown" ms-dblclick="ondblclick" ms-focus="onfocus" ms-blur="onblur" ms-duplex="text" tabIndex=1></textarea>
+        <textarea class="content" title="Ctrl + Enter 或双击提交 (空格键使输入框得到或失去焦点)" ms-keydown="onkeydown" ms-dblclick="ondblclick" ms-focus="onfocus" ms-blur="onblur" ms-duplex="text" tabIndex=1></textarea>
         <span id="uploading-photo" title="上传照片"><input type="file" id="file" /></span>
       </div>
     </div>
