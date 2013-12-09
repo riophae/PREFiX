@@ -905,6 +905,8 @@ function initMainUI() {
 		var event = new Event('click');
 		$link[0].dispatchEvent(event);
 	}).on('keydown', function(e) {
+		if ($(e.target).is('select'))
+			return;
 		switch (e.keyCode) {
 			case 40: case 38:
 				break;
