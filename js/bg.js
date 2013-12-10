@@ -429,7 +429,8 @@ function update(retry_chances, new_status_id) {
 	var d = new Deferred;
 
 	clearInterval(PREFiX.interval);
-	PREFiX.interval = setInterval(update, 30000);
+	var interval_time = (PREFiX.rateLimit - PREFiX.rateLimitRemaining) / 10 * 1000;
+	PREFiX.interval = setInterval(update, Math.max(interval_time, 30000));
 
 	var tl = PREFiX.homeTimeline;
 	var statuses = fixStatusList(tl.statuses.concat(tl.buffered));
@@ -560,6 +561,9 @@ function load() {
 	};
 	init_interval = setInterval(init_data, 15 * 1000);
 	init_data();
+	PREFiX.rateLimitRemaining = 1500;
+	PREFiX.rateLimitReset = Date.now() + Ripple.OAuth.timeCorrectionMsec;
+	updateRateLimit();
 	update();
 	loadFriends();
 	initSavedSearches();
@@ -900,6 +904,30 @@ Ripple.events.addGlobalObserver('after', function(data, e) {
 	}
 });
 
+Ripple.events.addGlobalObserver('after', function(data, e) {
+	if (! e || e.type !== 'after.ajax_oncomplete')
+		return;
+	e = e.srcEvent;
+	if (! e) return;
+	if (e.url.indexOf('http://api.fanfou.com/') === 0) {
+		PREFiX.rateLimitRemaining--;
+		var now = Date.now() + Ripple.OAuth.timeCorrectionMsec;
+		if (PREFiX.rateLimitReset <= now) {
+			PREFiX.rateLimitRemaining == PREFiX.rateLimit;
+		}
+	}
+});
+
+function updateRateLimit() {
+	if (! PREFiX.account) return;
+	PREFiX.user.getRateLimit().next(function(result) {
+		PREFiX.rateLimit = result.hourly_limit;
+		PREFiX.rateLimitReset = Date.parse(result.reset_time);
+		PREFiX.rateLimitRemaining = result.remaining_hits;
+	});
+}
+setInterval(updateRateLimit, 5 * 60 * 1000);
+
 if (! lscache.get('install_time')) {
 	lscache.set('install_time', Date.now());
 }
@@ -1025,6 +1053,9 @@ var PREFiX = this.PREFiX = {
 		current: ''
 	},
 	friends: [],
+	rateLimit: 1500,
+	rateLimitRemaining: 1500,
+	rateLimitReset: Date.now(),
 	settings: settings,
 	account: lscache.get('account_details'), // 当前账号的数据, 如昵称头像等
 	accessToken: lscache.get('access_token'), // 缓存的 access token, 与饭否服务器联络的凭证
