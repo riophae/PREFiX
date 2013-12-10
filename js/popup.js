@@ -222,6 +222,32 @@ function initKeyboardControlEvents() {
 		var current_model = getCurrent();
 		var current_id = current_model.current;
 		var $current_view = findView(current_model, current_id);
+		var is_context_tl = !! $('body.show-context-timeline').length;
+		var is_photo = !! $('body.show-picture').length;
+		if (is_context_tl || is_photo) {
+			var key_matched = 0;
+			switch (e.keyCode) {
+				case 74:
+					key_matched = 40;
+					break;
+				case 75:
+					key_matched = 38;
+					break;
+				case 72:
+					key_matched = 36;
+					break;
+				case 76:
+					key_matched = 35;
+					break;
+			}
+			if (key_matched) {
+				$(window).trigger({
+					type: 'keydown',
+					keyCode: key_matched
+				});
+			}
+			return;
+		}
 		if (e.keyCode === 74) {
 			var $next_view = $current_view.next();
 			if (! $next_view.length) return;
