@@ -204,7 +204,7 @@ function initKeyboardControl() {
 
 function initKeyboardControlEvents() {
 	var min_pos = 0;
-	min_pos += parseInt($main.css('top'), 0);
+	min_pos += parseInt($main.css('top'), 10);
 	min_pos += $('#title').height();
 	$main.delegate('[data-id]', 'mouseenter', function(e) {
 		setCurrent(getCurrent(), e.currentTarget.getAttribute('data-id'));
@@ -1878,8 +1878,6 @@ privatemsgs_model.initialize = function() {
 	$('#title h2').text('Private Messages');
 	$('#privatemsgs').addClass('current');
 
-	initKeyboardControl();
-
 	function check() {
 		if (! is_focused || $main[0].scrollTop) return;
 		if (PREFiX.count.direct_messages) {
@@ -2163,7 +2161,6 @@ $(function() {
 			$textarea[0].selectionStart = $textarea[0].selectionEnd = 0;
 		}
 		getCurrent().initialize();
-		initKeyboardControl();
 		initKeyboardControlEvents();
 		setTimeout(showUsageTip, 100);
 	}, 100);
