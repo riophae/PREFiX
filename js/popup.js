@@ -307,7 +307,13 @@ function initKeyboardControlEvents() {
 			if ($('body.show-context-timeline').length) {
 				$('#context-timeline').trigger('click');
 			} else {
-				$view.find('.context span').click();
+				var $context = $view.find('.context span');
+				if (e.shiftKey) {
+					var event = new Event('contextmenu');
+					$context[0].dispatchEvent(event);
+				} else {
+					$context.click();
+				}
 			}
 		} else if (e.keyCode === 70) {
 			var $fav = $view.find('a.favourite');
