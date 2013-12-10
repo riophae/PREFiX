@@ -183,6 +183,7 @@ function setCurrent(model, id) {
 	if ($view.length) {
 		model.current = id;
 		model.$elem.children().removeClass('current');
+		model.$elem.find('a.focused').removeClass('focused');
 		$view.addClass('current');
 	} else {
 		model.current = null;
@@ -289,6 +290,7 @@ function initKeyboardControlEvents() {
 			case 82 /* R */: case 68 /* D */:
 			case 32 /* Space */:
 			case 80 /* P */: case 85 /* U */:
+			case 77 /* M */: case 78 /* N */:
 				e.preventDefault();
 				break;
 			default:
@@ -349,7 +351,46 @@ function initKeyboardControlEvents() {
 		} else if (e.keyCode === 80) {
 			if (is_panel_mode) return;
 			$('#new-window').click();
+		} else if (e.keyCode === 78) {
+			var $focused_link = $view.find('.status-content a.focused');
+			if ($focused_link.length) {
+				$focused_link.removeClass('focused');
+				var $next = $focused_link.next('a');
+				if (! $next.length) {
+					$next = $view.find('.status-content a').first();
+				}
+				$next.addClass('focused');
+			} else {
+				var $links = [].slice.call($view.find('.status-content a'));
+				if (! $links.length) return;
+				$($links[0]).addClass('focused');
+			}
+		} else if (e.keyCode === 77) {
+			var $focused_link = $view.find('.status-content a.focused');
+			if ($focused_link.length) {
+				$focused_link.removeClass('focused');
+				var $prev = $focused_link.prev('a');
+				if (! $prev.length) {
+					$prev = $view.find('.status-content a').last();
+				}
+				$prev.addClass('focused');
+			} else {
+				var $links = [].slice.call($view.find('.status-content a')).reverse();
+				if (! $links.length) return;
+				$($links[0]).addClass('focused');
+			}
 		}
+	}).keydown(function(e) {
+		if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey)
+			return;
+		if (e.keyCode !== 13) return;
+		var current_model = getCurrent();
+		var $view = findView(current_model, current_model.current);
+		var $focused_link = $view.find('a.focused');
+		if (! $focused_link.length) return;
+		$focused_link.click().removeClass('focused');
+		e.preventDefault();
+		e.stopPropagation();
 	});
 }
 

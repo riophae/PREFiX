@@ -1624,6 +1624,11 @@ html.panel-mode #new-window {
 	margin: 0 5px;
 	pointer-events: none;
 }
+.status-list .status-content a.focused {
+	outline: 1px dotted rgba(82, 168, 236, .5) !important;
+	background: rgba(82, 168, 236, .25);
+	color: #666 !important;
+}
 .photo img {
 	cursor: -webkit-zoom-in;
 	cursor: zoom-in;
