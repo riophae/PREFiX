@@ -272,6 +272,7 @@ function initKeyboardControlEvents() {
 			if ($scrolling_elem === $main) {
 				if ($main.scrollTop() === 0) {
 					PREFiX.update();
+					cutStream();
 				}
 				setCurrent(current_model, list[0].id);
 			}
