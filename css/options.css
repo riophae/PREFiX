@@ -108,6 +108,9 @@ h1 {
 	min-width: 420px;
 	padding-top: 53px;
 }
+#page-container {
+	padding-bottom: 100px;
+}
 #mainview .page {
 	display: none;
 }
