@@ -210,7 +210,7 @@ function initKeyboardControlEvents() {
 		setCurrent(getCurrent(), e.currentTarget.getAttribute('data-id'));
 	});
 	$(window).keydown(function(e) {
-		if (e.ctrlKey || e.altKey) return;
+		if (e.ctrlKey || e.altKey || e.metaKey) return;
 		switch (e.keyCode) {
 			case 74 /* J */: case 75 /* K */:
 			case 72 /* H */: case 76 /* L */:
@@ -282,7 +282,7 @@ function initKeyboardControlEvents() {
 		}
 		smoothScrollTo(target);
 	}).keydown(function(e) {
-		if (e.ctrlKey || e.altKey) return;
+		if (e.ctrlKey || e.altKey || e.metaKey) return;
 		switch (e.keyCode) {
 			case 86 /* V */: case 67 /* C */:
 			case 70 /* F */: case 81 /* Q */:
@@ -338,8 +338,7 @@ function initKeyboardControlEvents() {
 		} else if (e.keyCode === 85) {
 			var $link = $view.find('a.permanent-link');
 			$link.click();
-		} else if (e.keyCode === 32 &&
-			! (e.shiftKey || e.ctrlKey || e.metaKey)) {
+		} else if (e.keyCode === 32 && ! e.shiftKey) {
 			$textarea.focus();
 		} else if (e.keyCode === 80) {
 			if (is_panel_mode) return;
