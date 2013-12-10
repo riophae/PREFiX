@@ -242,8 +242,13 @@ function initKeyboardControlEvents() {
 		} else if (e.keyCode === 72) {
 			var list = current_model.statuses || current_model.messages;
 			target = 0;
-			setCurrent(current_model, list[0].id);
-			$('h1').click();
+			if ($scrolling_elem === $main) {
+				if ($main.scrollTop() === 0) {
+					PREFiX.update();
+				}
+				setCurrent(current_model, list[0].id);
+			}
+
 		} else if (e.keyCode === 76) {
 			var list = current_model.statuses || current_model.messages;
 			target = $main[0].scrollHeight - $main.height();
