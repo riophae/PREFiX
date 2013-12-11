@@ -1771,6 +1771,7 @@ tl_model.initialize = function() {
 			unshift(tl_model.statuses, buffered);
 		} else {
 			setTimeout(function() {
+				var scroll_top = $main.scrollTop();
 				insertKeepScrollTop(function() {
 					if (buffered.length >= 50) {
 						var now = Date.now();
@@ -1784,7 +1785,9 @@ tl_model.initialize = function() {
 						}
 					}
 					unshift(tl_model.statuses, buffered);
-					autoScroll(tl_model, buffered);
+					if (scroll_top <= 30) {
+						autoScroll(tl_model, buffered);
+					}
 				});
 			}, 50);
 		}
@@ -1848,9 +1851,12 @@ mentions_model.initialize = function() {
 		ajax.next(function(statuses) {
 			if (mentions_model.statuses.length) {
 				if (statuses.length) {
+					var scroll_top = $main.scrollTop();
 					insertKeepScrollTop(function() {
 						unshift(mentions_model.statuses, statuses);
-						autoScroll(mentions_model, statuses);
+						if (scroll_top <= 30) {
+							autoScroll(mentions_model, statuses);
+						}
 					});
 				}
 			} else {
@@ -1969,9 +1975,12 @@ privatemsgs_model.initialize = function() {
 		ajax.next(function(messages) {
 			if (privatemsgs_model.messages.length) {
 				if (messages.length) {
+					var scroll_top = $main.scrollTop();
 					insertKeepScrollTop(function() {
 						unshift(privatemsgs_model.messages, messages);
-						autoScroll(privatemsgs_model, messages);
+						if (scroll_top <= 30) {
+							autoScroll(privatemsgs_model, messages);
+						}
 					});
 				}
 			} else {
