@@ -1638,6 +1638,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 					data.photo = PREFiX.image;
 					r[ PREFiX.image ? 'postPhoto' : 'postStatus' ](data).
 					setupAjax({
+						lock: vm,
 						timeout: PREFiX.image ? 180000 : 30000,
 						onstart: function(e) {
 							if (data.photo) {
@@ -1659,24 +1660,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 						showNotification('发表成功!');
 						vm.text = '';
 						setImage(null);
-						PREFiX.update(7, status.id).next(function() {
-							if (PREFiX.current === 'tl_model') {
-								var now = new Date;
-								waitFor(function() {
-									return tl_model.statuses.some(function(s) {
-											return status.id == s.id;
-										}) || ((new Date) - now > 5000);
-								}, function() {
-									if ($main[0].scrollTop < $main.height() / 2) {
-										setTimeout(function() {
-											goTop(true);
-										}, 100);
-									}
-								});
-							}
-						});
-					}).setupAjax({
-						lock: vm
+						PREFiX.update(7, status.id);
 					}).error(function(e) {
 						if (e.status && e.response) {
 							showNotification(e.response.error);
