@@ -1230,14 +1230,21 @@ function insertKeepScrollTop(insert) {
 }
 
 function autoScroll(model, list) {
-	var item = fixStatusList(list).reverse()[0];
+	list = fixStatusList(list);
+	var item = list.reverse()[0];
 	var $item = model.$elem.find('li[data-id="' + item.id + '"]');
 	if (! $item.length) return;
+	var $breakpoint = $item.next('.breakpoint');
+	if ($breakpoint.length) {
+		$item = $breakpoint;
+	}
 	setTimeout(function() {
 		var offset = $item.offset().top + $item.height();
 		var height = $body.height();
 		var pos = $main.scrollTop();
-		smoothScrollTo(Math.max(pos - (height - offset), 0));
+		var target = Math.max(pos - (height - offset), 0);
+		setCurrent(model, target > 0 ? item.id : list[0].id);
+		smoothScrollTo(target);
 	}, 100);
 }
 
