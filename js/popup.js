@@ -695,6 +695,12 @@ function initMainUI() {
 			prop('href', 'css/font-fix.css').
 			appendTo('head');
 		}
+		if (ratio > 1 && ratio < 1.25) {
+			$('<link />').
+			prop('rel', 'stylesheet').
+			prop('href', 'css/font-fix-2.css').
+			appendTo('head');
+		}
 	}
 
 	var $birthday_cake = $('#birthday-cake');

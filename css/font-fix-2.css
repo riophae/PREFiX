@@ -1,0 +1,7 @@
+#context-timeline ul li .timestamp-client,
+#context-timeline ul li .timestamp-client span,
+.status-list .content .timestamp-client,
+.status-list .content .timestamp-client span,
+.status-list .breakpoint {
+	font-family: Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
+}
