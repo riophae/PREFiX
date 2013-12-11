@@ -1966,7 +1966,17 @@ privatemsgs_model.initialize = function() {
 			if (privatemsgs_model.messages.length) {
 				if (messages.length) {
 					insertKeepScrollTop(function() {
+						messages = fixStatusList(messages);
 						unshift(privatemsgs_model.messages, messages);
+						var message = messages.reverse()[0];
+						var $message = privatemsgs_model.$elem.find('li[data-id="' + message.id + '"]');
+						if (! $message.length) return;
+						setTimeout(function() {
+							var offset = $message.offset().top + $message.height();
+							var height = $body.height();
+							var pos = $main.scrollTop();
+							smoothScrollTo(Math.max(pos - (height - offset), 0));
+						}, 100);
 					});
 				}
 			} else {
