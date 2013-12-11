@@ -1834,9 +1834,21 @@ mentions_model.initialize = function() {
 		}
 		ajax.next(function(statuses) {
 			if (mentions_model.statuses.length) {
-				insertKeepScrollTop(function() {
-					unshift(mentions_model.statuses, statuses);
-				});
+				if (statuses.length) {
+					insertKeepScrollTop(function() {
+						statuses = fixStatusList(statuses);
+						unshift(mentions_model.statuses, statuses);
+						var status = statuses.reverse()[0];
+						var $status = mentions_model.$elem.find('li[data-id="' + status.id + '"]');
+						if (! $status.length) return;
+						setTimeout(function() {
+							var offset = $status.offset().top + $status.height();
+							var height = $body.height();
+							var pos = $main.scrollTop();
+							smoothScrollTo(Math.max(pos - (height - offset), 0));
+						}, 100);
+					});
+				}
 			} else {
 				mentions_model.statuses = fixStatusList(statuses);
 				resetLoadingEffect();
@@ -1952,9 +1964,11 @@ privatemsgs_model.initialize = function() {
 		}
 		ajax.next(function(messages) {
 			if (privatemsgs_model.messages.length) {
-				insertKeepScrollTop(function() {
-					unshift(privatemsgs_model.messages, messages);
-				});
+				if (messages.length) {
+					insertKeepScrollTop(function() {
+						unshift(privatemsgs_model.messages, messages);
+					});
+				}
 			} else {
 				privatemsgs_model.messages = fixStatusList(messages);	
 				resetLoadingEffect();
