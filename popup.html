@@ -115,7 +115,7 @@
               </div>
               <div class="content">
                 <div class="info fix">
-                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="'发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
                   <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
@@ -147,7 +147,7 @@
               </div>
               <div class="content">
                 <div class="info fix">
-                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="'发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
                   <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
@@ -176,7 +176,7 @@
               </div>
               <div class="content">
                 <div class="info fix">
-                  <a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name" ms-data-send-pm="message.sender.id + ':' + message.sender.name" ms-title="'发送私信给 @' + message.sender.name + ' (快捷键 D)'"></a>
+                  <a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name" ms-data-send-pm="message.sender.id + ':' + message.sender.name" ms-title="message.is_self ? '查看我的消息' : '发送私信给 @' + message.sender.name + ' (快捷键 D)'"></a>
                   <span class="timestamp-client" ms-html="message.relativeTime"></span>
                 </div>
                 <div class="status-content" ms-html="message.fixedText"></div>
@@ -201,7 +201,7 @@
               </div>
               <div class="content">
                 <div class="info fix">
-                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="'发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+                  <a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
                   <a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
                   <span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
                 </div>
