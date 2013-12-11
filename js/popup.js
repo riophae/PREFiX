@@ -1229,6 +1229,18 @@ function insertKeepScrollTop(insert) {
 	}, 50);
 }
 
+function autoScroll(model, list) {
+	var item = fixStatusList(list).reverse()[0];
+	var $item = model.$elem.find('li[data-id="' + item.id + '"]');
+	if (! $item.length) return;
+	setTimeout(function() {
+		var offset = $item.offset().top + $item.height();
+		var height = $body.height();
+		var pos = $main.scrollTop();
+		smoothScrollTo(Math.max(pos - (height - offset), 0));
+	}, 100);
+}
+
 function loadOldder() {
 	var model = getCurrent();
 	if (model === searches_model) {
@@ -1771,17 +1783,8 @@ tl_model.initialize = function() {
 							oldest_status.loaded_at = 'Loaded @ ' + getShortTime(now) + '.';
 						}
 					}
-					buffered = fixStatusList(buffered);
 					unshift(tl_model.statuses, buffered);
-					var status = buffered.reverse()[0];
-					var $status = tl_model.$elem.find('li[data-id="' + status.id + '"]');
-					if (! $status.length) return;
-					setTimeout(function() {
-						var offset = $status.offset().top + $status.height();
-						var height = $body.height();
-						var pos = $main.scrollTop();
-						smoothScrollTo(Math.max(pos - (height - offset), 0));
-					}, 100);
+					autoScroll(tl_model, buffered);
 				});
 			}, 50);
 		}
@@ -1846,17 +1849,8 @@ mentions_model.initialize = function() {
 			if (mentions_model.statuses.length) {
 				if (statuses.length) {
 					insertKeepScrollTop(function() {
-						statuses = fixStatusList(statuses);
 						unshift(mentions_model.statuses, statuses);
-						var status = statuses.reverse()[0];
-						var $status = mentions_model.$elem.find('li[data-id="' + status.id + '"]');
-						if (! $status.length) return;
-						setTimeout(function() {
-							var offset = $status.offset().top + $status.height();
-							var height = $body.height();
-							var pos = $main.scrollTop();
-							smoothScrollTo(Math.max(pos - (height - offset), 0));
-						}, 100);
+						autoScroll(mentions_model, statuses);
 					});
 				}
 			} else {
@@ -1976,17 +1970,8 @@ privatemsgs_model.initialize = function() {
 			if (privatemsgs_model.messages.length) {
 				if (messages.length) {
 					insertKeepScrollTop(function() {
-						messages = fixStatusList(messages);
 						unshift(privatemsgs_model.messages, messages);
-						var message = messages.reverse()[0];
-						var $message = privatemsgs_model.$elem.find('li[data-id="' + message.id + '"]');
-						if (! $message.length) return;
-						setTimeout(function() {
-							var offset = $message.offset().top + $message.height();
-							var height = $body.height();
-							var pos = $main.scrollTop();
-							smoothScrollTo(Math.max(pos - (height - offset), 0));
-						}, 100);
+						autoScroll(privatemsgs_model, messages);
 					});
 				}
 			} else {
