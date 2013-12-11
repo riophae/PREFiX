@@ -425,8 +425,9 @@ function showUsageTip() {
 	var pos = lscache.get('usage_tip_pos') || 0;
 	pos = Math.min(pos, usage_tips.length);
 	var tip = usage_tips[pos];
+	var $usage_tip = $('#usage-tip');
 	if (! tip) {
-		$('#usage-tip').remove();
+		$usage_tip.remove();
 		return;
 	}
 	$('#hide-usage-tip').click(function(e) {
@@ -437,8 +438,21 @@ function showUsageTip() {
 	$('#usage-tip-content').html(tip);
 	var $title = $('#title');
 	$title.addClass('show-usage-tip');
+	var width = $usage_tip.width();
+	var delta = width - $body.width() + 25;
+	if (delta > 0) {
+		setTimeout(function() {
+			$usage_tip.css('margin-left', 0).
+			animate({
+				'margin-left': -delta + 'px'
+			}, 3000);
+		}, 3000);
+	}
 	setTimeout(function() {
 		$title.removeClass('show-usage-tip');
+		$usage_tip.animate({
+			'margin-left': 0
+		}, 400);
 	}, 15000);
 }
 

@@ -1403,6 +1403,7 @@ html.panel-mode #new-window {
 }
 #title.show-usage-tip {
 	margin-left: -400px;
+	width: 9999px;
 }
 #title h2 {
 	font: 18px "HelveticaNeueLT Pro for PERFiX", "Helvetica Neue LT Pro Light";
@@ -1424,6 +1425,9 @@ html.panel-mode #new-window {
 	position: absolute;
 	left: 400px;
 	top: 50%;
+	display: inline-block;
+	height: 21px;
+	line-height: 21px;
 	padding-left: 15px;
 	-webkit-transform: translateY(-50%);
 	transform: translateY(-50%);
