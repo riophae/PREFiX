@@ -265,6 +265,7 @@ function initKeyboardControlEvents() {
 			var current_pos = $main.scrollTop();
 			var height = $pre_view.height();
 			var target = Math.min(current_pos - height, delta + current_pos - min_pos);
+			target = Math.max(target, current_pos + delta + height - $body.height());
 			setCurrent(current_model, $pre_view.attr('data-id'));
 		} else if (e.keyCode === 72) {
 			var list = current_model.statuses || current_model.messages;
