@@ -961,7 +961,8 @@ var settings = {
 		drawAttention: true,
 		showSavedSearchCount: true,
 		createPopAtStartup: false,
-		volume: 1
+		volume: 1,
+		holdCtrlToSubmit: false
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };

@@ -1605,10 +1605,13 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	}
 	vm.ondblclick = function(e) {
 		if (e.ctrlKey || e.metaKey) {
-			if (! vm.text.trim()) {
+			if (! vm.text.trim() && ! PREFiX.image) {
 				vm.text = $textarea.prop('placeholder');
 			}
+		} else if (PREFiX.settings.current.holdCtrlToSubmit) {
+			return;
 		}
+		e.preventDefault();
 		return vm.onkeydown({
 			ctrlKey: true,
 			keyCode: 13
