@@ -1771,7 +1771,17 @@ tl_model.initialize = function() {
 							oldest_status.loaded_at = 'Loaded @ ' + getShortTime(now) + '.';
 						}
 					}
+					buffered = fixStatusList(buffered);
 					unshift(tl_model.statuses, buffered);
+					var status = buffered.reverse()[0];
+					var $status = tl_model.$elem.find('li[data-id="' + status.id + '"]');
+					if (! $status.length) return;
+					setTimeout(function() {
+						var offset = $status.offset().top + $status.height();
+						var height = $body.height();
+						var pos = $main.scrollTop();
+						smoothScrollTo(Math.max(pos - (height - offset), 0));
+					}, 100);
 				});
 			}, 50);
 		}
