@@ -452,7 +452,7 @@ function showUsageTip() {
 		$title.removeClass('show-usage-tip');
 		$usage_tip.animate({
 			'margin-left': 0
-		}, 400);
+		}, 100);
 	}, 15000);
 }
 

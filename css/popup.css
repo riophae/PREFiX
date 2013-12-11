@@ -1399,7 +1399,7 @@ html.panel-mode #new-window {
 	position: relative;
 	-webkit-transition: margin-left .4s ease-in-out;
 	transition: margin-left .4s ease-in-out;
-	width: 800px;
+	width: 2000px;
 }
 #title.show-usage-tip {
 	margin-left: -400px;
@@ -1415,7 +1415,7 @@ html.panel-mode #new-window {
 }
 #topic-selector {
 	position: absolute;
-	right: 415px;
+	right: 1615px;
 	top: 50%;
 	margin: 0;
 	-webkit-transform: translateY(-50%);
@@ -1429,6 +1429,8 @@ html.panel-mode #new-window {
 	height: 21px;
 	line-height: 21px;
 	padding-left: 15px;
+	-webkit-transition: margin-left .1s linear;
+	transition: margin-left .1s linear;
 	-webkit-transform: translateY(-50%);
 	transform: translateY(-50%);
 }
