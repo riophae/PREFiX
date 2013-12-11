@@ -874,7 +874,17 @@ Ripple.events.observe('process_status', function(status) {
 	html = jEmoji.docomoToUnified(html);
 	html = jEmoji.kddiToUnified(html);
 	html = jEmoji.unifiedToHTML(html);
-	status.fixedText = html.replace(/\s*\n+\s*/g, '<br />');
+
+	html = html.replace(/\s*\n+\s*/g, '<br />');
+
+	var mention_re = /<a href="http:\/\/fanfou\.com\/([^"]+)" class="former">([^<]+)<\/a>/gi;
+	html = html.replace(mention_re, function(_, id, name) {
+		return '<a href="http://fanfou.com/' + id +
+			'" title="@' + name + ' (' + id +
+			')">' + name + '</a>';
+	});
+
+	status.fixedText = html;
 
 	if (status.photo) {
 		var img = new Image;
