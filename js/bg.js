@@ -466,10 +466,11 @@ function update(retry_chances, new_status_id) {
 				if (! PREFiX.popupActive && tl.scrollTop < 30) {
 					var buffered_count = tl.buffered.length;
 					var read_count = tl.statuses.length;
-					if (buffered_count + read_count > 20) {
-						tl.statuses.splice(Math.max(0, 20 - buffered_count));
-						if (buffered_count > 20) {
-							tl.buffered.splice(20);
+					var cache_amount = settings.current.cacheAmount;
+					if (buffered_count + read_count > cache_amount) {
+						tl.statuses.splice(Math.max(0, cache_amount - buffered_count));
+						if (buffered_count > cache_amount) {
+							tl.buffered.splice(cache_amount);
 						}
 					}
 				}
@@ -943,6 +944,7 @@ var settings = {
 		birthdayNoticeType: 'only_friends',
 		birthdayGreetingType: 'post_status',
 		autoFlushCache: false,
+		cacheAmount: 75,
 		zoomRatio: '1',
 		drawAttention: true,
 		showSavedSearchCount: true,

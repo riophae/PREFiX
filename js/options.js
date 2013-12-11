@@ -46,6 +46,18 @@ $(function() {
 		bg_win.playSound(true);
 	});
 
+	var $auto_flush_cache = $('[key="autoFlushCache"]');
+	var $cache_amount = $('[key="cacheAmount"]');
+
+	$auto_flush_cache.on('change', function(e) {
+		var checked = $auto_flush_cache.prop('checked');
+		$cache_amount.prop('disabled', ! checked);
+	}).trigger('change');
+
+	$cache_amount.on('change', function(e) {
+		$('#cacheAmount').text($cache_amount.val());
+	}).trigger('change');
+
 	if (PREFiX.account) {
 		$('#username').
 		text('@' + PREFiX.account.name + ' (' + PREFiX.account.id + ')').
