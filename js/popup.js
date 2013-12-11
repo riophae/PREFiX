@@ -1258,7 +1258,9 @@ function autoScroll(model, list) {
 		var pos = $main.scrollTop();
 		var target = Math.max(pos - (height - offset), 0);
 		setCurrent(model, target > 0 ? item.id : list[0].id);
-		smoothScrollTo(target);
+		if ($scrolling_elem === $main) {
+			smoothScrollTo(target);
+		}
 	}, 100);
 }
 
