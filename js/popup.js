@@ -302,14 +302,13 @@ function initKeyboardControlEvents() {
 		var $view = findView(current_model, current_model.current);
 		var current = findModel(current_model, current_model.current);
 		if (e.keyCode === 86) {
+			if ($('body.show-picture').length) {
+				hidePicture();
+			} else if (! e.shiftKey) {
+				$view.find('.photo img').click();
+			}
 			if (e.shiftKey) {
 				$view.find('.photo img').trigger('contextmenu');
-			} else {
-				if ($('body.show-picture').length) {
-					hidePicture();
-				} else {
-					$view.find('.photo img').click();
-				}
 			}
 		} else if (e.keyCode === 67) {
 			if ($('body.show-context-timeline').length) {
