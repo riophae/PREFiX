@@ -1246,13 +1246,13 @@ function insertKeepScrollTop(insert) {
 function autoScroll(model, list) {
 	list = fixStatusList(list);
 	var item = list.reverse()[0];
-	var $item = model.$elem.find('li[data-id="' + item.id + '"]');
-	if (! $item.length) return;
-	var $breakpoint = $item.next('.breakpoint');
-	if ($breakpoint.length) {
-		$item = $breakpoint;
-	}
 	setTimeout(function() {
+		var $item = model.$elem.find('li[data-id="' + item.id + '"]');
+		if (! $item.length) return;
+		var $breakpoint = $item.next('.breakpoint');
+		if ($breakpoint.length) {
+			$item = $breakpoint;
+		}
 		var offset = $item.offset().top + $item.height();
 		var height = $body.height();
 		var pos = $main.scrollTop();
