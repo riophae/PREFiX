@@ -2265,7 +2265,7 @@ $(function() {
 	}, 100);
 	var $tip = $('#uploading-photo-tip');
 	var shown = lscache.get('uploading_photo_tip');
-	if (! shown) {
+	if (! shown && lscache.get('hide-following-tip')) {
 		$('#hide-uploading-photo-tip').click(function(e) {
 			$tip.css({
 				'animation-name': 'wobbleOut',
