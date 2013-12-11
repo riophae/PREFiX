@@ -223,12 +223,13 @@ Deferred.parallel = function (dl) {
 					values = Array.prototype.slice.call(values, 0);
 				}
 				if (failed) {
-					ret.fail();
+					ret.fail(values);
 				} else {
 					ret.call(values);
 				}
 			}
 		}).error(function (e) {
+			values[i] = e;
 			failed = true;
 			if (--num <= 0) {
 				ret.fail();

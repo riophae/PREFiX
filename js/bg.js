@@ -495,6 +495,8 @@ function update(retry_chances, new_status_id) {
 		chrome.browserAction.setTitle({
 			title: 'PREFiX - 网络连接断开或内部错误'
 		});
+		var time = getShortTime(new Date);
+		console.log('Error thrown @ ' + time, e);
 	});
 
 	return d;
