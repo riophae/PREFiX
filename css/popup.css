@@ -1159,6 +1159,7 @@ body.show-context-timeline #context-timeline {
 [platform="mac"] #context-timeline ul li .timestamp-client {
 	height: 18px;
 	margin: 0;
+	line-height: 21px !important
 }
 [platform="mac"] #context-timeline ul li.protected .timestamp-client {
 	background-position: right 5px !important;
