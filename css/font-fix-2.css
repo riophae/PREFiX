@@ -13,3 +13,7 @@
 	-webkit-transform: scale(0.89) translateY(.5px);
 	transform: scale(0.89) translateY(.5px);
 }
+[platform="mac"] #context-timeline ul li.protected .timestamp-client,
+[platform="mac"] .status-list li.protected .timestamp-client {
+	line-height: 20px;
+}
