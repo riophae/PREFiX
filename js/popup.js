@@ -213,8 +213,8 @@ function initKeyboardControlEvents() {
 	$(window).keydown(function(e) {
 		if (e.ctrlKey || e.altKey || e.metaKey) return;
 		switch (e.keyCode) {
-			case 74 /* J */: case 75 /* K */:
-			case 72 /* H */: case 76 /* L */:
+			case 72 /* H */: case 74 /* J */:
+			case 75 /* K */: case 76 /* L */:
 				e.preventDefault();
 				break;
 			default:
@@ -228,14 +228,14 @@ function initKeyboardControlEvents() {
 		if (is_context_tl || is_photo) {
 			var key_matched = 0;
 			switch (e.keyCode) {
+				case 72:
+					key_matched = 36;
+					break;
 				case 74:
 					key_matched = 40;
 					break;
 				case 75:
 					key_matched = 38;
-					break;
-				case 72:
-					key_matched = 36;
 					break;
 				case 76:
 					key_matched = 35;
@@ -249,7 +249,18 @@ function initKeyboardControlEvents() {
 			}
 			return;
 		}
-		if (e.keyCode === 74) {
+
+		if (e.keyCode === 72) {
+			var list = current_model.statuses || current_model.messages;
+			target = 0;
+			if ($scrolling_elem === $main) {
+				if ($main.scrollTop() === 0) {
+					PREFiX.update();
+					cutStream();
+				}
+				setCurrent(current_model, list[0].id);
+			}
+		} else if (e.keyCode === 74) {
 			var $next_view = $current_view.nextAll('li[data-id]').first();
 			if (! $next_view.length) return;
 			var delta = $next_view.offset().top;
@@ -267,22 +278,12 @@ function initKeyboardControlEvents() {
 			var target = Math.min(current_pos - height, delta + current_pos - min_pos);
 			target = Math.max(target, current_pos + delta + height - $body.height());
 			setCurrent(current_model, $pre_view.attr('data-id'));
-		} else if (e.keyCode === 72) {
-			var list = current_model.statuses || current_model.messages;
-			target = 0;
-			if ($scrolling_elem === $main) {
-				if ($main.scrollTop() === 0) {
-					PREFiX.update();
-					cutStream();
-				}
-				setCurrent(current_model, list[0].id);
-			}
-
 		} else if (e.keyCode === 76) {
 			var list = current_model.statuses || current_model.messages;
 			target = $main[0].scrollHeight - $main.height();
 			setCurrent(current_model, list[list.length - 1].id);
 		}
+
 		smoothScrollTo(target);
 	}).keydown(function(e) {
 		if (e.ctrlKey || e.altKey || e.metaKey) return;
