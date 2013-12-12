@@ -324,7 +324,10 @@ function initKeyboardControlEvents() {
 			}
 		} else if (e.keyCode === 68) {
 			var $name = $view.find('a.name');
-			$name.click();
+			$name.trigger({
+				type: 'click',
+				shiftKey: e.shiftKey
+			});
 		} else if (e.keyCode === 70) {
 			var $fav = $view.find('a.favourite');
 			if (e.shiftKey && current.favorited) {
@@ -375,10 +378,16 @@ function initKeyboardControlEvents() {
 			}
 		} else if (e.keyCode === 83) {
 			var $avatar = $view.find('.avatar a');
-			$avatar.click();
+			$avatar.trigger({
+				type: 'click',
+				shiftKey: e.shiftKey
+			});
 		} else if (e.keyCode === 85) {
 			var $link = $view.find('a.permanent-link');
-			$link.click();
+			$link.trigger({
+				type: 'click',
+				shiftKey: e.shiftKey
+			});
 		} else if (e.keyCode === 86) {
 			if ($('body.show-picture').length) {
 				hidePicture();
@@ -386,18 +395,24 @@ function initKeyboardControlEvents() {
 				$view.find('.photo img').click();
 			}
 			if (e.shiftKey) {
-				$view.find('.photo img').trigger('contextmenu');
+				$view.find('.photo img').trigger({
+					type: 'contextmenu',
+					shiftKey: e.shiftKey
+				});
 			}
 		}
 	}).keydown(function(e) {
-		if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey)
+		if (e.ctrlKey || e.metaKey || e.altKey)
 			return;
 		if (e.keyCode !== 13) return;
 		var current_model = getCurrent();
 		var $view = findView(current_model, current_model.current);
 		var $focused_link = $view.find('a.focused');
 		if (! $focused_link.length) return;
-		$focused_link.click().removeClass('focused');
+		$focused_link.removeClass('focused').trigger({
+			type: 'click',
+			shiftKey: e.shiftKey
+		});
 		e.preventDefault();
 		e.stopPropagation();
 	});
@@ -937,7 +952,7 @@ function initMainUI() {
 			return;
 		e.preventDefault();
 		e.stopPropagation();
-		createTab(e.currentTarget.href);
+		createTab(e.currentTarget.href, e.shiftKey);
 	}).delegate('a[href^="/q/"]', 'click', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -948,13 +963,13 @@ function initMainUI() {
 		var large_url = e.target.dataset.largeImg;
 		if (large_url) {
 			e.preventDefault();
-			createTab(large_url);
+			createTab(large_url, e.shiftKey);
 		}
 	}).delegate('.photo img', 'click', function(e) {
 		showPicture(e.target.dataset.largeImg);
 	}).delegate('#picture', 'contextmenu', function(e) {
 		e.preventDefault();
-		createTab(e.target.src);
+		createTab(e.target.src, e.shiftKey);
 		hidePicture();
 	});
 
