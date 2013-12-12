@@ -1255,9 +1255,10 @@ function insertKeepScrollTop(insert) {
 
 function autoScroll(model, list) {
 	list = fixStatusList(list);
-	var item = list.reverse()[0];
+	var first_item = list[0];
+	var last_item = list.reverse()[0];
 	setTimeout(function() {
-		var $item = model.$elem.find('li[data-id="' + item.id + '"]');
+		var $item = model.$elem.find('li[data-id="' + last_item.id + '"]');
 		if (! $item.length) return;
 		var $breakpoint = $item.next('.breakpoint');
 		if ($breakpoint.length) {
@@ -1267,7 +1268,7 @@ function autoScroll(model, list) {
 		var height = $body.height();
 		var pos = $main.scrollTop();
 		var target = Math.max(pos - (height - offset), 0);
-		setCurrent(model, target > 0 ? item.id : list[0].id);
+		setCurrent(model, target > 0 ? last_item.id : first_item.id);
 		if ($scrolling_elem === $main) {
 			smoothScrollTo(target);
 		}
