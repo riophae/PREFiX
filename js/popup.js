@@ -2318,6 +2318,13 @@ onunload = function() {
 	PREFiX.popupActive = false;
 	if ($main[0].scrollTop < 30)
 		cutStream();
+	if (is_panel_mode) {
+		var pos = {
+			x: screenX,
+			y: screenY
+		};
+		lscache.set('popup_pos', pos);
+	}
 }
 
 if (location.search == '?new_window=true') {

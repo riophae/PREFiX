@@ -31,14 +31,18 @@ function createPopup() {
 	var height = getViewHeight();
 	var url = '/popup.html?new_window=true';
 	var size = getDefaultWindowSize(width, height);
+	var pos = lscache.get('popup_pos') || {
+		x: Math.round((screen.width - size.width) / 2),
+		y: Math.round((screen.height - size.height) / 2)
+	};
 	var options = {
 		url: url,
 		focused: true,
 		type: 'panel',
 		width: Math.round(size.width),
 		height: Math.round(size.height),
-		left: Math.round((screen.width - size.width) / 2),
-		top: Math.round((screen.height - size.height) / 2)
+		left: pos.x,
+		top: pos.y
 	};
 	chrome.windows.create(options);
 }
@@ -237,8 +241,8 @@ function getDefaultWindowSize(width, height) {
 	var delta_x = lscache.get('delta_x') || outerWidth - innerWidth;
 	var delta_y = lscache.get('delta_y') || outerHeight - innerHeight;
 	return {
-		width: width + delta_x,
-		height: height + delta_y
+		width: Math.round(width + delta_x),
+		height: Math.round(height + delta_y)
 	};
 }
 
