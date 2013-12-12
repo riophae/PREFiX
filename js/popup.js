@@ -287,12 +287,13 @@ function initKeyboardControlEvents() {
 	}).keydown(function(e) {
 		if (e.ctrlKey || e.altKey || e.metaKey) return;
 		switch (e.keyCode) {
-			case 86 /* V */: case 67 /* C */:
-			case 70 /* F */: case 81 /* Q */:
-			case 82 /* R */: case 68 /* D */:
 			case 32 /* Space */:
-			case 80 /* P */: case 85 /* U */:
-			case 77 /* M */: case 78 /* N */:
+			case 67 /* C */: case 68 /* D */:
+			case 70 /* F */: case 77 /* M */:
+			case 78 /* N */: case 80 /* P */:
+			case 81 /* Q */: case 82 /* R */:
+			case 83 /* S */: case 85 /* U */:
+			case 86 /* V */:
 				e.preventDefault();
 				break;
 			default:
@@ -301,15 +302,8 @@ function initKeyboardControlEvents() {
 		var current_model = getCurrent();
 		var $view = findView(current_model, current_model.current);
 		var current = findModel(current_model, current_model.current);
-		if (e.keyCode === 86) {
-			if ($('body.show-picture').length) {
-				hidePicture();
-			} else if (! e.shiftKey) {
-				$view.find('.photo img').click();
-			}
-			if (e.shiftKey) {
-				$view.find('.photo img').trigger('contextmenu');
-			}
+		if (e.keyCode === 32 && ! e.shiftKey) {
+			$textarea.focus();
 		} else if (e.keyCode === 67) {
 			if ($('body.show-context-timeline').length) {
 				$('#context-timeline').trigger('click');
@@ -322,23 +316,6 @@ function initKeyboardControlEvents() {
 					$context.click();
 				}
 			}
-		} else if (e.keyCode === 70) {
-			var $fav = $view.find('a.favourite');
-			if (e.shiftKey && current.favorited) {
-				$fav[0].click();
-			} else if (! e.shiftKey && ! current.favorited) {
-				$fav[0].click();
-			}
-		} else if (e.keyCode === 81) {
-			var $repost = $view.find('a.repost');
-			if ($repost.length) {
-				$repost[0].click();
-			}
-		} else if (e.keyCode === 82) {
-			var $reply = $view.find('a.reply');
-			if ($reply.length) {
-				$reply[0].click();
-			}
 		} else if (e.keyCode === 68 && e.shiftKey) {
 			var $remove = $view.find('a.remove');
 			if ($remove.length) {
@@ -348,27 +325,12 @@ function initKeyboardControlEvents() {
 		} else if (e.keyCode === 68) {
 			var $name = $view.find('a.name');
 			$name.click();
-		} else if (e.keyCode === 85) {
-			var $link = $view.find('a.permanent-link');
-			$link.click();
-		} else if (e.keyCode === 32 && ! e.shiftKey) {
-			$textarea.focus();
-		} else if (e.keyCode === 80) {
-			if (is_panel_mode) return;
-			$('#new-window').click();
-		} else if (e.keyCode === 78) {
-			var $focused_link = $view.find('.status-content a.focused');
-			if ($focused_link.length) {
-				$focused_link.removeClass('focused');
-				var $next = $focused_link.next('a');
-				if (! $next.length) {
-					$next = $view.find('.status-content a').first();
-				}
-				$next.addClass('focused');
-			} else {
-				var $links = [].slice.call($view.find('.status-content a'));
-				if (! $links.length) return;
-				$($links[0]).addClass('focused');
+		} else if (e.keyCode === 70) {
+			var $fav = $view.find('a.favourite');
+			if (e.shiftKey && current.favorited) {
+				$fav[0].click();
+			} else if (! e.shiftKey && ! current.favorited) {
+				$fav[0].click();
 			}
 		} else if (e.keyCode === 77) {
 			var $focused_link = $view.find('.status-content a.focused');
@@ -383,6 +345,48 @@ function initKeyboardControlEvents() {
 				var $links = [].slice.call($view.find('.status-content a')).reverse();
 				if (! $links.length) return;
 				$($links[0]).addClass('focused');
+			}
+		} else if (e.keyCode === 78) {
+			var $focused_link = $view.find('.status-content a.focused');
+			if ($focused_link.length) {
+				$focused_link.removeClass('focused');
+				var $next = $focused_link.next('a');
+				if (! $next.length) {
+					$next = $view.find('.status-content a').first();
+				}
+				$next.addClass('focused');
+			} else {
+				var $links = [].slice.call($view.find('.status-content a'));
+				if (! $links.length) return;
+				$($links[0]).addClass('focused');
+			}
+		} else if (e.keyCode === 80) {
+			if (is_panel_mode) return;
+			$('#new-window').click();
+		} else if (e.keyCode === 81) {
+			var $repost = $view.find('a.repost');
+			if ($repost.length) {
+				$repost[0].click();
+			}
+		} else if (e.keyCode === 82) {
+			var $reply = $view.find('a.reply');
+			if ($reply.length) {
+				$reply[0].click();
+			}
+		} else if (e.keyCode === 83) {
+			var $avatar = $view.find('.avatar a');
+			$avatar.click();
+		} else if (e.keyCode === 85) {
+			var $link = $view.find('a.permanent-link');
+			$link.click();
+		} else if (e.keyCode === 86) {
+			if ($('body.show-picture').length) {
+				hidePicture();
+			} else if (! e.shiftKey) {
+				$view.find('.photo img').click();
+			}
+			if (e.shiftKey) {
+				$view.find('.photo img').trigger('contextmenu');
 			}
 		}
 	}).keydown(function(e) {
