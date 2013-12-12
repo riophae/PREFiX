@@ -18,5 +18,5 @@
 }
 [platform="mac"] .status-list li.protected .timestamp-client {
 	line-height: 25px;
-	background-position: right 7.5px;
+	background-position: right 7.5px !important;
 }
