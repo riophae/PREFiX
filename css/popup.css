@@ -1146,7 +1146,7 @@ body.show-context-timeline #context-timeline {
 }
 #context-timeline ul li .timestamp-client,
 #context-timeline ul li .timestamp-client span {
-	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
+	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
 	color: #ccc !important;
 }
 #context-timeline ul li.protected .timestamp-client {
@@ -1617,7 +1617,7 @@ html.panel-mode #new-window {
 }
 .status-list .content .timestamp-client,
 .status-list .content .timestamp-client span {
-	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
+	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
 }
 .status-list .status-content {
 	clear: both;

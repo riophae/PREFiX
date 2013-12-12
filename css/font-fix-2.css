@@ -3,5 +3,13 @@
 .status-list .content .timestamp-client,
 .status-list .content .timestamp-client span,
 .status-list .breakpoint {
-	font-family: Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
+	font-family: Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
+}
+#context-timeline ul li .timestamp-client .chs {
+	-webkit-transform: scale(0.89) translateY(0);
+	transform: scale(0.89) translateY(0);
+}
+[platform="win"] .status-list .content .timestamp-client .chs {
+	-webkit-transform: scale(0.89) translateY(.5px);
+	transform: scale(0.89) translateY(.5px);
 }

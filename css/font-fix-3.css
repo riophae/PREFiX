@@ -1,0 +1,10 @@
+[platform="win"] #context-timeline ul li.protected .timestamp-client {
+	background-position: right 5px;
+}
+[platform="win"] .status-list .content .timestamp-client .chs ~ .en {
+	-webkit-transform: translateY(.5px);
+	transform: translateY(.5px);
+}
+[platform="win"] .status-list li.protected .timestamp-client {
+	background-position: right 3px;
+}

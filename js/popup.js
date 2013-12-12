@@ -681,6 +681,8 @@ function initMainUI() {
 		$('html').attr('platform', 'linux');
 	} else if (PREFiX.is_mac) {
 		$('html').attr('platform', 'mac');
+	} else if (is_windows) {
+		$('html').attr('platform', 'win');
 	}
 
 	var ratio = +PREFiX.settings.current.zoomRatio;
@@ -703,6 +705,12 @@ function initMainUI() {
 			$('<link />').
 			prop('rel', 'stylesheet').
 			prop('href', 'css/font-fix-2.css').
+			appendTo('head');
+		}
+		if (ratio === 1.5) {
+			$('<link />').
+			prop('rel', 'stylesheet').
+			prop('href', 'css/font-fix-3.css').
 			appendTo('head');
 		}
 	}
