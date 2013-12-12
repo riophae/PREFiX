@@ -8,7 +8,9 @@
 	height: 15px;
 }
 [platform="linux"] #context-timeline ul li.protected .timestamp-client {
-	background-position: right 5px !important;
+	background-position: right 7px !important;
+	height: 17px;
+	line-height: 21px;
 }
 [platform="mac"] #context-timeline ul .content .timestamp-client {
 	line-height: 20px;
@@ -41,4 +43,9 @@
 [platform="win"] .status-list li .content .timestamp-client .chs {
 	-webkit-transform: scale(0.89) translateY(1.5px);
 	transform: scale(0.89) translateY(1.5px);
+}
+[platform="linux"] #context-timeline ul .content .timestamp-client .chs ~ .en,
+[platform="linux"] .status-list li.protected .timestamp-client .chs ~ .en {
+	-webkit-transform: translateY(0);
+	transform: translateY(0);
 }

@@ -20,3 +20,11 @@
 	line-height: 25px;
 	background-position: right 7.5px !important;
 }
+[platform="linux"] .status-list li.protected .timestamp-client,
+[platform="linux"] #context-timeline ul li.protected .timestamp-client {
+	background-position: right 2px !important;
+}
+[platform="linux"] #context-timeline ul .content .timestamp-client .chs ~ .en {
+	-webkit-transform: translateY(0);
+	transform: translateY(0);
+}
