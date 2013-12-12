@@ -303,7 +303,12 @@ function initKeyboardControlEvents() {
 		var $view = findView(current_model, current_model.current);
 		var current = findModel(current_model, current_model.current);
 		if (e.keyCode === 32 && ! e.shiftKey) {
-			$textarea.focus();
+			if ($scrolling_elem !== $main) {
+				e.keyCode = 8;
+				$(window).trigger(e);
+			} else {
+				$textarea.focus();
+			}
 		} else if (e.keyCode === 67) {
 			if ($('body.show-context-timeline').length) {
 				$('#context-timeline').trigger('click');
