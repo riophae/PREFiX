@@ -250,7 +250,7 @@ function initKeyboardControlEvents() {
 			return;
 		}
 		if (e.keyCode === 74) {
-			var $next_view = $current_view.next();
+			var $next_view = $current_view.nextAll('li[data-id]').first();
 			if (! $next_view.length) return;
 			var delta = $next_view.offset().top;
 			var current_pos = $main.scrollTop();
@@ -259,7 +259,7 @@ function initKeyboardControlEvents() {
 			var target = Math.max(current_pos + height, delta + current_pos - $body.height() + next_view_height);
 			setCurrent(current_model, $next_view.attr('data-id'));
 		} else if (e.keyCode === 75) {
-			var $pre_view = $current_view.prev();
+			var $pre_view = $current_view.prevAll('li[data-id]').first();
 			if (! $pre_view.length) return;
 			var delta = $pre_view.offset().top;
 			var current_pos = $main.scrollTop();
