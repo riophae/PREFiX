@@ -55,4 +55,11 @@ PREFiX
 * 扩展内搜索话题消息
 * 查看自己的消息
 
+**ver 0.6.0**
+* Vim 风格快捷键支持
+* 可以调整提示音音量
+* 自动调整刷新频率
+* 智能滑动页面
+* 可以自定义缓存数量
+
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
