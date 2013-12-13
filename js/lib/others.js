@@ -102,9 +102,7 @@ $(function(){
         /*
          *        On mouse enter toggle the effect
          */
-        var $text = $(selectedClass);
-
-        (function(){
+        $(selectedClass).each(function(){
 
                 /*
                  * Get the id from data-id to identify the animation
@@ -141,6 +139,6 @@ $(function(){
                  */
                 animateOption(thisItem,-70,$(thisItem.dom).children().first().css('color'));
 
-        }).call($text[0]);
+        });
 
 });
