@@ -1165,7 +1165,11 @@ function showPicture(img_url) {
 	});
 	var canceled = false;
 	waitFor(function() {
-		return $picture[0].naturalWidth || canceled;
+		var height = $picture[0].naturalHeight;
+		if (height && height > $body.height() * 1.5) {
+			return true;
+		}
+		return $picture[0].complete || canceled;
 	}, function() {
 		if ($picture[0].naturalWidth > 400) {
 			$picture.css('width', '400px');
