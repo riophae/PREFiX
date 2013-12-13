@@ -1683,6 +1683,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 					}).next(function() {
 						showNotification('发表成功!');
 						vm.text = '';
+						$textarea.blur();
 					}).error(function(e) {
 						if (e.status && e.response) {
 							showNotification(e.response.error);
@@ -1723,6 +1724,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 						showNotification('发表成功!');
 						vm.text = '';
 						setImage(null);
+						$textarea.blur();
 						PREFiX.update(7, status.id);
 					}).error(function(e) {
 						if (e.status && e.response) {
