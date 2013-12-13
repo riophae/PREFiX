@@ -1157,10 +1157,10 @@ function showPicture(img_url) {
 		'height': ''
 	});
 	var $overlay = $scrolling_elem = $('#picture-overlay');
-	$overlay.removeClass('error');
+	$overlay.removeClass('error').addClass('loading');
 	$overlay.scrollTop(0);
 	$picture.off().on('error', function(e) {
-		$overlay.addClass('error');
+		$overlay.addClass('error').removeClass('loading');
 		canceled = true;
 	});
 	var canceled = false;
@@ -1171,6 +1171,7 @@ function showPicture(img_url) {
 		}
 		return $picture[0].complete || canceled;
 	}, function() {
+		$overlay.removeClass('loading');
 		if ($picture[0].naturalWidth > 400) {
 			$picture.css('width', '400px');
 		}
