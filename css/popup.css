@@ -422,6 +422,22 @@
 		transform: translateX(0);
 	}
 }
+@-webkit-keyframes slide-bg {
+	from {
+		background-position: 0 0;
+	}
+	to {
+		background-position: 34px 34px;
+	}
+}
+@keyframes slide-bg {
+	from {
+		background-position: 0 0;
+	}
+	to {
+		background-position: 34px 34px;
+	}
+}
 @-webkit-keyframes loading-animation-1 {
 	0% {
 		-webkit-transform: translateY(0);
@@ -1015,6 +1031,27 @@ body.show-picture #picture-overlay,
 body.show-context-timeline #context-timeline {
 	display: block;
 }
+.loading-effect #picture-overlay,
+.loading-effect #context-timeline {
+	background-image:
+		-webkit-repeating-linear-gradient(
+			-45deg, transparent, transparent 8px,
+			rgba(255,255,255,.1) 8px,
+			rgba(255,255,255,.1) 16px,
+			transparent 16px, transparent 24px
+		);
+	background-image:
+		repeating-linear-gradient(
+			-45deg, transparent, transparent 8px,
+			rgba(255,255,255,.1) 8px,
+			rgba(255,255,255,.1) 16px,
+			transparent 16px, transparent 24px
+		);
+	background-size: 34px 34px;
+	-webkit-animation: slide-bg 1s linear infinite;
+	animation: slide-bg 1s linear infinite;
+}
+
 #picture-overlay {
 	z-index: 200;
 	position: fixed;
@@ -1032,6 +1069,9 @@ body.show-context-timeline #context-timeline {
 }
 #picture-overlay::scrollbar-track:vertical {
 	margin: 0;
+}
+.loading-effect #picture {
+	display: none !important;
 }
 #picture {
 	position: absolute;
@@ -1083,15 +1123,6 @@ body.show-context-timeline #context-timeline {
 }
 #context-timeline::scrollbar-track:vertical {
 	margin: 0;
-}
-#context-timeline.loading::after {
-	display: inline-block;
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	content: "LOADING";
-	-webkit-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
 }
 #context-timeline.loading ul {
 	display: none;

@@ -1148,7 +1148,7 @@ function computePosition(data) {
 
 function showPicture(img_url) {
 	var $picture = $('#picture');
-	$body.addClass('show-picture');
+	$body.addClass('show-picture loading-effect');
 	if ($picture.prop('src') != img_url) {
 		$picture.prop('src', img_url);
 	}
@@ -1171,6 +1171,7 @@ function showPicture(img_url) {
 		}
 		return $picture[0].complete || canceled;
 	}, function() {
+		$body.removeClass('loading-effect');
 		if ($picture[0].naturalWidth > 400) {
 			$picture.css('width', '400px');
 		}
@@ -1501,13 +1502,13 @@ function toggleFavourite(e) {
 
 function showContextTimeline(e) {
 	e.preventDefault();
-	$body.addClass('show-context-timeline');
+	$body.addClass('show-context-timeline loading-effect');
 	var status = this.$vmodel.status.$model;
 	var id = status.id;
 	context_tl_model.statuses = [];
 	var context_statuses = [ status ];
 	var $context_tl = $scrolling_elem = $('#context-timeline');
-	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom loading');
+	$context_tl.removeClass('focusOutFromTop').addClass('loading');
 	$context_tl.scrollTop(0);
 	if (status.repost_status) {
 		context_statuses.push(status.repost_status);
@@ -1520,6 +1521,7 @@ function showContextTimeline(e) {
 			unshift(context_statuses, statuses, true);
 			context_tl_model.statuses = fixStatusList(context_statuses).reverse();
 			$('#context-timeline').removeClass('loading');
+			$body.removeClass('loading-effect');
 		}).error(function(e) {
 			id = status.in_reply_to_status_id;
 			if (e.status === 403 && id)
@@ -1529,9 +1531,9 @@ function showContextTimeline(e) {
 }
 
 function showRelatedStatuses(e) {
-	$body.addClass('show-context-timeline');
+	$body.addClass('show-context-timeline loading-effect');
 	var $context_tl = $scrolling_elem = $('#context-timeline');
-	$context_tl.removeClass('focusOutFromTop').addClass('focusInFromBottom loading');
+	$context_tl.removeClass('focusOutFromTop').addClass('loading');
 	$context_tl.scrollTop(0);
 	context_tl_model.statuses = [];
 	var statuses = [];
@@ -1544,10 +1546,12 @@ function showRelatedStatuses(e) {
 				status = s;
 				get();
 			}).error(function() {
+				$body.removeClass('loading-effect');
 				$context_tl.removeClass('loading');
 				unshift(context_tl_model.statuses, statuses, true);
 			});
 		} else {
+			$body.removeClass('loading-effect');
 			$context_tl.removeClass('loading');
 			unshift(context_tl_model.statuses, statuses, true);
 		}
