@@ -288,6 +288,13 @@ function initKeyboardControlEvents() {
 	}).keydown(function(e) {
 		if (e.ctrlKey || e.altKey || e.metaKey) return;
 		switch (e.keyCode) {
+			case 68 /* D */: case 70 /* F */:
+			case 77 /* M */: case 78 /* N */:
+			case 81 /* Q */: case 82 /* R */:
+			case 83 /* S */: case 85 /* U */:
+				if ($scrolling_elem !== $main)
+					return;
+
 			case 32 /* Space */:
 			case 67 /* C */: case 68 /* D */:
 			case 70 /* F */: case 77 /* M */:
