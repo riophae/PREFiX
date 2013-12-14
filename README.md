@@ -61,5 +61,6 @@ PREFiX
 * 自动调整刷新频率
 * 智能滑动页面
 * 可以自定义缓存数量
+* 旋转图片功能
 
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
