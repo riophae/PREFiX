@@ -287,6 +287,11 @@ function initKeyboardControlEvents() {
 		smoothScrollTo(target);
 	}).keydown(function(e) {
 		if (e.ctrlKey || e.altKey || e.metaKey) return;
+		if (e.keyCode === 27 /* Esc */) {
+			if ($scrolling_elem !== $main) {
+				e.keyCode = 32;
+			}
+		}
 		switch (e.keyCode) {
 			case 68 /* D */: case 70 /* F */:
 			case 77 /* M */: case 78 /* N */:
@@ -1665,6 +1670,10 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	}
 	vm.onkeydown = function(e) {
 		e.stopPropagation && e.stopPropagation();
+		if (e.keyCode === 27 /* Esc */) {
+			$textarea.blur();
+			return;
+		}
 		var value = $textarea.val().trim();
 		if ((! value && ! PREFiX.image) || vm.submitting) return;
 		if (e.keyCode === 13 && (e.ctrlKey || e.metaKey)) {
