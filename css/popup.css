@@ -1012,7 +1012,8 @@ body.show-context-timeline #main {
 	width: 395px;
 }
 body.show-picture #picture-overlay,
-body.show-context-timeline #context-timeline {
+body.show-context-timeline #context-timeline,
+body.show-picture #picture-copy {
 	display: block;
 }
 #picture-overlay {
@@ -1049,15 +1050,20 @@ body.show-context-timeline #context-timeline {
 }
 #picture {
 	position: absolute;
-	max-width: 400px;
 	box-shadow: 0 0 25px #000;
 	cursor: -webkit-zoom-out;
 	cursor: zoom-out;
 }
+#picture-copy {
+	position: fixed;
+	display: none;
+	bottom: -9999px;
+	left: 0;
+}
 #picture.run-animation {
-	-webkit-transition-property: opacity, left, top, width, height;
+	-webkit-transition-property: opacity, left, top, width, height, -webkit-transform, margin-left;
 	-webkit-transition-duration: 225ms;
-	transition-property: opacity, left, top, width, height;
+	transition-property: opacity, left, top, width, height, -webkit-transform, margin-left;
 	transition-duration: 225ms;
 	-webkit-transform-origin: center;
 	transform-origin: center;
