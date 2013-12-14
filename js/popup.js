@@ -295,9 +295,13 @@ function initKeyboardControlEvents() {
 		switch (e.keyCode) {
 			case 68 /* D */: case 70 /* F */:
 			case 77 /* M */: case 78 /* N */:
-			case 81 /* Q */: case 82 /* R */:
-			case 83 /* S */: case 85 /* U */:
+			case 81 /* Q */: case 83 /* S */:
+			case 85 /* U */:
 				if ($scrolling_elem !== $main)
+					return;
+
+			case 82 /* R */:
+				if ($('body.show-context-timeline').length)
 					return;
 
 			case 32 /* Space */:
@@ -321,6 +325,10 @@ function initKeyboardControlEvents() {
 				$(window).trigger(e);
 			} else {
 				$textarea.focus();
+				if (compose-bar.type === 'repost') {
+					$textarea[0].selectionStart = 0;
+					$textarea[0].selectionEnd = 0;
+				}
 			}
 		} else if (e.keyCode === 67) {
 			if ($('body.show-context-timeline').length) {
