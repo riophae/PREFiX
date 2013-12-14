@@ -1203,16 +1203,15 @@ function showPicture(img_url) {
 		if ($picture[0].naturalWidth > 400) {
 			$picture.css('width', '400px');
 		}
-		var width = parseInt($picture.css('width'), 10);
-		var height = parseInt($picture.css('height'), 10);
+		var width = $picture.width();
+		var height = $picture.height();
 		$picture.css(computePosition({
 			width: width / 2,
 			height: height / 2
 		})).
 		css({
 			opacity: .5,
-			display: 'block',
-			'transition-timing-function': 'linear'
+			display: 'block'
 		}).
 		show().
 		addClass('run-animation').
@@ -1221,8 +1220,12 @@ function showPicture(img_url) {
 			height: height
 		})).
 		css({
-			opacity: 1,
-			animation: 'pictureSlideIn .3s both'
+			opacity: 1
+		});
+		$('#picture-wrapper').css({
+			animation: 'pictureSlideIn .3s both',
+			width: width,
+			height: height
 		});
 	});
 }
@@ -1230,15 +1233,32 @@ function showPicture(img_url) {
 function hidePicture() {
 	$scrolling_elem = $main;
 	var $picture = $('#picture');
-	$picture.
-	css(computePosition({
-		width: parseInt($picture.css('width'), 10) / 2,
-		height: parseInt($picture.css('height'), 10) / 2
-	})).
-	css({
-		opacity: .5,
+	var width = $picture.width();
+	var height = $picture.height();
+	var transform = $picture[0].style.transform ||
+		$picture[0].style.webkitTransform;
+	var rotate_deg = 0;
+	if (transform && transform.indexOf('rotateZ') > -1) {
+		rotate_deg = +transform.match(/rotateZ\((\d+)deg\)/)[1];
+	}
+	if (rotate_deg % 180) {
+		var temp = width;
+		width = height;
+		height = temp;
+	}
+	var style = computePosition({
+		width: width / 2,
+		height: height / 2
+	});
+	style.width = $picture.width() / 2 + 'px';
+	style.height = $picture.height() / 2 + 'px';
+	style.opacity = .5;
+	style['margin-left'] = parseInt($picture.css('margin-left'), 10) / 2 + 'px';
+	$picture.css(style);
+	$('#picture-wrapper').css({
 		animation: 'pictureSlideOut .3s both',
-		'transition-timing-function': 'linear'
+		width: width,
+		height: height
 	});
 	setTimeout(function() {
 		$('body').removeClass('show-picture');
@@ -1253,7 +1273,7 @@ function rotatePicture() {
 	var $picture_copy = $picture.clone().attr('style', '');
 	$picture_copy.prop('id', 'picture-copy');
 	$picture.after($picture_copy);
-	var transform = $picture[0].style.Transform ||
+	var transform = $picture[0].style.transform ||
 		$picture[0].style.webkitTransform;
 	var rotate_deg = 90;
 	if (transform && transform.indexOf('rotateZ') > -1) {
@@ -1285,7 +1305,7 @@ function rotatePicture() {
 	style.transform = rotate_value;
 	setTimeout(function() {
 		$picture.css(style);
-	})
+	});
 }
 
 var pre_count = {
