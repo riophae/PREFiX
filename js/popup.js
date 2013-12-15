@@ -1159,10 +1159,12 @@ function cutStream() {
 	}
 }
 
-function computePosition(data) {
+function computePosition(data, no_minus_left) {
 	var left = parseInt(($body[0].clientWidth - data.width) / 2, 10);
 	var top = parseInt(($body[0].clientHeight - data.height) / 2, 10);
-	data.left = Math.max(0, left);
+	if (no_minus_left) {
+		data.left = Math.max(0, left);
+	}
 	data.top = Math.max(0, top);
 	for (var key in data) {
 		data[key] += 'px';
@@ -1208,7 +1210,7 @@ function showPicture(img_url) {
 		$picture.css(computePosition({
 			width: width / 2,
 			height: height / 2
-		})).
+		}, true)).
 		css({
 			opacity: .5,
 			display: 'block'
@@ -1218,13 +1220,13 @@ function showPicture(img_url) {
 		css(computePosition({
 			width: width,
 			height: height
-		})).
+		}, true)).
 		css({
 			opacity: 1
 		});
 		$('#picture-wrapper').css({
 			animation: 'pictureSlideIn .3s both',
-			width: width,
+			width: 400 + 'px',
 			height: height
 		});
 	});
@@ -1250,14 +1252,15 @@ function hidePicture() {
 		width: width / 2,
 		height: height / 2
 	});
+	style.left = (400 - ($picture.width() / 2)) / 2 + 'px';
 	style.width = $picture.width() / 2 + 'px';
 	style.height = $picture.height() / 2 + 'px';
 	style.opacity = .5;
-	style['margin-left'] = parseInt($picture.css('margin-left'), 10) / 2 + 'px';
+	style['margin-left'] = 0;
 	$picture.css(style);
 	$('#picture-wrapper').css({
 		animation: 'pictureSlideOut .3s both',
-		width: width,
+		width: '400px',
 		height: height
 	});
 	setTimeout(function() {
@@ -1284,26 +1287,34 @@ function rotatePicture() {
 	var style = {
 		'margin-left': 0
 	};
-	if (rotate_deg % 180 === 0) {
-		if ($picture[0].naturalWidth > 400) {
-			$picture_copy.css('width', '400px');
+	var width, height;
+	waitFor(function() {
+		return $picture_copy.width();
+	}, function() {
+		if (rotate_deg % 180 === 0) {
+			if ($picture[0].naturalWidth > 400) {
+				$picture_copy.css('width', '400px');
+			}
+		} else {
+			if ($picture[0].naturalHeight > 400) {
+				$picture_copy.css('height', '400px');
+			}
+			if ($picture[0].naturalWidth > 400) {
+				style['margin-left'] = (400 - $picture_copy.width()) / 2 + 'px';
+			}
 		}
-	} else {
-		if ($picture[0].naturalHeight > 400) {
-			$picture_copy.css('height', '400px');
-		}
-		if ($picture_copy.width() > 400) {
-			style['margin-left'] = (400 - $picture_copy.width()) / 2 + 'px';
-		}
-	}
-	var width = $picture_copy.width();
-	var height = $picture_copy.height();
-	$.extend(style, computePosition({
-		width: width,
-		height: height
-	}));
-	style.transform = rotate_value;
-	setTimeout(function() {
+		width = $picture_copy.width();
+		height = $picture_copy.height();
+		$('#picture-wrapper').css(rotate_deg % 180 === 0 ? {
+			width: width, height: height
+		} : {
+			width: height, height: width
+		});
+		$.extend(style, computePosition({
+			width: width,
+			height: height
+		}));
+		style.transform = rotate_value;
 		$picture.css(style);
 	});
 }
