@@ -1201,6 +1201,10 @@ function showPicture(img_url) {
 		}
 		return $picture[0].complete || canceled;
 	}, function() {
+		$('#picture-copy').remove();
+		var $picture_copy = $picture.clone();
+		$picture_copy.prop('id', 'picture-copy');
+		$picture.after($picture_copy);
 		$overlay.removeClass('loading');
 		if ($picture[0].naturalWidth > 400) {
 			$picture.css('width', '400px');
@@ -1272,10 +1276,8 @@ function hidePicture() {
 function rotatePicture() {
 	var $picture = $('#picture');
 	$picture.css('animation', '');
-	$('#picture-copy').remove();
-	var $picture_copy = $picture.clone().attr('style', '');
-	$picture_copy.prop('id', 'picture-copy');
-	$picture.after($picture_copy);
+	var $picture_copy = $('#picture-copy');
+	$picture_copy.attr('style', '');
 	var transform = $picture[0].style.transform ||
 		$picture[0].style.webkitTransform;
 	var rotate_deg = 90;
