@@ -1393,7 +1393,7 @@ function insertKeepScrollTop(insert) {
 function autoScroll(model, list) {
 	list = fixStatusList(list);
 	var first_item = list[0];
-	var last_item = list.reverse()[0];
+	var last_item = list[list.length - 1];
 	setTimeout(function() {
 		var $item = model.$elem.find('li[data-id="' + last_item.id + '"]');
 		if (! $item.length) return;
@@ -1943,7 +1943,8 @@ tl_model.initialize = function() {
 							return Math.abs(time - now) < 500;
 						});
 						if (is_breakpoint) {
-							var oldest_status = fixStatusList(buffered).reverse()[0];
+							buffered = fixStatusList(buffered);
+							var oldest_status = buffered[buffered.length - 1];
 							oldest_status.is_breakpoint = true;
 							oldest_status.loaded_at = 'Loaded @ ' + getShortTime(now) + '.';
 						}
