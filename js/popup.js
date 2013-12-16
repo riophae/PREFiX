@@ -1394,21 +1394,27 @@ function autoScroll(model, list) {
 	list = fixStatusList(list);
 	var first_item = list[0];
 	var last_item = list[list.length - 1];
+	var pre_target, target;
 	setTimeout(function() {
-		var $item = model.$elem.find('li[data-id="' + last_item.id + '"]');
-		if (! $item.length) return;
-		var $breakpoint = $item.next('.breakpoint');
-		if ($breakpoint.length) {
-			$item = $breakpoint;
-		}
-		var offset = $item.offset().top + $item.height();
-		var height = $body.height();
-		var pos = $main.scrollTop();
-		var target = Math.max(pos - (height - offset), 0);
-		setCurrent(model, target > 0 ? last_item.id : first_item.id);
-		if ($scrolling_elem === $main) {
-			smoothScrollTo(target);
-		}
+		waitFor(function() {
+			pre_target = target;
+			var $item = model.$elem.find('li[data-id="' + last_item.id + '"]');
+			if (! $item.length) return;
+			var $breakpoint = $item.next('.breakpoint');
+			if ($breakpoint.length) {
+				$item = $breakpoint;
+			}
+			var offset = $item.offset().top + $item.height();
+			var height = $body.height();
+			var pos = $main.scrollTop();
+			target = Math.max(pos - (height - offset), 0);
+			return pre_target !== undefined && pre_target === target;
+		}, function() {
+			setCurrent(model, target > 0 ? last_item.id : first_item.id);
+			if ($scrolling_elem === $main) {
+				smoothScrollTo(target);
+			}
+		});
 	}, 100);
 }
 
