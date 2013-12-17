@@ -1126,6 +1126,10 @@ function initMainUI() {
 			e.preventDefault();
 			hidePicture();
 		}
+	}).on('keydown', function(e) {
+		if (e.keyCode !== 116) return;
+		e.preventDefault();
+		PREFiX.update();
 	});
 
 	tl_model.$elem = $('#home-timeline');
