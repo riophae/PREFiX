@@ -1484,32 +1484,6 @@
 					// url 和 options 可以在全局监听器中修改
 					var url = event.url;
 					var options = event.ajaxOptions;
-					xhr.open(method, url, options.async);
-
-					xhr.timeout = options.timeout;
-
-					// 监听 XMLHttpRequest Level 2 事件
-					Object.keys(constants.normalAjaxEventTypes).
-					forEach(function(formal_type) {
-						var local_type = constants.normalAjaxEventTypes[formal_type];
-						xhr[formal_type] = function(e) {
-							var event_type = local_type;
-							if (formal_type == 'onload' && ! request.isSuccessful()) {
-								event_type = 'error';
-							}
-							ajax_one_time_events[event_type].triggerWith(
-								event_type == 'success' ? (options.context || request) : request,
-								undefined, event);
-						}
-					});
-
-					// 监听与上传相关的事件
-					constants.uploadingAjaxEventTypes.
-					forEach(function(event_type) {
-						if (options[event_type] !== noop) {
-							xhr.upload[event_type] = options[event_type];
-						}
-					});
 
 					// 处理参数
 					var params = options.params;
@@ -1544,6 +1518,33 @@
 					// 可以得到这些最终使用的参数
 					options.params = params;
 					event.url = url;
+
+					xhr.open(method, url, options.async);
+
+					xhr.timeout = options.timeout;
+
+					// 监听 XMLHttpRequest Level 2 事件
+					Object.keys(constants.normalAjaxEventTypes).
+					forEach(function(formal_type) {
+						var local_type = constants.normalAjaxEventTypes[formal_type];
+						xhr[formal_type] = function(e) {
+							var event_type = local_type;
+							if (formal_type == 'onload' && ! request.isSuccessful()) {
+								event_type = 'error';
+							}
+							ajax_one_time_events[event_type].triggerWith(
+								event_type == 'success' ? (options.context || request) : request,
+								undefined, event);
+						}
+					});
+
+					// 监听与上传相关的事件
+					constants.uploadingAjaxEventTypes.
+					forEach(function(event_type) {
+						if (options[event_type] !== noop) {
+							xhr.upload[event_type] = options[event_type];
+						}
+					});
 
 					headers['Accept'] = constants.responseTypes[options.accepts] || constants.responseTypes['*'];
 					try {
