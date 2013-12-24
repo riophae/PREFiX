@@ -877,6 +877,7 @@ Ripple.events.observe('process_status', function(status) {
 	html = jEmoji.kddiToUnified(html);
 	html = jEmoji.unifiedToHTML(html);
 
+	html = html.replace(/@\n/g, '@');
 	html = html.replace(/\s*\n+\s*/g, '<br />');
 
 	var mention_re = /<a href="http:\/\/fanfou\.com\/([^"]+)" class="former">([^<]+)<\/a>/gi;
