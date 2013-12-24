@@ -1815,7 +1815,10 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 				var $compose_bar = $('#compose-bar');
 				var full_length = $compose_bar.width();
 				shorten().next(function() {
-					data.status = vm.text;
+					var text = vm.text;
+					var re = new RegExp('@' + PREFiX.account.name, 'g');
+					text = text.replace(re, '@\n' + PREFiX.account.name);
+					data.status = text;
 					data.photo = PREFiX.image;
 					r[ PREFiX.image ? 'postPhoto' : 'postStatus' ](data).
 					setupAjax({

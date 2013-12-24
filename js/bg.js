@@ -963,7 +963,8 @@ var settings = {
 		showSavedSearchCount: true,
 		createPopAtStartup: false,
 		volume: 1,
-		holdCtrlToSubmit: false
+		holdCtrlToSubmit: false,
+		addEnterAfterAt: true
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
