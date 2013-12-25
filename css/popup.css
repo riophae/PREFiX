@@ -1605,8 +1605,8 @@ html.panel-mode #new-window {
 }
 .status-list .content {
 	float: right;
-	margin-right: 15px;
-	width: 308px;
+	margin-right: 10px;
+	width: 304px;
 }
 .status-list .content > * {
 	line-height: 150%;
@@ -1625,27 +1625,9 @@ html.panel-mode #new-window {
 .status-list .content .timestamp-client {
 	float: right;
 }
-.status-list .content .timestamp-client .chs {
-	-webkit-transform: scale(0.89) translateY(1px);
-	transform: scale(0.89) translateY(1px);
-	margin: 0 -1px 0 0;
-	display: inline-block;
-}
-.status-list .content .timestamp-client .chs ~ .en {
-	display: inline-block;
-	-webkit-transform: translateY(1px);
-	transform: translateY(1px);
-}
-[platform="mac"] .status-list .content .timestamp-client {
-	line-height: 22px;
-}
-[platform="mac"] .status-list .content .timestamp-client .chs {
-	-webkit-transform: scale(0.89) translateY(2px);
-	transform: scale(0.89) translateY(2px);
-}
 .status-list .content .timestamp-client,
 .status-list .content .timestamp-client span {
-	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
+	font: 12px Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
 }
 .status-list .status-content {
 	clear: both;
