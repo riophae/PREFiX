@@ -152,8 +152,8 @@
 }
 @-webkit-keyframes pictureSlideIn {
 	0% {
-		-webkit-transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
-		transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
+		-webkit-transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
+		transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
 	}
 	35% {
 		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
@@ -166,8 +166,8 @@
 }
 @keyframes pictureSlideIn {
 	0% {
-		-webkit-transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
-		transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
+		-webkit-transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
+		transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
 	}
 	35% {
 		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
@@ -188,8 +188,8 @@
 		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 	}
 	100% {
-		-webkit-transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
-		transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
+		-webkit-transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
+		transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
 	}
 }
 @keyframes pictureSlideOut {
@@ -202,8 +202,8 @@
 		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 	}
 	100% {
-		-webkit-transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
-		transform: translateY(-100px) perspective(400px) rotateX(-25deg) scale(.6);
+		-webkit-transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
+		transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
 	}
 }
 @-webkit-keyframes shake {

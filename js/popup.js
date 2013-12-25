@@ -1243,8 +1243,8 @@ function showPicture(img_url) {
 		var width = $picture.width();
 		var height = $picture.height();
 		$picture.css(computePosition({
-			width: width / 2,
-			height: height / 2
+			width: width / 1.5,
+			height: height / 1.5
 		}, true)).
 		css({
 			opacity: .5,
@@ -1260,7 +1260,7 @@ function showPicture(img_url) {
 			opacity: 1
 		});
 		$('#picture-wrapper').css({
-			animation: 'pictureSlideIn .3s both',
+			animation: 'pictureSlideIn 225ms both',
 			width: 400 + 'px',
 			height: height
 		});
@@ -1284,24 +1284,24 @@ function hidePicture() {
 		height = temp;
 	}
 	var style = computePosition({
-		width: width / 2,
-		height: height / 2
+		width: width / 1.5,
+		height: height / 1.5
 	});
-	style.left = (400 - ($picture.width() / 2)) / 2 + 'px';
-	style.width = $picture.width() / 2 + 'px';
-	style.height = $picture.height() / 2 + 'px';
+	style.left = (400 - ($picture.width() / 1.5)) / 2 + 'px';
+	style.width = $picture.width() / 1.5 + 'px';
+	style.height = $picture.height() / 1.5 + 'px';
 	style.opacity = .5;
 	style['margin-left'] = 0;
 	$picture.css(style);
 	$('#picture-wrapper').css({
-		animation: 'pictureSlideOut .3s both',
+		animation: 'pictureSlideOut 225ms both',
 		width: '400px',
 		height: height
 	});
 	setTimeout(function() {
 		$('body').removeClass('show-picture');
 		$picture.removeClass('run-animation');
-	}, 350);
+	}, 225);
 }
 
 function rotatePicture() {
