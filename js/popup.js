@@ -690,6 +690,28 @@ function focusToEnd() {
 	$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
 }
 
+function deleteStatusFromAllLists(status_id) {
+	var lists = [
+		tl_model.statuses,
+		mentions_model.statuses,
+		PREFiX.homeTimeline.buffered,
+		PREFiX.homeTimeline.statuses,
+		PREFiX.mentions.statuses
+	];
+	lists.forEach(function(list) {
+		var index = -1;
+		list.some(function(status, i) {
+			if (status.id === status_id) {
+				index = i;
+				return true;
+			}
+		});
+		if (index > -1) {
+			list.splice(index, 1);
+		}
+	});
+}
+
 function setImage(file) {
 	$textarea.css('text-indent', file ? '30px' : '');
 	var size;
@@ -1553,6 +1575,7 @@ function remove(e) {
 		$item.parents('li').
 		slideUp(function() {
 			self.$vmodel.$remove();
+			deleteStatusFromAllLists(status_id);
 			if (index >= 0) {
 				setCurrent(current_model, current_model.statuses[index].id);
 			}
