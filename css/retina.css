@@ -1,3 +1,57 @@
+@-webkit-keyframes btnBlinking {
+	from {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+	50% {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, .2) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+	to {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+}
+@keyframes btnBlinking {
+	from {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+	50% {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, .2) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+	to {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+}
+div.notify-box .confirm-btn,
+div.notify-box .reject-btn {
+	box-shadow:
+		0 .5px 0 #fff inset,
+		0 .5px 0 #fff;
+	text-shadow: 0 .5px 0 #fff;
+}
+div.notify-box .confirm-btn:active,
+div.notify-box .reject-btn:active {
+	box-shadow:
+		0 999px 0 rgba(0, 115, 215, .3) inset,
+		0 .5px 0 rgba(255, 255, 255, 1) inset,
+		0 .5px 0 rgba(0, 0, 0, .09);
+}
 #context-timeline .close {
 	background-image: url('/images/close@2x.png');
 	background-size: 32px 32px;

@@ -1026,7 +1026,6 @@ body.show-picture #picture-copy {
 	overflow-y: auto;
 	background: rgba(0, 0, 0, .85);
 	color: #fff;
-	text-shadow: 0 0 2px #ccc;
 }
 #picture-overlay::-webkit-scrollbar-track:vertical {
 	margin: 0;
@@ -1035,7 +1034,6 @@ body.show-picture #picture-copy {
 	margin: 0;
 }
 #picture-overlay .loading-tip {
-	text-shadow: none;
 	display: none;
 }
 #picture-overlay.loading .loading-tip {
