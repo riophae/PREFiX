@@ -126,9 +126,6 @@
 					<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
 				</div>
 				</div>
-				<div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
-				<span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息 (快捷键 C)"></span>
-				</div>
 			</div>
 			</li>
 			<li class="breakpoint" ms-if="status.is_breakpoint" ms-text="status.loaded_at"></li>
@@ -157,9 +154,6 @@
 				<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
 					<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
 				</div>
-				</div>
-				<div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
-				<span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息 (快捷键 C)"></span>
 				</div>
 			</div>
 			</li>
@@ -212,10 +206,6 @@
 					<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
 				</div>
 				</div>
-				<div ms-if="!! status.repost_status || !! status.in_reply_to_status_id" class="context">
-				<span ms-click="showRelatedStatuses" ms-on-contextmenu="showContextTimeline" title="查看上下文消息 (快捷键 C)"></span>
-				</div>
-			</div>
 			</li>
 		</ul>
 			<div id="loading">

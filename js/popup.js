@@ -762,24 +762,6 @@ function initMainUI() {
 		if (ratio > 1.4) {
 			$('h2').css('letter-spacing', '.5px');
 		}
-		if (ratio === 1.25) {
-			$('<link />').
-			prop('rel', 'stylesheet').
-			prop('href', 'css/font-fix.css').
-			appendTo('head');
-		}
-		if (ratio > 1 && ratio < 1.25) {
-			$('<link />').
-			prop('rel', 'stylesheet').
-			prop('href', 'css/font-fix-2.css').
-			appendTo('head');
-		}
-		if (ratio === 1.5) {
-			$('<link />').
-			prop('rel', 'stylesheet').
-			prop('href', 'css/font-fix-3.css').
-			appendTo('head');
-		}
 	}
 
 	var $birthday_cake = $('#birthday-cake');
@@ -1005,6 +987,30 @@ function initMainUI() {
 		e.preventDefault();
 		e.stopPropagation();
 		createTab(e.currentTarget.href, e.shiftKey);
+	}).delegate('span.context', 'click', function(e) {
+		var $status = $(e.currentTarget).parents('li');
+		var status_id = $status.attr('data-id');
+		var model = getCurrent();
+		var status;
+		model.statuses.some(function(s) {
+			if (s.id === status_id) {
+				status = s;
+				return true;
+			}
+		});
+		showRelatedStatuses.call(status, e);
+	}).delegate('span.context', 'contextmenu', function(e) {
+		var $status = $(e.currentTarget).parents('li');
+		var status_id = $status.attr('data-id');
+		var model = getCurrent();
+		var status;
+		model.statuses.some(function(s) {
+			if (s.id === status_id) {
+				status = s;
+				return true;
+			}
+		});
+		showContextTimeline.call(status, e);
 	}).delegate('a[href^="/q/"]', 'click', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -1639,7 +1645,7 @@ function toggleFavourite(e) {
 function showContextTimeline(e) {
 	e.preventDefault();
 	$body.addClass('show-context-timeline');
-	var status = this.$vmodel.status.$model;
+	var status = this.$model;
 	var id = status.id;
 	context_tl_model.statuses = [];
 	var context_statuses = [ status ];
@@ -1672,7 +1678,7 @@ function showRelatedStatuses(e) {
 	$context_tl.scrollTop(0);
 	context_tl_model.statuses = [];
 	var statuses = [];
-	var status = this.$vmodel.status.$model;
+	var status = this.$model;
 	(function get() {
 		push(statuses, [ status ]);
 		var id = status.repost_status_id || status.in_reply_to_status_id;

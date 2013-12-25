@@ -889,6 +889,10 @@ Ripple.events.observe('process_status', function(status) {
 			')">' + name + '</a>';
 	});
 
+	if (status.repost_status || status.in_reply_to_status_id) {
+		html += '<span class="context" title="查看上下文消息 (快捷键 C)"></span>';
+	}
+
 	status.fixedText = html;
 
 	if (status.photo) {

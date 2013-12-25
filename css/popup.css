@@ -1171,23 +1171,12 @@ body.show-picture #picture-copy {
 }
 #context-timeline ul li .timestamp-client,
 #context-timeline ul li .timestamp-client span {
-	font: 12px "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
+	font: 12px Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
 	color: #ccc !important;
 }
 #context-timeline ul li.protected .timestamp-client {
 	padding-right: 12px;
 	background: url('/images/protected.png') right center no-repeat;
-}
-[platform="linux"] #context-timeline ul li.protected .timestamp-client {
-	background-position: right 1px !important;
-}
-[platform="mac"] #context-timeline ul li .timestamp-client {
-	height: 18px;
-	margin: 0;
-	line-height: 21px !important
-}
-[platform="mac"] #context-timeline ul li.protected .timestamp-client {
-	background-position: right 5px !important;
 }
 #context-timeline ul li .status-content a {
 	text-decoration: underline !important;
@@ -1650,19 +1639,14 @@ html.panel-mode #new-window {
 	cursor: zoom-in;
 }
 .status-list .context {
-	clear: both;
-	margin-bottom: -8px;
-	width: 400px;
-	text-align: center;
-}
-.status-list .context span {
 	display: inline-block;
 	cursor: pointer;
-	width: 22px;
-	height: 18px;
+	margin: 0 0 -3.5px 3px;
+	width: 16px;
+	height: 16px;
 	background: url('/images/conversation.png') center top no-repeat;
 }
-.status-list .context span:hover {
+.status-list .context:hover {
 	background-position: center bottom;
 }
 .status-list .in-reply-to-message {
