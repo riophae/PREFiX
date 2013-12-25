@@ -1,3 +1,7 @@
+#context-timeline .close {
+	background-image: url('/images/close@2x.png');
+	background-size: 32px 32px;
+}
 #birthday-cake span {
 	background-image: url('/images/birthday-cake@2x.png');
 	background-size: 256px;
