@@ -334,10 +334,9 @@ function initKeyboardControlEvents() {
 			if ($('body.show-context-timeline').length) {
 				$('#context-timeline').trigger('click');
 			} else {
-				var $context = $view.find('.context span');
+				var $context = $view.find('.context');
 				if (e.shiftKey) {
-					var event = new Event('contextmenu');
-					$context[0].dispatchEvent(event);
+					$context.trigger('contextmenu');
 				} else {
 					$context.click();
 				}
