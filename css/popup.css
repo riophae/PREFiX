@@ -1208,7 +1208,7 @@ body.show-picture #picture-copy {
 }
 h1 {
 	float: left;
-	margin: 6px 0 0 15px;
+	margin: 6px 0 0 10px;
 	padding: 0;
 	cursor: pointer;
 }
@@ -1264,7 +1264,7 @@ html.panel-mode #new-window {
 #navigation-bar {
 	float: right;
 	padding: 0;
-	margin: 6px 15px 0 0;
+	margin: 6px 10px 0 0;
 }
 #navigation-bar li {
 	position: relative;
@@ -1329,10 +1329,10 @@ html.panel-mode #new-window {
 	overflow: hidden;
 }
 #compose-bar textarea {
-	width: 370px;
+	width: 380px;
 	height: 18px;
 	min-height: 18px;
-	padding: 12px 15px;
+	padding: 12px 10px;
 	line-height: 18px;
 	border: 0;
 	outline: 0 !important;
@@ -1374,7 +1374,7 @@ html.panel-mode #new-window {
 #uploading-photo {
 	display: block;
 	position: absolute;
-	left: 8px;
+	left: 5px;
 	top: 0;
 	width: 26px;
 	height: 19px;
@@ -1428,7 +1428,7 @@ html.panel-mode #new-window {
 #title h2 {
 	font: 18px "HelveticaNeueLT Pro for PERFiX", "Helvetica Neue LT Pro Light";
 	font-weight: 300;
-	padding: 10px 0 5px 15px;
+	padding: 10px 0 5px 10px;
 	margin: 0;
 	border-bottom: 1px solid #ddd;
 	height: 21px;
@@ -1575,7 +1575,7 @@ html.panel-mode #new-window {
 }
 .status-list .avatar {
 	float: left;
-	margin-left: 15px;
+	margin-left: 10px;
 	position: relative;
 	border: 1px solid rgba(255, 255, 255, .75);
 }
@@ -1598,7 +1598,7 @@ html.panel-mode #new-window {
 .status-list .content {
 	float: right;
 	margin-right: 10px;
-	width: 304px;
+	width: 316px;
 }
 .status-list .content > * {
 	line-height: 150%;
@@ -1617,8 +1617,7 @@ html.panel-mode #new-window {
 .status-list .content .timestamp-client {
 	float: right;
 }
-.status-list .content .timestamp-client,
-.status-list .content .timestamp-client span {
+.status-list .content .timestamp-client {
 	font: 12px Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
 }
 .status-list .status-content {

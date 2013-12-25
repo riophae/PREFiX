@@ -860,11 +860,6 @@ Ripple.events.observe('process_status', function(status) {
 			'iPhone版': 'iPhone'
 		})[status.source] || status.source;
 		status.source = status.source.replace('客户端', '');
-		status.source = status.source.replace(/[a-zA-Z0-0]+/g, function(en) {
-			return '<span class="en">' + en + '</span>'
-		}).replace(chs_re, function(chs) {
-			return '<span class="chs">' + chs + '</span>';
-		});
 		status.is_breakpoint = false;
 		status.loaded_at = null;
 		status.loaded_at_relative = '';
