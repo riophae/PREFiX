@@ -56,6 +56,12 @@ h1 b {
 	background-size: 25px 38px;
 	background-image: url('/images/uploading-photo@2x.png');
 }
+#compose-bar textarea {
+	box-shadow: 0 0 3px rgba(0, 0, 0, .15);
+}
+#compose-bar textarea:focus {
+	box-shadow: 0 0 3px rgba(83, 186, 237, .5);
+}
 .status-list li:hover {
 	background-image: url('/images/status-bg@2x.png');
 	background-size: 60px;

@@ -1382,7 +1382,7 @@ html.panel-mode #new-window {
 	border-color: #ffe5e5;
 }
 #compose-bar textarea:focus {
-	box-shadow: 0 0px 5px 0 rgba(83, 186, 237, .5);
+	box-shadow: 0 0 5px 0 rgba(83, 186, 237, .5);
 }
 .uploading textarea {
 	background-image: url('/images/progress-bar-bg.gif');
