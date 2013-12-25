@@ -58,7 +58,11 @@ h1 b {
 }
 .status-list li:hover {
 	background-image: url('/images/status-bg@2x.png');
-	background-size: 100px;
+	background-size: 60px;
+}
+.status-list li:hover,
+.status-list li.current {
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .75) inset;
 }
 .status-list li .action-icons .remove {
 	background-image: url('/images/remove@2x.png');
@@ -76,9 +80,12 @@ h1 b {
 	background-image: url('/images/favourite@2x.png');
 	background-size: 36px 102px;
 }
-.status-list .context span {
+.status-list .avatar {
+	border-width: .5px;
+}
+.status-list .context {
 	background-image: url('/images/conversation@2x.png');
-	background-size: 22px 36px;
+	background-size: 16px 32px;
 }
 .status-list li.protected .timestamp-client {
 	background-image: url('/images/protected@2x.png');

@@ -1528,6 +1528,8 @@ html.panel-mode #new-window {
 }
 .status-list li .action-icons .remove {
 	left: 0;
+	top: inherit;
+	bottom: 0;
 	background-image: url('/images/remove.png');
 }
 .status-list li .action-icons .remove:hover {
@@ -1536,7 +1538,7 @@ html.panel-mode #new-window {
 	animation: shake ease-in-out .2s infinite;
 }
 .status-list li .action-icons .reply {
-	right: 75px;
+	right: 68px;
 	background-image: url('/images/reply.png');
 }
 .status-list li .action-icons .reply:hover {
@@ -1546,14 +1548,14 @@ html.panel-mode #new-window {
 	right: 0;
 }
 .status-list li .action-icons .repost {
-	right: 41px;
+	right: 34px;
 	background-image: url('/images/repost.png');
 }
 .status-list li .action-icons .repost:hover {
 	background-position: left bottom;
 }
 .status-list li .action-icons .favourite {
-	right: 7px;
+	right: 0;
 	background-image: url('/images/favourite.png');
 	-webkit-transform-origin: center bottom;
 	transform-origin: center bottom;
