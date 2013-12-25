@@ -1195,7 +1195,7 @@ body.show-picture #picture-copy {
 }
 #context-timeline ul li .timestamp-client,
 #context-timeline ul li .timestamp-client span {
-	font: 12px Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
+	font: 12px Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
 	color: #ccc !important;
 }
 #context-timeline ul li.protected .timestamp-client {
@@ -1641,7 +1641,7 @@ html.panel-mode #new-window {
 	float: right;
 }
 .status-list .content .timestamp-client {
-	font: 12px Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Microsoft Yahei", "WenQuanYi Micro Hei";
+	font: 12px Calibri, "Calibri for PREFiX", "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft Yahei", "WenQuanYi Micro Hei";
 }
 .status-list .status-content {
 	clear: both;
@@ -1688,7 +1688,7 @@ html.panel-mode #new-window {
 	height: 48px;
 	text-align: center;
 	letter-spacing: 2px;
-	font: 13px "Calibri for PREFiX";
+	font: 13px Calibri, "Calibri for PREFiX";
 	line-height: 48px;
 	background: url('/images/status-bg.png') repeat;
 }
