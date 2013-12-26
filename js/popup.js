@@ -1269,7 +1269,7 @@ function showPicture(img_url) {
 			height: height / 1.5
 		}, true)).
 		css({
-			opacity: .5,
+			opacity: 0,
 			display: 'block'
 		}).
 		show().
@@ -1312,7 +1312,7 @@ function hidePicture() {
 	style.left = (400 - ($picture.width() / 1.5)) / 2 + 'px';
 	style.width = $picture.width() / 1.5 + 'px';
 	style.height = $picture.height() / 1.5 + 'px';
-	style.opacity = .5;
+	style.opacity = 0;
 	style['margin-left'] = 0;
 	$picture.css(style);
 	$('#picture-wrapper').css({
