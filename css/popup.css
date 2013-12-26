@@ -156,8 +156,8 @@
 		transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
 	}
 	35% {
-		-webkit-transform: translateY(100px) perspective(400px) rotateX(0) scale(.75);
-		transform: translateY(100px) perspective(400px) rotateX(0) scale(.75);
+		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
+		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 	}
 	100% {
 		-webkit-transform: translateY(0) perspective(400px) rotateX(0) scale(1);
@@ -170,8 +170,8 @@
 		transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
 	}
 	35% {
-		-webkit-transform: translateY(100px) perspective(400px) rotateX(0) scale(.75);
-		transform: translateY(100px) perspective(400px) rotateX(0) scale(.75);
+		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
+		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 	}
 	100% {
 		-webkit-transform: translateY(0) perspective(400px) rotateX(0) scale(1);
@@ -184,8 +184,8 @@
 		transform: translateY(0) perspective(400px) rotateX(0) scale(1);
 	}
 	65% {
-		-webkit-transform: translateY(100px) perspective(400px) rotateX(0) scale(.75);
-		transform: translateY(100px) perspective(400px) rotateX(0) scale(.75);
+		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
+		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 	}
 	100% {
 		-webkit-transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
@@ -198,8 +198,8 @@
 		transform: translateY(0) perspective(400px) rotateX(0) scale(1);
 	}
 	65% {
-		-webkit-transform: translateY(100px) perspective(400px) rotateX(0) scale(.75);
-		transform: translateY(100px) perspective(400px) rotateX(0) scale(.75);
+		-webkit-transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
+		transform: translateY(50px) perspective(400px) rotateX(0) scale(.75);
 	}
 	100% {
 		-webkit-transform: translateY(-50px) perspective(400px) rotateX(-10deg) scale(.6);
