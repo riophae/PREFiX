@@ -1084,6 +1084,29 @@ body.show-picture #picture-copy {
 	-webkit-animation: fadeIn .4s ease-in-out;
 	animation: fadeIn .4s ease-in-out;
 }
+body.show-drop-area #drop-area {
+	display: block;
+}
+#drop-area {
+	z-index: 300;
+	position: fixed;
+	display: none;
+	width: 400px;
+	height: 600px;
+	background: rgba(0, 0, 0, .85);
+	color: #fff;
+}
+#drop-area div {
+	position: absolute;
+	bottom: 100px;
+	left: 50%;
+	width: 280px;
+	height: 150px;
+	line-height: 150px;
+	margin-left: -140px;
+	border: 2px dashed #666;
+	text-align: center;
+}
 #context-timeline {
 	z-index: 100;
 	position: fixed;

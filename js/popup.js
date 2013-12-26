@@ -39,7 +39,7 @@ function setViewHeight(height) {
 
 function applyViewHeight() {
 	var height = getViewHeight();
-	$('body, #picture-overlay, #context-timeline').height(height);
+	$('body, #picture-overlay, #context-timeline, #drop-area').height(height);
 	$main.height(height - parseInt($main.css('top'), 10));
 }
 
@@ -869,18 +869,40 @@ function initMainUI() {
 		}
 	});
 
+	function showDropArea(e) {
+		if (! e) return;
+		e = e.originalEvent || e;
+		var items = e.dataTransfer.items;
+		var is_file = [].slice.call(items).some(function(item) {
+			if (item.kind === 'file' &&
+				item.type.match(/^image\//)) {
+				return true;
+			}
+		});
+		if (! is_file) return;
+		$body.addClass('show-drop-area');
+	}
+
+	function hideDropArea(e) {
+		if (e && e.target !== $('#drop-area')[0]) return;
+		$body.removeClass('show-drop-area');
+	}
+
 	$app.on({
-		dragenter: function(e) {},
+		dragenter: showDropArea,
 		dragover: function(e) {
 			e.stopPropagation();
 			e.preventDefault();
+			showDropArea(e);
 		},
-		dragleave: function(e) {},
+		dragleave: hideDropArea,
 		drop: function(e) {
 			e = e.originalEvent;
 
 			e.stopPropagation();
 			e.preventDefault();
+
+			hideDropArea();
 
 			var file = e.dataTransfer.files[0];
 			if (! file || ! isImage(file.type))
