@@ -265,7 +265,7 @@ function initSavedSearches() {
 				}
 			});
 			var cache_amount = Math.max(self.unread_count, 20);
-			self.tweets.splice(cache_amount);
+			self.statuses.splice(cache_amount);
 	}
 	SavedSearchItem.prototype.stop = function() {
 		if (this.ajax) {
@@ -604,12 +604,14 @@ function unload() {
 		statuses: [],
 		buffered: [],
 		scrollTop: 0,
-		current: ''
+		current: '',
+		is_replying: false
 	};
 	PREFiX.mentions = { 
 		statuses: [],
 		scrollTop: 0,
-		current: ''
+		current: '',
+		is_replying: false
 	};
 	PREFiX.privatemsgs = { 
 		messages: [],
@@ -890,6 +892,8 @@ Ripple.events.observe('process_status', function(status) {
 
 	status.fixedText = html;
 
+	status.current_replied = false;
+
 	if (status.photo) {
 		var img = new Image;
 		img.src = status.photo.thumburl;
@@ -1060,12 +1064,14 @@ var PREFiX = this.PREFiX = {
 		statuses: [],
 		buffered: [],
 		scrollTop: 0,
-		current: ''
+		current: '',
+		is_replying: false
 	},
 	mentions: { 
 		statuses: [],
 		scrollTop: 0,
-		current: ''
+		current: '',
+		is_replying: false
 	},
 	privatemsgs: { 
 		messages: [],

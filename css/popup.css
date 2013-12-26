@@ -1510,6 +1510,12 @@ html.panel-mode #new-window {
 #stream > ul.current {
 	display: block;
 }
+[replying="true"] li {
+	opacity: .5;
+}
+[current-replied="true"] {
+	opacity: 1 !important;
+}
 .status-list {
 	padding: 0;
 	margin: 0;
@@ -1519,6 +1525,8 @@ html.panel-mode #new-window {
 	text-shadow: 0 1px 0 #fff;
 	border-bottom: 1px solid #ddd;
 	box-shadow: 0 1px 0 #fff inset;
+	-webkit-transition: opacity .2s ease-in-out;
+	transition: opacity .2s ease-in-out;
 	-webkit-perspective: 400px;
 	perspective: 400px;
 	-webkit-perspective-origin: top center;

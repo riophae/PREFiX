@@ -1613,8 +1613,20 @@ function remove(e) {
 	});
 }
 
+function cancelReply() {
+	var current_model = getCurrent();
+	current_model.is_replying = false;
+	current_model.statuses.some(function(status) {
+		if (status.current_replied) {
+			status.current_replied = false;
+			return true;
+		}
+	});
+}
+
 function generateMethod(type) {
 	return function() {
+		cancelReply();
 		var status = this.$vmodel.status;
 		composebar_model.type = type;
 		composebar_model.id = status.id;
@@ -1641,6 +1653,9 @@ function generateMethod(type) {
 		if (type === 'reply') {
 			$textarea[0].selectionStart = prefix.length;
 			$textarea[0].selectionEnd = value.length;
+			var current_model = getCurrent();
+			current_model.is_replying = true;
+			status.current_replied = true;
 		} else {
 			$textarea[0].selectionStart = $textarea[0].selectionEnd = 0;
 		}
@@ -1919,6 +1934,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			vm.id = '';
 			vm.user = '';
 			vm.username = '';
+			cancelReply();
 		}
 		$textarea.toggleClass('filled', !! value);
 		count();
@@ -1954,12 +1970,17 @@ var tl_model = avalon.define('home-timeline', function(vm) {
 	vm.statuses = [];
 
 	vm.scrollTop = 0;
+
+	vm.is_replying = PREFiX.homeTimeline.is_replying;
 });
 tl_model.$watch('current', function(value) {
 	PREFiX.homeTimeline.current = value;
 });
 tl_model.$watch('scrollTop', function(value) {
 	PREFiX.homeTimeline.scrollTop = value;
+});
+tl_model.$watch('is_replying', function(value) {
+	PREFiX.homeTimeline.is_replying = value;
 });
 tl_model.statuses.$watch('length', function() {
 	PREFiX.homeTimeline.statuses = tl_model.$model.statuses.map(function(s) {
@@ -2046,12 +2067,17 @@ var mentions_model = avalon.define('mentions', function(vm) {
 	vm.statuses = [];
 
 	vm.scrollTop = 0;
+
+	vm.is_replying = PREFiX.mentions.is_replying;
 });
 mentions_model.$watch('current', function(value) {
 	PREFiX.mentions.current = value;
 });
 mentions_model.$watch('scrollTop', function(value) {
 	PREFiX.mentions.scrollTop = value;
+});
+mentions_model.$watch('is_replying', function(value) {
+	PREFiX.mentions.is_replying = value;
 });
 mentions_model.statuses.$watch('length', function() {
 	PREFiX.mentions.statuses = mentions_model.$model.statuses.map(function(s) {
@@ -2248,6 +2274,8 @@ var searches_model = avalon.define('saved-searches', function(vm) {
 	vm.showContextTimeline = showContextTimeline;
 
 	vm.keyword = PREFiX.keyword;
+
+	vm.is_replying = false;
 
 	vm.statuses = [];
 });
