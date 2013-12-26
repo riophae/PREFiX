@@ -1881,12 +1881,10 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 				var full_length = $compose_bar.width();
 				shorten().next(function() {
 					var text = vm.text;
-					if (PREFiX.settings.current.addEnterAfterAt) {
-						var re = new RegExp('@' + PREFiX.account.name, 'g');
-						text = text.replace(re, function(_, pos) {
-							return '@' + (pos ? '\n': '') + PREFiX.account.name;
-						});
-					}
+					var re = new RegExp('@' + PREFiX.account.name, 'g');
+					text = text.replace(re, function(_, pos) {
+						return '@' + (pos ? '\n': '') + PREFiX.account.name;
+					});
 					data.status = text;
 					data.photo = PREFiX.image;
 					r[ PREFiX.image ? 'postPhoto' : 'postStatus' ](data).
