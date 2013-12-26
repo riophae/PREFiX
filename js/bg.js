@@ -484,7 +484,49 @@ function update(retry_chances, new_status_id) {
 	});
 	Deferred.parallel(deferred_new, deferred_notification).next(function() {
 		var need_notify = updateTitle();
-		if (need_notify) playSound();
+		if (need_notify) {
+			playSound();
+			if (settings.current.notification) {
+				var is_pm = !! PREFiX.count.direct_messages;
+				var content = '您有 ';
+				content += PREFiX.count.direct_messages || PREFiX.count.mentions;
+				content += ' 条未读';
+				content += is_pm ? '私信' : '@消息';
+				if (! PREFiX.popupActive || (PREFiX.panelMode && ! PREFiX.is_popup_focused)) {
+					showNotification({
+						content: content,
+						id: 'notification'
+					}).addEventListener('click', function(e) {
+						this.cancel();
+						if (PREFiX.panelMode) {
+							var url = chrome.extension.getURL('/popup.html?new_window=true');
+							chrome.tabs.query({
+								url: url
+							}, function(tabs) {
+								tabs.forEach(function(tab) {
+									chrome.windows.update(tab.windowId, {
+										focused: true
+									});
+								});
+							});
+							var views = chrome.extension.getViews();
+							views.some(function(view) {
+								if (view.location.href == url) {
+									var selector = '#navigation-bar ';
+									selector += is_pm ? '.privatemsgs' : '.mentions';
+									var elem = view.$(selector)[0];
+									var event = new Event('click');
+									elem.dispatchEvent(event);
+									return true;
+								}
+							});
+						} else {
+							createPopup();
+						}
+					});
+				}
+			}
+		}
 
 		d.call();
 	}).error(function(e) {
@@ -968,7 +1010,8 @@ var settings = {
 		showSavedSearchCount: true,
 		createPopAtStartup: false,
 		volume: 1,
-		holdCtrlToSubmit: false
+		holdCtrlToSubmit: false,
+		notification: true
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
