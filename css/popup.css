@@ -1190,7 +1190,6 @@ body.show-drop-area #drop-area {
 	overflow-y: auto;
 	background: rgba(0, 0, 0, .85);
 	color: #fff;
-	text-shadow: 0 0 2px #ccc;
 }
 #context-timeline::-webkit-scrollbar-track:vertical {
 	margin: 0;
