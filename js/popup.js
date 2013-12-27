@@ -330,12 +330,12 @@ function initKeyboardControlEvents() {
 		var current_model = getCurrent();
 		var $view = findView(current_model, current_model.current);
 		var current = findModel(current_model, current_model.current);
-		if (e.keyCode === 8) {
+		if (e.keyCode === 8 && $scrolling_elem === $main &&
+			PREFiX.current === 'usertl_model') {
 			$('#back').click();
 		} if (e.keyCode === 32 && ! e.shiftKey) {
 			if ($scrolling_elem !== $main) {
-				e.keyCode = 8;
-				$(window).trigger(e);
+				hideAllOverlays(e);
 			} else {
 				$textarea.focus();
 				if (compose-bar.type === 'repost') {
@@ -726,6 +726,16 @@ function deleteStatusFromAllLists(status_id) {
 			list.splice(index, 1);
 		}
 	});
+}
+
+function hideAllOverlays(e) {
+	if ($('body.show-picture').length) {
+		e.preventDefault();
+		hidePicture();
+	} else if ($('body.show-context-timeline').length) {
+		e.preventDefault();
+		$('#context-timeline').trigger('click');
+	}
 }
 
 function setImage(file) {
@@ -1205,15 +1215,6 @@ function initMainUI() {
 		var height = $scrolling_elem.height();
 		smoothScrollTo(e.keyCode === 34 ?
 			current_pos + height : current_pos - height);
-	}).on('keydown', function(e) {
-		if (e.keyCode !== 8) return;
-		if ($('body.show-context-timeline').length) {
-			e.preventDefault();
-			$('#context-timeline').trigger('click');
-		} else if ($('body.show-picture').length) {
-			e.preventDefault();
-			hidePicture();
-		}
 	}).on('keydown', function(e) {
 		if (e.keyCode !== 116) return;
 		e.preventDefault();
