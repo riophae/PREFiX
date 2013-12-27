@@ -14,6 +14,8 @@ var $main;
 var is_panel_mode = false;
 var $scrolling_elem;
 
+var last_model = PREFiX.current;
+
 var is_windows = navigator.platform.indexOf('Win') > -1;
 
 var loading = false;
@@ -179,15 +181,23 @@ function findModel(model, id) {
 }
 
 function setCurrent(model, id) {
-	var $view = findView(model, id);
-	if ($view.length) {
-		model.current = id;
-		model.$elem.children().removeClass('current');
-		model.$elem.find('a.focused').removeClass('focused');
-		$view.addClass('current');
-	} else {
-		model.current = null;
-	}
+	var now = Date.now();
+	var canceled = false;
+	var $view;
+	waitFor(function() {
+		$view = findView(model, id);
+		if (Date.now() - now > 5000) {
+			canceled = true;
+		}
+		return $view.length || canceled;
+	}, function() {
+		if ($view.length) {
+			model.current = id;
+			model.$elem.children().removeClass('current');
+			model.$elem.find('a.focused').removeClass('focused');
+			$view.addClass('current');
+		}
+	})
 }
 
 function initKeyboardControl() {
@@ -293,6 +303,7 @@ function initKeyboardControlEvents() {
 			}
 		}
 		switch (e.keyCode) {
+			case 8 /* Backspace*/:
 			case 68 /* D */: case 70 /* F */:
 			case 77 /* M */: case 78 /* N */:
 			case 81 /* Q */: case 83 /* S */:
@@ -304,13 +315,13 @@ function initKeyboardControlEvents() {
 				if ($('body.show-context-timeline').length)
 					return;
 
+			case 8 /* Backspace*/:
 			case 32 /* Space */:
-			case 67 /* C */: case 68 /* D */:
-			case 70 /* F */: case 77 /* M */:
-			case 78 /* N */: case 80 /* P */:
-			case 81 /* Q */: case 82 /* R */:
-			case 83 /* S */: case 85 /* U */:
-			case 86 /* V */:
+			case 67 /* C */: case 70 /* F */:
+			case 77 /* M */: case 78 /* N */:
+			case 80 /* P */: case 81 /* Q */:
+			case 82 /* R */: case 83 /* S */:
+			case 85 /* U */: case 86 /* V */:
 				e.preventDefault();
 				break;
 			default:
@@ -319,7 +330,9 @@ function initKeyboardControlEvents() {
 		var current_model = getCurrent();
 		var $view = findView(current_model, current_model.current);
 		var current = findModel(current_model, current_model.current);
-		if (e.keyCode === 32 && ! e.shiftKey) {
+		if (e.keyCode === 8) {
+			$('#back').click();
+		} if (e.keyCode === 32 && ! e.shiftKey) {
 			if ($scrolling_elem !== $main) {
 				e.keyCode = 8;
 				$(window).trigger(e);
@@ -347,12 +360,6 @@ function initKeyboardControlEvents() {
 				var event = new Event('dblclick');
 				$remove[0].dispatchEvent(event);
 			}
-		} else if (e.keyCode === 68) {
-			var $name = $view.find('a.name');
-			$name.trigger({
-				type: 'click',
-				shiftKey: e.shiftKey
-			});
 		} else if (e.keyCode === 70) {
 			var $fav = $view.find('a.favourite');
 			if (e.shiftKey && current.favorited) {
@@ -406,11 +413,16 @@ function initKeyboardControlEvents() {
 				$reply[0].click();
 			}
 		} else if (e.keyCode === 83) {
-			var $avatar = $view.find('.avatar a');
-			$avatar.trigger({
-				type: 'click',
-				shiftKey: e.shiftKey
-			});
+			if (e.shiftKey) {
+				var $avatar = $view.find('.avatar a');
+				$avatar.trigger({
+					type: 'click',
+					shiftKey: true
+				});
+			} else {
+				var $name = $view.find('.name');
+				$name.trigger('click');
+			}
 		} else if (e.keyCode === 85) {
 			var $link = $view.find('a.permanent-link');
 			$link.trigger({
@@ -576,7 +588,7 @@ function updateRelativeTime() {
 	if (! current || (! current.statuses && ! current.messages))
 		return;
 	(current.statuses || current.messages).forEach(function(s) {
-		s.relativeTime = getRelativeTime(s.created_at);
+		s.relativeTime = s.created_at && getRelativeTime(s.created_at);
 	});
 }
 
@@ -687,6 +699,11 @@ function focusToEnd() {
 	$textarea.focus();
 	var pos = composebar_model.text.length;
 	$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
+}
+
+function resetHeader() {
+	$('#back').css('animation', 'leftOut .4s both');
+	$('h1').css('animation', 'topIn .4s both');
 }
 
 function deleteStatusFromAllLists(status_id) {
@@ -990,24 +1007,18 @@ function initMainUI() {
 			markBreakpoint();
 	}, 100));
 
-	$('#app').delegate('[data-send-pm]', 'click', function(e) {
-		e.stopImmediatePropagation();
-		e.preventDefault();
-		var data = $(this).data('send-pm').split(':');
-		var id = data[0];
-		if (id === PREFiX.account.id) {
-			searches_model.show_my_timeline = true;
-			$('#navigation-bar .saved-searches').trigger('click');
-		} else {
-			sendPM(id, data[1]);
-		}
-	}).delegate('a', 'click', function(e) {
+	$('#app').delegate('a', 'click', function(e) {
 		if (e.currentTarget.href.indexOf('http://') !== 0 &&
 			e.currentTarget.href.indexOf('https://') !== 0)
 			return;
 		e.preventDefault();
 		e.stopPropagation();
-		createTab(e.currentTarget.href, e.shiftKey);
+		if (! e.currentTarget.dataset.userid || e.shiftKey) {
+			createTab(e.currentTarget.href, e.shiftKey);
+		}
+	}).delegate('[data-userid]', 'click', function(e) {
+		PREFiX.userid = this.dataset.userid;
+		nav_model.showUserTimeline();
 	}).delegate('span.context', 'click', function(e) {
 		var $status = $(e.currentTarget).parents('li');
 		var status_id = $status.attr('data-id');
@@ -1050,6 +1061,34 @@ function initMainUI() {
 		e.preventDefault();
 		createTab(e.target.src, e.shiftKey);
 		hidePicture();
+	}).delegate('#relationship', 'click', function(e) {
+		var $this = $(e.currentTarget);
+		if ($this.text() === '关注 TA') {
+			r.addFriend({
+				id: PREFiX.userid
+			}).next(function(user) {
+				$this.text(user.following ? '已关注' : '已发出关注请求');
+				$this.prop('title', '取消关注');
+			});
+		} else if ($this.text() === '已关注') {
+			r.removeFriend({
+				id: PREFiX.userid
+			}).next(function(user) {
+				$this.text('关注 TA').prop('title', '');
+			})
+		}
+	});
+
+	$('#back').click(function(e) {
+		if (last_model === 'usertl_model') {
+			last_model = 'tl_model';
+		}
+		$main.scrollTop(0);
+		setTimeout(function() {
+			PREFiX.current = nav_model.current = last_model;
+			window[last_model].initialize();
+			resetHeader();
+		});
 	});
 
 	$('h1').click(function(e) {
@@ -1185,6 +1224,7 @@ function initMainUI() {
 	mentions_model.$elem = $('#mentions');
 	privatemsgs_model.$elem = $('#privatemsgs');
 	searches_model.$elem = $('#saved-searches');
+	usertl_model.$elem = $('#user-timeline');
 
 	resetLoadingEffect();
 
@@ -1496,21 +1536,6 @@ function loadOldder() {
 				list.push.apply(list, statuses);
 				updateRelativeTime();
 			});
-		} else if (k === '##MY_TIMELINE##') {
-			r.getUserTimeline({
-				id: PREFiX.account.id,
-				max_id: oldest_status.id,
-			}).setupAjax({
-				lock: loadOldder,
-				send: function() {
-					loading = true;
-				},
-				oncomplete: function() {
-					loading = false;
-				}
-			}).next(function(statuses) {
-				push(searches_model.statuses, statuses);
-			});
 		} else if (k !== '##PUBLIC_TIMELINE##') {
 			if (k === null) {
 				k = searches_model.keyword;
@@ -1530,6 +1555,23 @@ function loadOldder() {
 				push(searches_model.statuses, statuses);
 			});
 		}
+	} else if (model === usertl_model) {
+		var oldest_status = usertl_model.statuses[usertl_model.statuses.length - 1];
+		if (! oldest_status) return;
+		r.getUserTimeline({
+			id: PREFiX.userid,
+			max_id: oldest_status.id,
+		}).setupAjax({
+			lock: loadOldder,
+			send: function() {
+				loading = true;
+			},
+			oncomplete: function() {
+				loading = false;
+			}
+		}).next(function(statuses) {
+			push(usertl_model.statuses, statuses);
+		});
 	} else if (model.statuses) {
 		var oldest_status = model.statuses[model.statuses.length - 1];
 		if (! oldest_status) return;
@@ -1739,29 +1781,34 @@ var nav_model = avalon.define('navigation', function(vm) {
 		if (loading) return;
 		if (vm.current == 'tl_model' && $main.scrollTop())
 			return goTop(e);
-		PREFiX.current = vm.current = 'tl_model';
+		last_model = PREFiX.current = vm.current = 'tl_model';
 		tl_model.initialize();
 	}
 	vm.showMentions = function(e) {
 		if (loading) return;
 		if (vm.current == 'mentions_model' && $main.scrollTop())
 			return goTop(e);
-		PREFiX.current = vm.current = 'mentions_model';
+		last_model = PREFiX.current = vm.current = 'mentions_model';
 		mentions_model.initialize();
 	}
 	vm.showPrivateMsgs = function(e) {
 		if (loading) return;
 		if (vm.current == 'privatemsgs_model' && $main.scrollTop())
 			return goTop(e);
-		PREFiX.current = vm.current = 'privatemsgs_model';
+		last_model = PREFiX.current = vm.current = 'privatemsgs_model';
 		privatemsgs_model.initialize();
 	}
 	vm.showSavedSearches = function(e) {
 		if (loading) return;
 		if (vm.current == 'searches_model' && $main.scrollTop())
 			return goTop(e);
-		PREFiX.current = vm.current = 'searches_model';
+		last_model = PREFiX.current = vm.current = 'searches_model';
 		searches_model.initialize();
+	}
+	vm.showUserTimeline = function(e) {
+		if (loading) return;
+		PREFiX.current = vm.current = 'usertl_model';
+		usertl_model.initialize();
 	}
 	vm.$watch('current', function(new_value, old_value) {
 		if (old_value == 'privatemsgs_model') {
@@ -1773,6 +1820,10 @@ var nav_model = avalon.define('navigation', function(vm) {
 		if (new_value == 'searches_model') {
 			$('#topic-selector').show();
 		}
+		if (old_value == 'usertl_model') {
+			resetHeader();
+		}
+		$('#title').show();
 		window[old_value] && window[old_value].unload();
 		$('#navigation-bar li').removeClass('current');
 		$('#stream > ul').removeClass('current');
@@ -1962,9 +2013,9 @@ var tl_model = avalon.define('home-timeline', function(vm) {
 	});
 
 	vm.toggleFavourite = toggleFavourite;
-	
+
 	vm.showContextTimeline = showContextTimeline;
-	
+
 	vm.statuses = [];
 
 	vm.scrollTop = 0;
@@ -2059,9 +2110,9 @@ var mentions_model = avalon.define('mentions', function(vm) {
 	});
 
 	vm.toggleFavourite = toggleFavourite;
-	
+
 	vm.showContextTimeline = showContextTimeline;
-	
+
 	vm.statuses = [];
 
 	vm.scrollTop = 0;
@@ -2303,21 +2354,6 @@ searches_model.initialize = function() {
 		});
 	}
 
-	function showMyTimeline() {
-		$('#topic-selector').prop('disabled', true);
-		$('#loading').show();
-		searches_model.statuses = [];
-		searches_model.current = null;
-		r.getUserTimeline({
-			id: PREFiX.account.id
-		}).next(function(statuses) {
-			unshift(searches_model.statuses, statuses);
-			initKeyboardControl();
-		}).hold(function() {
-			$('#topic-selector').prop('disabled', false);
-		});
-	}
-
 	function showFavorites() {
 		$('#topic-selector').prop('disabled', true);
 		$('#loading').show();
@@ -2391,11 +2427,6 @@ searches_model.initialize = function() {
 		$public_tl.prop('value', '##PUBLIC_TIMELINE##');
 		$selector.append($public_tl);
 
-		var $my_tl = $('<option />');
-		$my_tl.text('我的消息');
-		$my_tl.prop('value', '##MY_TIMELINE##');
-		$selector.append($my_tl);
-
 		var $fav = $('<option />');
 		$fav.text('我的收藏');
 		$fav.prop('value', '##MY_FAVORITES##');
@@ -2421,10 +2452,6 @@ searches_model.initialize = function() {
 			if (this.value === '##PUBLIC_TIMELINE##') {
 				searches_model.keyword = '';
 				showPublicTimeline();
-			} else if (this.value === '##MY_TIMELINE##') {
-				searches_model.keyword = '';
-				delete searches_model.show_my_timeline;
-				showMyTimeline();
 			} else if (this.value === '##MY_FAVORITES##') {
 				searches_model.keyword = '';
 				showFavorites();
@@ -2448,9 +2475,7 @@ searches_model.initialize = function() {
 	});
 
 	var $selector = $('#topic-selector');
-	if (searches_model.show_my_timeline) {
-		$selector.val('##MY_TIMELINE##');
-	} else if (searches_model.search_keyword) {
+	if (searches_model.search_keyword) {
 		$selector.val('##SEARCH##');
 	} else if (last) {
 		$selector.val(searches_model.keyword);
@@ -2478,6 +2503,73 @@ searches_model.initialize = function() {
 searches_model.unload = function() {
 	clearInterval(this.interval);
 }
+
+var usertl_model = avalon.define('user-timeline', function(vm) {
+	vm.remove = remove;
+
+	;[ 'reply', 'repost' ].forEach(function(type) {
+		vm[type] = generateMethod(type);
+	});
+
+	vm.toggleFavourite = toggleFavourite;
+
+	vm.showContextTimeline = showContextTimeline;
+
+	vm.statuses = [];
+
+	vm.is_replying = false;
+});
+usertl_model.initialize = function() {
+	$('#title').hide();
+	$('#user-timeline').addClass('current');
+	$('h1, #back').attr('style', '');
+	$body.addClass('show-back-button');
+
+	r.showUser({
+		id: PREFiX.userid
+	}).next(function(user) {
+		user.error = '';
+		user.created_at_ymd = getYMD(user.created_at);
+		var following = user.following;
+		var $relationship = $('#relationship');
+		if (user.protected && ! user.following) {
+			user.error = '该用户没有公开 TA 的消息. ';
+		} else if (! user.status) {
+			user.error = '该用户还没有发表消息. '
+		}
+		if (user.status) {
+			r.getUserTimeline({
+				id: PREFiX.userid
+			}).next(function(statuses) {
+				unshift(usertl_model.statuses, statuses);
+				setTimeout(initKeyboardControl);
+				if (following) {
+					r.showRelationshipById(user.id, PREFiX.account.id).
+					next(function(result) {
+						if (JSON.parse(result.relationship.source.following)) {
+							$('#relationship').text('互相关注');
+						} else {
+							$relationship.prop('title', '取消关注');
+						}
+					});
+				}
+			});
+		} else {
+			var statuses = [ { id: 0, user: user } ];
+			usertl_model.statuses = statuses;
+			$relationship.prop('title', following ? '取消关注' : '');
+		}
+		if (user.error) {
+			$('#loading').hide();
+		}
+	})
+
+	usertl_model.statuses = [];
+	$main.scrollTop(0);
+	usertl_model.current = null;
+	usertl_model.is_replying = false;
+}
+usertl_model.unload = function() { }
 
 var context_tl_model = avalon.define('context-timeline', function(vm) {
 	vm.statuses = [];

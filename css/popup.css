@@ -70,6 +70,70 @@
 		opacity: 0;
 	}
 }
+@-webkit-keyframes topOut {
+	0% {
+	}
+	100% {
+		-webkit-transform: translateY(-30px);
+		transform: translateY(-30px);
+	}
+}
+@keyframes topOut {
+	0% {
+	}
+	100% {
+		-webkit-transform: translateY(-30px);
+		transform: translateY(-30px);
+	}
+}
+@-webkit-keyframes topIn {
+	0% {
+		-webkit-transform: translateY(-30px);
+		transform: translateY(-30px);
+	}
+	100% {
+	}
+}
+@keyframes topIn {
+	0% {
+		-webkit-transform: translateY(-30px);
+		transform: translateY(-30px);
+	}
+	100% {
+	}
+}
+@-webkit-keyframes leftIn {
+	0% {
+		-webkit-transform: translateX(-30px);
+		transform: translateX(-30px);
+	}
+	100% {
+	}
+}
+@keyframes leftIn {
+	0% {
+		-webkit-transform: translateX(-30px);
+		transform: translateX(-30px);
+	}
+	100% {
+	}
+}
+@-webkit-keyframes leftOut {
+	0% {
+	}
+	100% {
+		-webkit-transform: translateX(-30px);
+		transform: translateX(-30px);
+	}
+}
+@keyframes leftOut {
+	0% {
+	}
+	100% {
+		-webkit-transform: translateX(-30px);
+		transform: translateX(-30px);
+	}
+}
 @-webkit-keyframes wobbleIn {
 	0% {
 		-webkit-transform: perspective(300px) rotateX(-90deg) scale(.8) translateY(-10px);
@@ -797,6 +861,15 @@ a {
 b, .bold, .bold * {
 	font-weight: bold;
 }
+i {
+	font-style: italic;
+}
+.left {
+	float: left !important;
+}
+.right {
+	float: right !important;
+}
 #birthday-cake {
 	display: none;
 	position: fixed;
@@ -1249,6 +1322,30 @@ body.show-drop-area #drop-area {
 	display: block;
 	position: relative;
 	height: 35px;
+}
+body.show-back-button #back {
+	display: block;
+	-webkit-animation: leftIn .4s both;
+	animation: leftIn .4s both;
+}
+body.show-back-button h1 {
+	-webkit-animation: topOut .4s both;
+	animation: topOut .4s both;
+}
+#back {
+	display: none;
+	background: url('/images/back.png') no-repeat;
+	width: 13px;
+	height: 20px;
+	position: absolute;
+	left: 10px;
+	top: 8px;
+	-webkit-filter: brightness(.8);
+	-webkit-transition: -webkit-filter ease-in-out .2s;
+}
+#back:hover {
+	-webkit-filter: brightness(1);
+	cursor: pointer;
 }
 h1 {
 	float: left;
@@ -1722,6 +1819,29 @@ html.panel-mode #new-window {
 	font: 13px Calibri, "Calibri for PREFiX";
 	line-height: 48px;
 	background: url('/images/status-bg.png') repeat;
+}
+#user-profile li {
+	padding: 8px 10px;
+}
+#user-profile li:first-of-type {
+	box-shadow: none;
+}
+#user-profile p {
+	margin: 0;
+	line-height: 150%;
+}
+#name-avatar p {
+	height: 24px;
+	line-height: 24px;
+}
+#relationship {
+	opacity: .5;
+	-webkit-transition: opacity .4s;
+	transition: opacity .4s;
+}
+#relationship:hover {
+	opacity: 1;
+	cursor: pointer;
 }
 #loading {
 	width: 400px;

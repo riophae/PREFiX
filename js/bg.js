@@ -887,8 +887,6 @@ var playSound = (function() {
 	}
 })();
 
-var chs_re = new RegExp;
-chs_re.compile('[「\u4E00-\u9FA5\uf900-\ufa2d」]', 'g');
 Ripple.events.observe('process_status', function(status) {
 	if (! status) return;
 
@@ -909,6 +907,10 @@ Ripple.events.observe('process_status', function(status) {
 		status.loaded_at_relative = '';
 	}
 
+	if (status.user) {
+		status.user.created_at_ymd = getYMD(status.user.created_at);
+	}
+
 	var html = status.text;
 	$temp.html(html);
 	status.textWithoutTags = $temp.text();
@@ -925,7 +927,7 @@ Ripple.events.observe('process_status', function(status) {
 	html = html.replace(mention_re, function(_, id, name) {
 		return '<a href="http://fanfou.com/' + id +
 			'" title="@' + name + ' (' + id +
-			')">' + name + '</a>';
+			')" data-userid="' + id + '">' + name + '</a>';
 	});
 
 	if (status.repost_status || status.in_reply_to_status_id) {

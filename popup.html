@@ -81,18 +81,19 @@
 	</div>
 	<div id="header">
 		<div id="top-bar" class="fix">
-		<h1 title="点击回到顶部或刷新 (快捷键 H)"><b>PREFiX</b><span id="back-to-top"></span></h1>
-		<span id="new-window" title="弹出到新窗口 (快捷键 P)"></span>
-		<ul id="navigation-bar" ms-controller="navigation">
-			<li class="home-timeline" title="首页 (快捷键 1)" ms-click="showHomeTimeline"><span class="count"></span></li>
-			<li class="mentions" title="提到我的 (快捷键 2)" ms-click="showMentions"><span class="count"></span></li>
-			<li class="privatemsgs" title="私信 (快捷键 3)" ms-click="showPrivateMsgs"><span class="count"></span></li>
-			<li class="saved-searches" title="随便看看 & 关注的话题 (快捷键 4)" ms-click="showSavedSearches"><span class="count"></span></li>
-		</ul>
+			<span id="back" title="返回 (快捷键 Backspace)"></span>
+			<h1 title="点击回到顶部或刷新 (快捷键 H)"><b>PREFiX</b><span id="back-to-top"></span></h1>
+			<span id="new-window" title="弹出到新窗口 (快捷键 P)"></span>
+			<ul id="navigation-bar" ms-controller="navigation">
+				<li class="home-timeline" title="首页 (快捷键 1)" ms-click="showHomeTimeline"><span class="count"></span></li>
+				<li class="mentions" title="提到我的 (快捷键 2)" ms-click="showMentions"><span class="count"></span></li>
+				<li class="privatemsgs" title="私信 (快捷键 3)" ms-click="showPrivateMsgs"><span class="count"></span></li>
+				<li class="saved-searches" title="随便看看 & 关注的话题 (快捷键 4)" ms-click="showSavedSearches"><span class="count"></span></li>
+			</ul>
 		</div>
 		<div id="compose-bar" ms-controller="composebar-textarea">
-		<textarea class="content" title="Ctrl + Enter 或双击提交 (空格键使输入框得到或失去焦点)" ms-keydown="onkeydown" ms-dblclick="ondblclick" ms-focus="onfocus" ms-blur="onblur" ms-duplex="text" tabIndex=1></textarea>
-		<span id="uploading-photo" title="上传照片"><input type="file" id="file" /></span>
+			<textarea class="content" title="Ctrl + Enter 或双击提交 (空格键使输入框得到或失去焦点)" ms-keydown="onkeydown" ms-dblclick="ondblclick" ms-focus="onfocus" ms-blur="onblur" ms-duplex="text" tabIndex=1></textarea>
+			<span id="uploading-photo" title="上传照片"><input type="file" id="file" /></span>
 		</div>
 	</div>
 	<div id="main">
@@ -120,7 +121,7 @@
 						</div>
 						<div class="content">
 						<div class="info fix">
-							<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+							<a class="name" ms-text="status.user.name" ms-data-userid="status.user.id" title="查看 TA 的消息 (快捷键 S)"></a>
 							<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
 							<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
 						</div>
@@ -143,13 +144,13 @@
 						<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
 						</div>
 						<div class="avatar">
-						<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-							<img ms-src="status.user.profile_image_url_large" />
-						</a>
+							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
+								<img ms-src="status.user.profile_image_url_large" />
+							</a>
 						</div>
 						<div class="content">
 						<div class="info fix">
-							<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+							<a class="name" ms-text="status.user.name" ms-data-userid="status.user.id" title="查看 TA 的消息 (快捷键 S)"></a>
 							<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
 							<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
 						</div>
@@ -169,13 +170,13 @@
 						<a ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
 						</div>
 						<div class="avatar">
-						<a ms-title="{{message.sender.name}} ({{message.sender.id}})" ms-href="'http://fanfou.com/' + message.sender.id">
-							<img ms-src="message.sender.profile_image_url_large" />
-						</a>
+							<a ms-title="{{message.sender.name}} ({{message.sender.id}})" ms-href="'http://fanfou.com/' + message.sender.id">
+								<img ms-src="message.sender.profile_image_url_large" />
+							</a>
 						</div>
 						<div class="content">
 						<div class="info fix">
-							<a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name" ms-data-send-pm="message.sender.id + ':' + message.sender.name" ms-title="message.is_self ? '查看我的消息' : '发送私信给 @' + message.sender.name + ' (快捷键 D)'"></a>
+							<a class="name" ms-text="message.sender.name" ms-data-userid="message.sender.id" title="查看 TA 的消息 (快捷键 S)"></a>
 							<span class="timestamp-client" ms-html="message.relativeTime"></span>
 						</div>
 						<div class="status-content" ms-html="message.fixedText"></div>
@@ -194,19 +195,66 @@
 						<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
 						</div>
 						<div class="avatar">
-						<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-							<img ms-src="status.user.profile_image_url_large" />
-						</a>
+							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
+								<img ms-src="status.user.profile_image_url_large" />
+							</a>
 						</div>
 						<div class="content">
 						<div class="info fix">
-							<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+							<a class="name" ms-text="status.user.name" ms-data-userid="status.user.id" title="查看 TA 的消息 (快捷键 S)"></a>
 							<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
 							<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
 						</div>
 						<div class="status-content" ms-html="status.fixedText" ms-class-bold="status.is_unread"></div>
 						<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
 							<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+						</div>
+					</div>
+				</li>
+			</ul>
+			<ul id="user-timeline" class="status-list fix" ms-controller="user-timeline" ms-each-status="statuses" ms-attr-replying="is_replying">
+				<div ms-if="$first" id="user-profile">
+					<li id="name-avatar" class="fix">
+						<div class="left">
+							<p class="name"><b>{{ status.user.name }}</b> ({{ status.user.id }}) <span ms-if="! status.is_self" id="relationship">{{ status.user.following ? '已关注' : '关注 TA' }}</span></p>
+							<p class="statistics">{{ status.user.friends_count }} 好友 / {{ status.user.followers_count }} 关注者 / {{ status.user.statuses_count }} 条消息</p>
+						</div>
+						<div class="right avatar">
+							<a ms-href="http://fanfou.com/{{ status.user.id }}" ms-title="打开 TA 的个人主页">
+								<img ms-src="status.user.profile_image_url_large" />
+							</a>
+						</div>
+					</li>
+					<li>
+						<div class="status-content" title="个人简介">
+							<p>{{ status.user.description }} <i>(注册于 {{ status.user.created_at_ymd }})</i></p>
+						</div>
+					</li>
+					<li ms-if="!! status.user.error">{{ status.user.error }}</li>
+				</div>
+				<li ms-if="!! status.id" ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
+					<div class="status fix">
+						<div class="action-icons">
+						<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+						<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+						<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+						<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
+						</div>
+						<div class="avatar">
+							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
+								<img ms-src="status.user.profile_image_url_large" />
+							</a>
+						</div>
+						<div class="content">
+						<div class="info fix">
+							<a class="name" ms-text="status.user.name" ms-data-userid="status.user.id" title="查看 TA 的消息 (快捷键 S)"></a>
+							<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
+							<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
+						</div>
+						<div class="status-content" ms-html="status.fixedText"></div>
+						<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
+							<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+						</div>
 						</div>
 					</div>
 				</li>

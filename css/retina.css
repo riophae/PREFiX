@@ -77,6 +77,10 @@ div.notify-box .reject-btn:active {
 	background-image: url('/images/header-bg@2x.png');
 	background-size: 400px 45px;
 }
+#back {
+	background-image: url('/images/back@2x.png');
+	background-size: 13px 20px;
+}
 h1 b {
 	background-image: url('/images/logo@2x.png');
 	background-size: 92px 24px;
