@@ -104,113 +104,113 @@
 		</span>
 		</div>
 		<div id="stream">
-		<ul id="home-timeline" class="status-list fix" ms-controller="home-timeline" ms-each-status="statuses" ms-attr-replying="is_replying">
-			<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
-			<div class="status fix">
-				<div class="action-icons">
-				<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-				<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
-				<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
-				<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
-				</div>
-				<div class="avatar">
-				<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-					<img ms-src="status.user.profile_image_url_large" />
-				</a>
-				</div>
-				<div class="content">
-				<div class="info fix">
-					<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
-					<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
-					<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
-				</div>
-				<div class="status-content" ms-html="status.fixedText"></div>
-				<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
-					<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
-				</div>
-				</div>
-			</div>
-			</li>
-			<li class="breakpoint" ms-if="status.is_breakpoint" ms-text="status.loaded_at"></li>
-		</ul>
-		<ul id="mentions" class="status-list fix" ms-controller="mentions" ms-each-status="statuses" ms-attr-replying="is_replying">
-			<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
-			<div class="status fix">
-				<div class="action-icons">
-				<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-				<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
-				<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
-				<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
-				</div>
-				<div class="avatar">
-				<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-					<img ms-src="status.user.profile_image_url_large" />
-				</a>
-				</div>
-				<div class="content">
-				<div class="info fix">
-					<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
-					<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
-					<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
-				</div>
-				<div class="status-content" ms-html="status.fixedText"></div>
-				<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
-					<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
-				</div>
-				</div>
-			</div>
-			</li>
-		</ul>
-		<ul id="privatemsgs" class="status-list fix" ms-controller="privatemsgs" ms-each-message="messages">
-			<li ms-data-id="message.id">
-			<div class="status fix">
-				<div class="action-icons">
-				<a ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-				<a ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
-				</div>
-				<div class="avatar">
-				<a ms-title="{{message.sender.name}} ({{message.sender.id}})" ms-href="'http://fanfou.com/' + message.sender.id">
-					<img ms-src="message.sender.profile_image_url_large" />
-				</a>
-				</div>
-				<div class="content">
-				<div class="info fix">
-					<a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name" ms-data-send-pm="message.sender.id + ':' + message.sender.name" ms-title="message.is_self ? '查看我的消息' : '发送私信给 @' + message.sender.name + ' (快捷键 D)'"></a>
-					<span class="timestamp-client" ms-html="message.relativeTime"></span>
-				</div>
-				<div class="status-content" ms-html="message.fixedText"></div>
-				<div ms-if="!! message.in_reply_to" ms-html="message.in_reply_to && message.in_reply_to.text" class="in-reply-to-message"></div>
-				</div>
-			</div>
-			</li>
-		</ul>
-		<ul id="saved-searches" class="status-list fix" ms-controller="saved-searches" ms-each-status="statuses" ms-attr-replying="is_replying">
-			<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
-			<div class="status fix">
-				<div class="action-icons">
-				<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-				<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
-				<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
-				<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
-				</div>
-				<div class="avatar">
-				<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-					<img ms-src="status.user.profile_image_url_large" />
-				</a>
-				</div>
-				<div class="content">
-				<div class="info fix">
-					<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
-					<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
-					<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
-				</div>
-				<div class="status-content" ms-html="status.fixedText" ms-class-bold="status.is_unread"></div>
-				<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
-					<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
-				</div>
-				</div>
-			</li>
-		</ul>
+			<ul id="home-timeline" class="status-list fix" ms-controller="home-timeline" ms-each-status="statuses" ms-attr-replying="is_replying">
+				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
+					<div class="status fix">
+						<div class="action-icons">
+						<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+						<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+						<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+						<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
+						</div>
+						<div class="avatar">
+						<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
+							<img ms-src="status.user.profile_image_url_large" />
+						</a>
+						</div>
+						<div class="content">
+						<div class="info fix">
+							<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+							<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
+							<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
+						</div>
+						<div class="status-content" ms-html="status.fixedText"></div>
+						<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
+							<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+						</div>
+						</div>
+					</div>
+				</li>
+				<li class="breakpoint" ms-if="status.is_breakpoint" ms-text="status.loaded_at"></li>
+			</ul>
+			<ul id="mentions" class="status-list fix" ms-controller="mentions" ms-each-status="statuses" ms-attr-replying="is_replying">
+				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
+					<div class="status fix">
+						<div class="action-icons">
+						<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+						<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+						<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+						<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
+						</div>
+						<div class="avatar">
+						<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
+							<img ms-src="status.user.profile_image_url_large" />
+						</a>
+						</div>
+						<div class="content">
+						<div class="info fix">
+							<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+							<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
+							<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
+						</div>
+						<div class="status-content" ms-html="status.fixedText"></div>
+						<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
+							<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+						</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<ul id="privatemsgs" class="status-list fix" ms-controller="privatemsgs" ms-each-message="messages">
+				<li ms-data-id="message.id">
+					<div class="status fix">
+						<div class="action-icons">
+						<a ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+						<a ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+						</div>
+						<div class="avatar">
+						<a ms-title="{{message.sender.name}} ({{message.sender.id}})" ms-href="'http://fanfou.com/' + message.sender.id">
+							<img ms-src="message.sender.profile_image_url_large" />
+						</a>
+						</div>
+						<div class="content">
+						<div class="info fix">
+							<a ms-href="'http://fanfou.com/' + message.sender.id" class="name" ms-text="message.sender.name" ms-data-send-pm="message.sender.id + ':' + message.sender.name" ms-title="message.is_self ? '查看我的消息' : '发送私信给 @' + message.sender.name + ' (快捷键 D)'"></a>
+							<span class="timestamp-client" ms-html="message.relativeTime"></span>
+						</div>
+						<div class="status-content" ms-html="message.fixedText"></div>
+						<div ms-if="!! message.in_reply_to" ms-html="message.in_reply_to && message.in_reply_to.text" class="in-reply-to-message"></div>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<ul id="saved-searches" class="status-list fix" ms-controller="saved-searches" ms-each-status="statuses" ms-attr-replying="is_replying">
+				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
+					<div class="status fix">
+						<div class="action-icons">
+						<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+						<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+						<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+						<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
+						</div>
+						<div class="avatar">
+						<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
+							<img ms-src="status.user.profile_image_url_large" />
+						</a>
+						</div>
+						<div class="content">
+						<div class="info fix">
+							<a ms-href="'http://fanfou.com/' + status.user.id" class="name" ms-text="status.user.name" ms-data-send-pm="status.user.id + ':' + status.user.name" ms-title="status.is_self ? '查看我的消息' : '发送私信给 @' + status.user.name + ' (快捷键 D)'"></a>
+							<a ms-href="'http://fanfou.com/statuses/' + status.id" ms-title="'消息链接 (快捷键 U) / ' + status.fullTime" class="permanent-link">#</a>
+							<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
+						</div>
+						<div class="status-content" ms-html="status.fixedText" ms-class-bold="status.is_unread"></div>
+						<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
+							<img ms-css-width="status.photo.thumb_width + 'px'" ms-css-height="status.photo.thumb_height + 'px'" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
+						</div>
+					</div>
+				</li>
+			</ul>
 			<div id="loading">
 				<ul>
 					<li></li><li></li><li></li><li></li><li></li>
