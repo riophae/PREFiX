@@ -227,8 +227,8 @@
 						</div>
 					</li>
 					<li>
-						<div class="status-content" title="个人简介">
-							<p>{{ status.user.description }} <i>(注册于 {{ status.user.created_at_ymd }})</i></p>
+						<div ms-if="!! status.user.description" class="status-content" title="个人简介">
+							<p>{{ status.user.description }}</i></p>
 						</div>
 					</li>
 					<li ms-if="!! status.user.error">{{ status.user.error }}</li>
