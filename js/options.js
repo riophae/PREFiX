@@ -29,6 +29,11 @@ $(function() {
 		}
 	});
 
+	$('[foldable-src]').on('change', function(e) {
+		var type = $(this).attr('foldable-src');
+		$('[foldable-tgt="' + type + '"]').prop('hidden', ! this.checked);
+	}).trigger('change');
+
 	var $volume = $('#volume');
 	$('[key="volume"]').on('change', function(e) {
 		var volume = +$(this).val();

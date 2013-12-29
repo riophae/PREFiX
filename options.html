@@ -61,9 +61,6 @@
 								<label><input type="checkbox" key="playSound" />有新的未读 @ 消息或未读私信时播放提示音</label>
 							</li>
 							<li>
-								<label><input type="checkbox" key="notification" />有新的提醒时显示桌面通知</label>
-							</li>
-							<li>
 								<label><input type="checkbox" key="drawAttention" />Timeline 上有新消息时闪烁任务栏图标 (禁用后有新@和私信时仍会闪烁)</label>
 							</li>
 							<li>
@@ -81,6 +78,27 @@
 									<option value="post_status">发送消息</option>
 									<option value="send_pm">发送私信</option>
 								</select>
+							</li>
+						</ul>
+						<ul>
+							<h3>桌面通知</h3>
+							<li>
+								<label><input type="checkbox" key="notification" foldable-src="notification" />启用桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_mention" foldable-tgt="notification" />当我被 @ 时显示桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_privatemsg" foldable-tgt="notification" />当收到私信时显示桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_follower" foldable-tgt="notification" />当有新关注者时显示桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_friendreq" foldable-tgt="notification" />当有新的关注请求时显示桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_favourite" foldable-tgt="notification" />当我的消息被收藏时显示桌面通知</label>
 							</li>
 						</ul>
 						<ul>
@@ -152,7 +170,7 @@
 							<li>R 键回复 (Reply) 消息, Q 键转发 (Quote) 消息</li>
 							<li>Shift + D 键删除 (Delete) 消息</li>
 							<li>F 键收藏 (Favorite), Shift + F 取消收藏</li>
-							<li>S 键查看用户信息 (Space), 按 Shift + S 键在前台标签打开该用户个人空间</li>
+							<li>S 键在应用内查看用户信息 (Space), 按 Shift + S 键在前台标签打开该用户个人空间</li>
 							<li>U 键在后台标签打开该消息的饭否页面, 按 Shift + U 键在前台标签打开</li>
 							<li>按空格键使输入框得到焦点, 再按空格键使输入框失去焦点</li>
 							<li>V 键放大图片或缩小图片 (View), Shift + V 键在前台标签打开原图</li>

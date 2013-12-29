@@ -427,12 +427,203 @@ function updateTitle() {
 	return need_notify;
 }
 
-function update(retry_chances, new_status_id) {
-	var d = new Deferred;
+function initStreamingAPI() {
+	var processed_index = -1;
+	function notify(options) {
+		if (! settings.current.notification)
+			return;
+		var is_mention_or_pm = [ 'mention', 'privatemsg' ].indexOf(options.type) > -1;
+		if (is_mention_or_pm) {
+			if (PREFiX.popupActive && (! PREFiX.panelMode || PREFiX.is_popup_focused))
+				return;
+		}
+		if (options.type === 'mention' && ! settings.current.notif_mention)
+			return;
+		if (options.type === 'privatemsg' && ! settings.current.notif_privatemsg)
+			return;
+		if (options.type === 'friend' && ! settings.current.notif_follower)
+			return;
+		if (options.type === 'request' && ! settings.current.notif_friendreq)
+			return;
+		if (options.type === 'favourite' && ! settings.current.notif_favourite)
+			return;
+		showNotification(options).addEventListener('click', function(e) {
+			this.cancel();
+			if (options.url) {
+				createTab(options.url);
+			}
+			if (! is_mention_or_pm)
+				return;
+			if (PREFiX.panelMode) {
+				var url = chrome.extension.getURL('/popup.html?new_window=true');
+				chrome.tabs.query({
+					url: url
+				}, function(tabs) {
+					tabs.forEach(function(tab) {
+						chrome.windows.update(tab.windowId, {
+							focused: true
+						});
+					});
+				});
+				var views = chrome.extension.getViews();
+				views.some(function(view) {
+					if (view.location.href == url) {
+						var selector = '#navigation-bar ';
+						if (options.type === 'mention') {
+							selector += '.mentions';
+						} else if (options.type === 'privatemsg') {
+							selector += '.privatemsgs';
+						}
+						var elem = view.$(selector)[0];
+						var event = new Event('click');
+						elem.dispatchEvent(event);
+						return true;
+					}
+				});
+			} else {
+				createPopup();
+			}
+		});
+	}
+	function process(data) {
+		if (! data || ! data.trim().length)
+			return;
+		try {
+			data = JSON.parse(data);
+		} catch (e) {
+			console.log('failed to parse data', data);
+			throw e;
+		}
+		var object = data.object;
+		if (object && object.text) {
+			Ripple.events.trigger('process_status', object);
+			if (object.photo) {
+				object.textWithoutTags += '[PHOTO]';
+			}
+		}
+		if (data.event === 'message.create' ||
+			data.event === 'dm.create') {
+			var retry = 3;
+			setTimeout(function() {
+				getNotification().next(function() {
+					if (! PREFiX.count.mentions &&
+						! PREFiX.count.direct_messages &&
+						! object.is_self &&
+						retry--) {
+						getNotification().next(arguments.callee);
+						return;
+					}
+					updateTitle();
+					if (! object.is_self) {
+						playSound();
+						var options = { };
+						if (data.event === 'message.create') {
+							options.type = 'mention';
+							options.title = object.user.name + ' (' +
+								object.user.id + ') 提到了你';
+							options.content = object.textWithoutTags;
+							options.icon = data.source.profile_image_url_large;
+						} else if (data.event === 'dm.create') {
+							options.type = 'privatemsg';
+							options.title = '收到 ' + data.source.name +
+								' (' + data.source.id + ') 发送的私信';
+							options.content = object.textWithoutTags;
+							options.icon = data.source.profile_image_url_large;
+						}
+						if (! options.type) return;
+						chrome.tabs.query({
+							active: true,
+							currentWindow: true
+						}, function(tabs) {
+							var tab = tabs[0];
+							if (! tab || tab.url.indexOf('fanfou.com/') === -1)
+								notify(options);
+						});
+					}
+				});
+			}, 500);
+		} else if (data.event === 'fav.create') {
+			if (data.source.id === PREFiX.account.id) return;
+			notify({
+				type: 'favourite',
+				title: data.source.name + ' (' + data.source.id + ') ' +
+					(data.event === 'fav.create' ? '' : '取消') +
+					'收藏了你的消息',
+				content: object.textWithoutTags,
+				icon: data.source.profile_image_url_large
+			});
+		} else if (data.event === 'friends.create') {
+			if (PREFiX.acount.protected) return;
+			notify({
+				type: 'friend',
+				title: data.source.name + ' (' + data.source.id + ') ' +
+					'关注了你',
+				content: '',
+				url: 'http://fanfou.com/' + data.source.id,
+				icon: data.source.profile_image_url_large
+			});
+		} else if (data.event === 'friends.request') {
+			notify({
+				type: 'request',
+				title: data.source.name + ' (' + data.source.id + ') ' +
+					'请求关注你',
+				content: '',
+				url: 'http://fanfou.com/friend.request',
+				icon: data.source.profile_image_url_large
+			});
+		} else {
+			console.log('streaming event', data)
+		}
+	}
+	PREFiX.streamingAjax = PREFiX.user.streamingAPI({
+		method: 'GET',
+		action: 'http://stream.fanfou.com/1/user.json',
+		callback: function(e) {
+			var data = this.responseText;
+			if (! data) return;
+			var parsed_data = data.split('\r\n');
+			for (var i = processed_index + 1; true; i++) {
+				if (parsed_data[i + 1] !== undefined) {
+					processed_index = i;
+					try {
+						process(parsed_data[i]);
+					} catch (e) { }
+				} else {
+					break;
+				}
+			}
+		}
+	}).hold(function(e) {
+		if (PREFiX.account) {
+			setTimeout(initStreamingAPI, 60 * 1000);
+		}
+	});
+}
 
+function stopStreamingAPI() {
+	if (PREFiX.streamingAjax) {
+		PREFiX.streamingAjax.cancel();
+		PREFiX.streamingAjax = null;
+	}
+}
+
+function resetTimer() {
 	clearInterval(PREFiX.interval);
 	var interval_time = (PREFiX.rateLimit - PREFiX.rateLimitRemaining) / 10 * 1000;
 	PREFiX.interval = setInterval(update, Math.max(interval_time, 30000));
+}
+
+function getNotification() {
+	return PREFiX.user.getNotification().next(function(data) {
+			PREFiX.previous_count = PREFiX.count;
+			PREFiX.count = data;
+		});
+}
+
+function update(retry_chances, new_status_id) {
+	var d = new Deferred;
+
+	resetTimer();
 
 	var tl = PREFiX.homeTimeline;
 	var statuses = fixStatusList(tl.statuses.concat(tl.buffered));
@@ -478,56 +669,9 @@ function update(retry_chances, new_status_id) {
 				}
 			});
 	}
-	var deferred_notification = PREFiX.user.getNotification().next(function(data) {
-		PREFiX.previous_count = PREFiX.count;
-		PREFiX.count = data;
-	});
+	var deferred_notification = getNotification();
 	Deferred.parallel(deferred_new, deferred_notification).next(function() {
-		var need_notify = updateTitle();
-		if (need_notify) {
-			playSound();
-			if (settings.current.notification) {
-				var is_pm = !! PREFiX.count.direct_messages;
-				var content = '您有 ';
-				content += PREFiX.count.direct_messages || PREFiX.count.mentions;
-				content += ' 条未读';
-				content += is_pm ? '私信' : '@消息';
-				if (! PREFiX.popupActive || (PREFiX.panelMode && ! PREFiX.is_popup_focused)) {
-					showNotification({
-						content: content,
-						id: 'notification'
-					}).addEventListener('click', function(e) {
-						this.cancel();
-						if (PREFiX.panelMode) {
-							var url = chrome.extension.getURL('/popup.html?new_window=true');
-							chrome.tabs.query({
-								url: url
-							}, function(tabs) {
-								tabs.forEach(function(tab) {
-									chrome.windows.update(tab.windowId, {
-										focused: true
-									});
-								});
-							});
-							var views = chrome.extension.getViews();
-							views.some(function(view) {
-								if (view.location.href == url) {
-									var selector = '#navigation-bar ';
-									selector += is_pm ? '.privatemsgs' : '.mentions';
-									var elem = view.$(selector)[0];
-									var event = new Event('click');
-									elem.dispatchEvent(event);
-									return true;
-								}
-							});
-						} else {
-							createPopup();
-						}
-					});
-				}
-			}
-		}
-
+		updateTitle();
 		d.call();
 	}).error(function(e) {
 		chrome.browserAction.setBadgeText({
@@ -604,6 +748,7 @@ function load() {
 				PREFiX.homeTimeline.statuses = fixStatusList(statuses);
 			}
 			clearInterval(init_interval);
+			initStreamingAPI();
 		});
 	};
 	init_interval = setInterval(init_data, 15 * 1000);
@@ -630,6 +775,7 @@ function unload() {
 	clearInterval(birthday_interval);
 	PREFiX.loaded = false;
 	PREFiX.user = PREFiX.account = null;
+	stopStreamingAPI();
 	PREFiX.current = 'tl_model';
 	PREFiX.compose = {
 		text: '',
@@ -890,6 +1036,10 @@ var playSound = (function() {
 Ripple.events.observe('process_status', function(status) {
 	if (! status) return;
 
+	if (status.user) {
+		status.is_self = status.user.id === PREFiX.account.id;
+	}
+
 	var created_at = status.created_at;
 	status.fullTime = getFullTime(created_at);
 	status.relativeTime = '';
@@ -1013,7 +1163,12 @@ var settings = {
 		createPopAtStartup: false,
 		volume: 1,
 		holdCtrlToSubmit: false,
-		notification: true
+		notification: true,
+		notif_mention: true,
+		notif_privatemsg: true,
+		notif_follower: true,
+		notif_friendreq: false,
+		notif_favourite: false
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
@@ -1084,6 +1239,8 @@ var PREFiX = this.PREFiX = {
 	initialize: initialize,
 	reset: reset,
 	update: update,
+	getNotification: getNotification,
+	streamingAjax: null,
 	getDataSince: getDataSince,
 	loaded: false,
 	interval: null,
