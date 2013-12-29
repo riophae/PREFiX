@@ -877,6 +877,7 @@ function initMainUI() {
 		PREFiX.is_popup_focused = true;
 		stopDrawingAttention();
 		markBreakpoint();
+		bg_win.hideAllNotifications();
 	}).on('blur', function(e) {
 		PREFiX.is_popup_focused = false;
 	});
