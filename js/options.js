@@ -20,6 +20,7 @@ $(function() {
 			case 'checkbox':
 				$item.prop('checked', value);
 				break;
+			case 'text':
 			case 'select':
 				$item.val(value);
 				break;
@@ -85,6 +86,12 @@ $(function() {
 		});
 	}).eq(last_used_page).click();
 
+	$('#repostFormat').change(function(e) {
+		if (! this.value.trim()) {
+			this.value = PREFiX.settings.default.repostFormat;
+		}
+	});
+
 	var custom_consumer = lscache.get('custom_consumer');
 	if (custom_consumer) {
 		$('#key').val(custom_consumer.key);
@@ -143,6 +150,7 @@ $(function() {
 					value = $item.prop('checked');
 					break;
 				case 'select':
+				case 'text':
 					value = $item.val();
 					break;
 				case 'range':

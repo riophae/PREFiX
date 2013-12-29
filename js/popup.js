@@ -1690,8 +1690,11 @@ function generateMethod(type) {
 				return user == status.user.name ? '' : ('@' + user + ' ');
 			}).join('');
 		} else {
-			var value = '转@' + status.user.name + ' ' + 
-				$('<div>' + status.text + '</div>').text();
+			var value = PREFiX.settings.current.repostFormat.
+				replace(/\$name\$|\$text\$/ig, function(k) {
+					return k === '$name$' ?
+						status.user.name : status.textWithoutTags;
+				})
 		}
 		composebar_model.text = value;
 		$textarea.focus();

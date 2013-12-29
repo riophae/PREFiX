@@ -156,6 +156,10 @@ button {
 [type="range"] {
 	margin: 0 8px;
 }
+[type="text"] {
+	width: 250px;
+	height: 18px;
+}
 select {
 	min-width: 100px;
 	margin: 0 5px !important;
@@ -180,8 +184,6 @@ select {
 	display: inline-block;
 }
 #custom-consumer li input {
-	width: 250px;
-	height: 18px;
 	text-align: center;
 }
 #custom-consumer li button {

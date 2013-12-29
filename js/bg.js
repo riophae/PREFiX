@@ -1168,7 +1168,8 @@ var settings = {
 		notif_privatemsg: true,
 		notif_follower: true,
 		notif_friendreq: false,
-		notif_favourite: false
+		notif_favourite: false,
+		repostFormat: '转@$name$ $text$'
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
@@ -1229,7 +1230,8 @@ var usage_tips = [
 	'如果您习惯使用双击选中文本, 请在设置页中开启 "只有按住 Ctrl / Command 键才能双击输入框发送消息". ',
 	'如果您希望查看完整的使用技巧, 参见设置页. ',
 	'如果您希望旋转图片, 请按快捷键 R 键. ',
-	'点击头像在应用内打开个人消息页面, 按住 Shift 点击打开该用户的饭否个人页面. '
+	'点击头像在应用内打开个人消息页面, 按住 Shift 点击打开该用户的饭否个人页面. ',
+	'您可以自由定义转发时消息的格式, 详见设置页. '
 ];
 
 var PREFiX = this.PREFiX = {
