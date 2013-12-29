@@ -1088,14 +1088,44 @@ Ripple.events.observe('process_status', function(status) {
 
 	status.current_replied = false;
 
+	if (! status.photo) {
+		var instagram_re = /http:\/\/(instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_]+\//;
+		var result = html.match(instagram_re);
+		if (result) {
+			var url = result[0] + 'media/';
+			url = url.replace('instagr.am', 'instagram.com');
+			status.photo = {
+				largeurl: url + '?size=l',
+				imageurl: url,
+				thumburl: url + '?size=t',
+				url: ''
+			};
+		}
+	}
+
 	if (status.photo) {
 		var img = new Image;
 		img.src = status.photo.thumburl;
 		waitFor(function() {
 			return img.naturalWidth;
 		}, function() {
-			status.photo.thumb_width = img.naturalWidth;
-			status.photo.thumb_height = img.naturalHeight;
+			var width = img.naturalWidth;
+			var height = img.naturalHeight;
+			if (width > height) {
+				if (width > 120) {
+					var k = width / 120;
+					width = 120;
+					height /= k;
+				}
+			} else {
+				if (height > 120) {
+					var k = height / 120;
+					height = 120;
+					width /= k;
+				}
+			}
+			status.photo.thumb_width = Math.round(width) + 'px';
+			status.photo.thumb_height = Math.round(height) + 'px';
 			img.src = status.photo.largeurl;
 		});
 	}
