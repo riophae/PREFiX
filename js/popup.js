@@ -486,15 +486,16 @@ function showUsageTip() {
 	pos = Math.min(pos, usage_tips.length);
 	var tip = usage_tips[pos];
 	var $usage_tip = $('#usage-tip');
-	if (! tip) {
+	if (tip === undefined) {
 		$usage_tip.remove();
 		return;
 	}
+	lscache.set('usage_tip_pos', ++pos);
+	if (! tip) return;
 	$('#hide-usage-tip').click(function(e) {
 		lscache.set('usage_tip_pos', usage_tips.length);
 		$title.removeClass('show-usage-tip');
 	});
-	lscache.set('usage_tip_pos', ++pos);
 	$('#usage-tip-content').html(tip);
 	var $title = $('#title');
 	$title.addClass('show-usage-tip');
