@@ -1198,7 +1198,7 @@ var settings = {
 		notif_privatemsg: true,
 		notif_follower: true,
 		notif_friendreq: false,
-		notif_favourite: false,
+		notif_favourite: true,
 		repostFormat: '转@$name$ $text$'
 	},
 	load: function() {
