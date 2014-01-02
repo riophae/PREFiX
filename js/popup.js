@@ -333,7 +333,7 @@ function initKeyboardControlEvents() {
 		if (e.keyCode === 8 && $scrolling_elem === $main &&
 			PREFiX.current === 'usertl_model') {
 			$('#back').click();
-		} if (e.keyCode === 32 && ! e.shiftKey) {
+		} else if (e.keyCode === 32 && ! e.shiftKey) {
 			if ($scrolling_elem !== $main) {
 				hideAllOverlays(e);
 			} else {
