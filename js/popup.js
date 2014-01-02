@@ -1029,6 +1029,7 @@ function initMainUI() {
 			createTab(e.currentTarget.href, e.shiftKey);
 		}
 	}).delegate('[data-userid]', 'click', function(e) {
+		if (e.shiftKey) return;
 		PREFiX.userid = this.dataset.userid;
 		nav_model.showUserTimeline();
 	}).delegate('span.context', 'click', function(e) {
