@@ -2061,7 +2061,7 @@
 		}, false);
 
 		var onreadystatechange = function(e) {
-			if (xhr.readyState === 3) {
+			if (xhr && xhr.readyState === 3) {
 				if (Date.now() - last_progress_time > config.streamMaxStaleTime) {
 					xhr.removeEventListener('readystatechange', onreadystatechange, false);
 					ajax.cancel();
