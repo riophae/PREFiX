@@ -558,7 +558,7 @@ function initStreamingAPI() {
 				type: 'friend',
 				title: data.source.name + ' (' + data.source.id + ') ' +
 					'关注了你',
-				content: '',
+				content: data.source.description,
 				url: 'http://fanfou.com/' + data.source.id,
 				icon: data.source.profile_image_url_large
 			});
@@ -567,7 +567,7 @@ function initStreamingAPI() {
 				type: 'request',
 				title: data.source.name + ' (' + data.source.id + ') ' +
 					'请求关注你',
-				content: '',
+				content: data.source.description,
 				url: 'http://fanfou.com/friend.request',
 				icon: data.source.profile_image_url_large
 			});
