@@ -498,7 +498,7 @@ function initStreamingAPI() {
 		if (object && object.text) {
 			Ripple.events.trigger('process_status', object);
 			if (object.photo) {
-				object.textWithoutTags += '[PHOTO]';
+				object.textWithoutTags += '[Photo]';
 			}
 		}
 		if (data.event === 'message.create' ||
