@@ -109,10 +109,10 @@
 				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
 					<div class="status fix">
 						<div class="action-icons">
-							<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-							<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
-							<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
-							<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
+							<a ms-if="status.is_self" ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+							<a ms-if="! status.is_self" ms-live-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+							<a ms-live-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+							<a ms-live-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
 						</div>
 						<div class="avatar">
 						<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
@@ -138,10 +138,10 @@
 				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
 					<div class="status fix">
 						<div class="action-icons">
-							<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-							<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
-							<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
-							<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
+							<a ms-if="status.is_self" ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+							<a ms-if="! status.is_self" ms-live-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+							<a ms-live-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+							<a ms-live-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
 						</div>
 						<div class="avatar">
 							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
@@ -166,8 +166,8 @@
 				<li ms-data-id="message.id">
 					<div class="status fix">
 						<div class="action-icons">
-							<a ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-							<a ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+							<a ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+							<a ms-live-click="reply" class="reply" title="回复 (快捷键 R)"></a>
 						</div>
 						<div class="avatar">
 							<a ms-title="{{message.sender.name}} ({{message.sender.id}})" ms-href="'http://fanfou.com/' + message.sender.id">
@@ -189,10 +189,10 @@
 				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
 					<div class="status fix">
 						<div class="action-icons">
-							<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-							<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
-							<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
-							<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
+							<a ms-if="status.is_self" ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+							<a ms-if="! status.is_self" ms-live-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+							<a ms-live-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+							<a ms-live-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
 						</div>
 						<div class="avatar">
 							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
@@ -236,10 +236,10 @@
 				<li ms-if="!! status.id" ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
 					<div class="status fix">
 						<div class="action-icons">
-							<a ms-if="status.is_self" ms-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
-							<a ms-if="! status.is_self" ms-click="reply" class="reply" title="回复 (快捷键 R)"></a>
-							<a ms-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
-							<a ms-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
+							<a ms-if="status.is_self" ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
+							<a ms-if="! status.is_self" ms-live-click="reply" class="reply" title="回复 (快捷键 R)"></a>
+							<a ms-live-click="repost" class="repost" title="转发 (快捷键 Q)"></a>
+							<a ms-live-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
 						</div>
 						<div class="avatar">
 							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
