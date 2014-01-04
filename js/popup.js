@@ -1005,11 +1005,22 @@ function initMainUI() {
 
 	$main = $scrolling_elem = $('#main');
 
+	var $stream = $('#stream');
+	var pointer_events_disabled = false;
+
 	$main[0].onscroll = function(e) {
-		this.scrollLeft = 0;
+		if (! pointer_events_disabled) {
+			pointer_events_disabled = true;
+			$stream.css('pointer-events', 'none');
+		}
 	}
 
 	$main.scroll(_.throttle(function(e) {
+		if (pointer_events_disabled) {
+			pointer_events_disabled = false;
+			$stream.css('pointer-events', '');
+		}
+		this.scrollLeft = 0;
 		var scroll_top = $main.scrollTop();
 		getCurrent().scrollTop = scroll_top;
 		$app.toggleClass('on-top', scroll_top === 0);
