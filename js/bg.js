@@ -1191,7 +1191,7 @@ var settings = {
 		drawAttention: ! is_mac,
 		showSavedSearchCount: true,
 		createPopAtStartup: false,
-		volume: 1,
+		volume: .75,
 		holdCtrlToSubmit: false,
 		notification: true,
 		notif_mention: true,
