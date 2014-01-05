@@ -117,6 +117,7 @@ $(function() {
 
 	var $usage_tip_list = $('#usage-tip-page ol').first();
 	bg_win.usage_tips.forEach(function(tip) {
+		if (! tip) return;
 		var $li = $('<li />');
 		$li.html(tip);
 		$li.appendTo($usage_tip_list);
