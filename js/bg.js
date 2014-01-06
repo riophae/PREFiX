@@ -926,8 +926,11 @@ var enrichStatus = (function() {
 			return;
 		}
 
-		if (! isPhotoLink(url))
+		if (! isPhotoLink(url)) {
+			self.status = 'ignored';
+			lscache.set('url-' + url, self);
 			return;
+		}
 
 		var result = url.match(instagram_re);
 		if (result) {
