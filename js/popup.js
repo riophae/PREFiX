@@ -40,9 +40,13 @@ function setViewHeight(height) {
 }
 
 function applyViewHeight() {
-	var height = getViewHeight();
-	$('body, #picture-overlay, #context-timeline, #drop-area').height(height);
-	$main.height(height - parseInt($main.css('top'), 10));
+	waitFor(function() {
+		return $main && $main.length;
+	}, function() {
+		var height = getViewHeight();
+		$('body, #picture-overlay, #context-timeline, #drop-area').height(height);
+		$main.height(height - parseInt($main.css('top'), 10));
+	});
 }
 
 var goTop = (function() {
