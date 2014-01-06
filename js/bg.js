@@ -1680,7 +1680,8 @@ var settings = {
 		notif_follower: true,
 		notif_friendreq: false,
 		notif_favourite: true,
-		repostFormat: '转@$name$ $text$'
+		repostFormat: '转@$name$ $text$',
+		newlineAfterMyName: true
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
