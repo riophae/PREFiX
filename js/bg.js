@@ -34,6 +34,43 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 	}
 });
 
+function batchProcess(callback) {
+	var views = ce.getViews();
+	views.forEach(callback);
+}
+
+function markStatusAsFavourited(status_id) {
+	var lists = [
+		PREFiX.homeTimeline.buffered,
+		PREFiX.homeTimeline.statuses,
+		PREFiX.mentions.statuses
+	];
+	lists.forEach(function(list) {
+		list.some(function(status) {
+			if (status.id === status_id) {
+				status.favorited = true;
+				return true;
+			}
+		});
+	});
+}
+
+function markStatusAsUnfavourited(status_id) {
+	var lists = [
+		PREFiX.homeTimeline.buffered,
+		PREFiX.homeTimeline.statuses,
+		PREFiX.mentions.statuses
+	];
+	lists.forEach(function(list) {
+		list.some(function(status) {
+			if (status.id === status_id) {
+				status.favorited = false;
+				return true;
+			}
+		});
+	});
+}
+
 function onInputStarted() {
 	chrome.omnibox.setDefaultSuggestion({
 		description: '按回车键发送消息至饭否, 按 ↑/↓ 回复指定消息'
@@ -592,7 +629,12 @@ function initStreamingAPI() {
 				});
 			}, 500);
 		} else if (data.event === 'fav.create') {
-			if (data.source.id === PREFiX.account.id) return;
+			if (data.source.id === PREFiX.account.id) {
+				batchProcess(function(view) {
+					view.markStatusAsFavourited(object.id);
+				});
+				return;
+			}
 			notify({
 				type: 'favourite',
 				title: data.source.name + ' (' + data.source.id + ') ' +
@@ -601,6 +643,13 @@ function initStreamingAPI() {
 				content: object.textWithoutTags,
 				icon: data.source.profile_image_url_large
 			});
+		} else if (data.event === 'fav.delete') {
+			if (data.source.id === PREFiX.account.id) {
+				batchProcess(function(view) {
+					view.markStatusAsUnfavourited(object.id);
+				});
+				return;
+			}
 		} else if (data.event === 'friends.create') {
 			if (PREFiX.acount.protected) return;
 			notify({

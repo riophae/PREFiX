@@ -711,6 +711,36 @@ function resetHeader() {
 	$('h1').css('animation', 'topIn .4s both');
 }
 
+function markStatusAsFavourited(status_id) {
+	var lists = [
+		tl_model.statuses,
+		mentions_model.statuses
+	];
+	lists.forEach(function(list) {
+		list.some(function(status) {
+			if (status.id === status_id) {
+				status.favorited = true;
+				return true;
+			}
+		});
+	});
+}
+
+function markStatusAsUnfavourited(status_id) {
+	var lists = [
+		tl_model.statuses,
+		mentions_model.statuses
+	];
+	lists.forEach(function(list) {
+		list.some(function(status) {
+			if (status.id === status_id) {
+				status.favorited = false;
+				return true;
+			}
+		});
+	});
+}
+
 function deleteStatusFromAllLists(status_id) {
 	var lists = [
 		tl_model.statuses,
