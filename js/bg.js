@@ -71,6 +71,26 @@ function markStatusAsUnfavourited(status_id) {
 	});
 }
 
+function deleteStatusFromAllLists(status_id) {
+	var lists = [
+		PREFiX.homeTimeline.buffered,
+		PREFiX.homeTimeline.statuses,
+		PREFiX.mentions.statuses
+	];
+	lists.forEach(function(list) {
+		var index = -1;
+		list.some(function(status, i) {
+			if (status.id === status_id) {
+				index = i;
+				return true;
+			}
+		});
+		if (index > -1) {
+			list.splice(index, 1);
+		}
+	});
+}
+
 function onInputStarted() {
 	chrome.omnibox.setDefaultSuggestion({
 		description: '按回车键发送消息至饭否, 按 ↑/↓ 回复指定消息'
@@ -628,6 +648,12 @@ function initStreamingAPI() {
 					}
 				});
 			}, 500);
+		} else if (data.event === 'message.delete') {
+			if (object.is_self) {
+				batchProcess(function(view) {
+					view.deleteStatusFromAllLists(object.id);
+				});
+			}
 		} else if (data.event === 'fav.create') {
 			if (data.source.id === PREFiX.account.id) {
 				batchProcess(function(view) {
