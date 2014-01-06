@@ -3,6 +3,9 @@ var ct = chrome.tabs;
 var root_url = ce.getURL('');
 var popup_url = ce.getURL('popup.html');
 
+var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp)\//;
+var status_url_re = /<a href="([^"]+)" title="([^"]+)" rel="nofollow" target="_blank">([^<]+)<\/a>/g;
+
 var $temp = $('<div />');
 
 chrome.runtime.onMessage.addListener(function(request, sender) {
@@ -121,6 +124,52 @@ function onInputEntered(text) {
 			onInputEntered(text);
 		});
 	});
+}
+
+function initUrlExpand() {
+	var short_url_services = lscache.get('short_url_services');
+	if (short_url_services) {
+		var re = '^https?:\\/\\/';
+		re += '(?:' + Object.keys(short_url_services).join('|') + ')';
+		re += '\\/\\S+';
+		re = re.replace(/\./g, '\\.');
+		PREFiX.shortUrlRe = new RegExp(re);
+		return;
+	}
+	Ripple.ajax.get('http://api.longurl.org/v2/services', {
+		params: {
+			format: 'json'
+		},
+		success: function(data) {
+			lscache.set('short_url_services', data);
+			initUrlExpand();
+		},
+		error: function(e) {
+			setTimeout(initUrlExpand, 60000);
+		}
+	});
+}
+
+var cachedShortUrls = { };
+function expandUrl(url) {
+	var d = new Deferred;
+	if (cachedShortUrls[url]) {
+		setTimeout(function() {
+			d.call(cachedShortUrls[url]);
+		});
+	} else {
+		Ripple.ajax.get('http://api.longurl.org/v2/expand', {
+			params: {
+				url: url,
+				format: 'json'
+			}
+		}).next(function(data) {
+			var long_url = data['long-url'];
+			cachedShortUrls[url] = long_url;
+			d.call(long_url);
+		});
+	}
+	return d;
 }
 
 var birthday_interval;
@@ -729,6 +778,384 @@ function loadFriends() {
 	});
 }
 
+function getNaturalDimentions(url, callback) {
+	var image = new Image;
+	image.src = url;
+	waitFor(function() {
+		return image.naturalWidth;
+	}, function() {
+		callback({
+			width: image.naturalWidth,
+			height: image.naturalHeight
+		});
+		image.src = '';
+		image = null;
+	});
+}
+
+function processPhoto(status, photo) {
+	var img = new Image;
+	img.src = photo.thumburl = photo.thumburl || photo.largeurl;
+	var width = photo.width;
+	var height = photo.height;
+	waitFor(function() {
+		return width || img.naturalWidth;
+	}, function() {
+		width = width || img.naturalWidth;
+		height = height || img.naturalHeight;
+		if (width > height) {
+			if (width > 120) {
+				var k = width / 120;
+				width = 120;
+				height /= k;
+			}
+		} else {
+			if (height > 120) {
+				var k = height / 120;
+				height = 120;
+				width /= k;
+			}
+		}
+		if (img.src != status.photo.largeurl) {
+			img.src = status.photo.largeurl;
+		}
+		photo.thumb_width = Math.round(width) + 'px';
+		photo.thumb_height = Math.round(height) + 'px';
+		if (status.photo.url) return;
+		$.extend(true, status.photo, photo);
+	});
+}
+
+var enrichStatus = (function() {
+	this.lib = [];
+
+	function UrlItem(url) {
+		this.url = url;
+		this.status = 'initialized';
+		this.callbacks = [];
+		this.fetch();
+		lib.push(this);
+	}
+
+	UrlItem.prototype.fetch = function fetch() {
+		var self = this;
+		var url = this.longUrl || this.url;
+		this.status = 'loading';
+
+		short_url_re = PREFiX.shortUrlRe || short_url_re;
+		if (short_url_re.test(url)) {
+			expandUrl(url).next(function(long_url) {
+				self.longUrl = long_url;
+				fetch.call(self);
+			});
+			return;
+		}
+
+		if (! isPhotoLink(url))
+			return;
+
+		var result = url.match(instagram_re);
+		if (result) {
+			var image_url = result[0] + 'media/';
+			image_url = image_url.replace('instagr.am', 'instagram.com');
+			loadImage({
+				url: self.url,
+				large_url: image_url + '?size=l',
+				thumbnail_url: image_url + '?size=t',
+				urlItem: self
+			});
+			return;
+		}
+
+		var result = url.match(pinsta_re);
+		if (result) {
+			var id = result[1];
+			Ripple.ajax.get(url).
+			next(function(html) {
+				var $html = $(html);
+				var large_url;
+				var thumbnail_url;
+				[].some.call($html.find('script'), function(script) {
+					var code = script.textContent;
+					if (code.indexOf('var mediaJson') > -1) {
+						code = code.match(/var mediaJson = ([^;]+);/)[1];
+						var media_json = JSON.parse(code);
+						media_json.some(function(item) {
+							if (item.id === id) {
+								large_url = item.images.standard_resolution;
+								thumbnail_url = item.images.thumbnail;
+								return true;
+							}
+						});
+						return true;
+					}
+				});
+				$html.length = 0;
+				$html = null;
+				if (large_url) {
+					loadImage({
+						url: self.url,
+						large_url: large_url,
+						thumbnail_url: thumbnail_url,
+						urlItem: self
+					});
+				} else {
+					self.status = 'ignored';
+					lscache.set('url-' + url, self);
+				}
+			});
+			return;
+		}
+
+		var result = url.match(weibo_re);
+		if (result) {
+			var large_url = url.replace(/\/(?:mw1024|bmiddle|thumbnail)\//, '/large/');
+			loadImage({
+				url: self.url,
+				large_url: large_url,
+				thumbnail_url: large_url.replace('/large/', '/thumbnail/'),
+				urlItem: self
+			});
+			return;
+		}
+
+		var result = url.match(imgly_re);
+		if (result) {
+			Ripple.ajax.get(url).
+			next(function(html) {
+				var $html = $(html);
+				var full_url = $html.find('#button-fullview a').attr('href');
+				$html.length = 0;
+				$html = null;
+				if (! /^http/.test(full_url)) {
+					full_url = 'http://img.ly' + full_url;
+				}
+				Ripple.ajax.get(full_url).next(function(html) {
+					var $html = $(html);
+					var large_url = $html.find('#image-full img').attr('src');
+					$html.length = 0;
+					$html = null;
+					if (large_url) {
+						loadImage({
+							url: self.url,
+							large_url: large_url,
+							urlItem: self
+						});
+					} else {
+						self.status = 'ignored';
+						lscache.set('url-' + url, self);
+					}
+				})
+			});
+			return;
+		}
+
+		var result = url.match(lofter_re);
+		if (result) {
+			Ripple.ajax.get(url).
+			next(function(html) {
+				var $html = $(html);
+				var large_url = $html.find('[bigimgsrc]').attr('bigimgsrc');
+				$html.length = 0;
+				$html = null;
+				if (large_url) {
+					loadImage({
+						url: self.url,
+						large_url: large_url,
+						urlItem: self
+					});
+				} else {
+					self.status = 'ignored';
+					lscache.set('url-' + url, self);
+				}
+			});
+			return;
+		}
+
+		var result = url.match(imgur_re);
+		if (result) {
+			Ripple.ajax.get(url).
+			next(function(html) {
+				html = html.replace(/(src|href)="\/\//g, function(_, $1) {
+					return $1 + '="http://';
+				});
+				var $html = $(html);
+				var large_url = $html.find('#image a').prop('href');
+				large_url = large_url || $html.find('#image img').prop('src');
+				$html.length = 0;
+				$html = null;
+				if (large_url) {
+					loadImage({
+						url: self.url,
+						large_url: large_url,
+						urlItem: self
+					});
+				} else {
+					self.status = 'ignored';
+					lscache.set('url-' + url, self);
+				}
+			});
+			return;
+		}
+
+		var result = url.match(tinypic_re);
+		if (result) {
+			Ripple.ajax.get(url).
+			next(function(html) {
+				var $html = $(html);
+				var large_url = $html.find('#imgFrame a').prop('href');
+				$html.length = 0;
+				$html = null;
+				if (large_url) {
+					loadImage({
+						url: self.url,
+						large_url: large_url,
+						urlItem: self
+					});
+				} else {
+					self.status = 'ignored';
+					lscache.set('url-' + url, self);
+				}
+			});
+			return;
+		}
+	}
+
+	UrlItem.prototype.call = function() {
+		var callback;
+		while (callback = this.callbacks.shift()) {
+			callback();
+		}
+	}
+
+	UrlItem.prototype.done = function(callback) {
+		if (this.status === 'ignored')
+			return;
+		if (this.status === 'error') {
+			this.fetch();
+		}
+		if (this.status === 'loading') {
+			this.callbacks.push(callback);
+		} else if (this.status === 'completed') {
+			callback();
+		}
+	}
+
+	function process(status, url_item) {
+		status.urlProcessed = true;
+		if (! url_item.data) return;
+		var data = url_item.data;
+		processPhoto(status, {
+			largeurl: data.url,
+			thumburl: data.thumbnail_url,
+			width: data.width,
+			height: data.height
+		});
+	}
+
+	function loadImage(options) {
+		var url_item = options.urlItem;
+		getNaturalDimentions(options.large_url, function(dimentions) {
+			url_item.data = {
+				url: options.large_url,
+				width: dimentions.width,
+				height: dimentions.height,
+				type: 'photo',
+				thumbnail_url: options.thumbnail_url
+			};
+			url_item.status = 'completed';
+			lscache.set('url-' + options.url, url_item);
+			setTimeout(function() {
+				url_item.call();
+			});
+		});
+	}
+
+	var instagram_re = /https?:\/\/(instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_]+\//;
+	var pinsta_re = /https?:\/\/pinsta\.me\/p\/([a-zA-Z0-9_]+)/;
+	var weibo_re = /https?:\/\/[w0-9]+\.sinaimg\.cn\/\S+\.jpg/;
+	var imgly_re = /https?:\/\/img\.ly\//;
+	var lofter_re = /\.lofter\.com\/post\/[a-zA-Z0-9_]+/;
+	var imgur_re = /imgur\.com\//;
+	var tinypic_re = /tinypic\.com\//;
+
+	var photo_res = [
+		instagram_re,
+		pinsta_re,
+		weibo_re,
+		imgly_re,
+		lofter_re,
+		imgur_re,
+		tinypic_re
+	];
+
+	function isPhotoLink(url) {
+		return photo_res.some(function(re) {
+				return re.test(url);
+			});
+	}
+
+	return function(status) {
+		if (status.urlProcessed)
+			return;
+		short_url_re = PREFiX.shortUrlRe || short_url_re;
+		var urls = [];
+		var result;
+		while (result = status_url_re.exec(status.text)) {
+			urls.push(result[1]);
+		}
+		if (! urls.length)
+			return;
+		urls.forEach(function(url) {
+			if (! url.split('/')[3]) return;
+			var is_short_url = short_url_re.test(url);
+			var is_photo_link = isPhotoLink(url) || is_short_url;
+			if (! is_photo_link) return;
+			var cached, url_item;
+			lib.some(function(url_item) {
+				if (url_item.url === url) {
+					cached = url_item;
+					return true;
+				}
+			});
+			ls_cached = lscache.get('oembed-' + url);
+			cached = cached || ls_cached;
+			cached = false;
+			if (cached) {
+				cached.__proto__ = UrlItem.prototype;
+				cached.done(function() {
+					process(status, cached);
+				});
+				url_item = cached;
+			} else {
+				url_item = new UrlItem(url);
+				url_item.done(function() {
+					process(status, url_item);
+				});
+			}
+			if (is_short_url) {
+				setTimeout(function() {
+					waitFor(function() {
+						return url_item.longUrl;
+					}, function() {
+						var text = status.fixedText;
+						$temp.html(text);
+						var $link = $temp.find('[href="' + url_item.url + '"]');
+						$link.prop('title', url_item.longUrl);
+						$link.prop('href', url_item.longUrl);
+						var display_url = url_item.longUrl.replace(/^https?:\/\/(?:www\.)?/, '');
+						if (display_url.length > 25) {
+							display_url = display_url.substring(0, 25) + '...';
+						}
+						$link.text(display_url);
+						status.fixedText = $temp.html();
+					});
+				});
+			}
+		});
+	}
+})();
+
 var init_interval;
 
 function load() {
@@ -822,6 +1249,8 @@ function unload() {
 
 function initialize() {
 	settings.load();
+
+	initUrlExpand();
 
 	if (PREFiX.accessToken) {
 		// 更新账户信息
@@ -1088,47 +1517,21 @@ Ripple.events.observe('process_status', function(status) {
 
 	status.current_replied = false;
 
-	if (! status.photo) {
-		var instagram_re = /http:\/\/(instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_]+\//;
-		var result = html.match(instagram_re);
-		if (result) {
-			var url = result[0] + 'media/';
-			url = url.replace('instagr.am', 'instagram.com');
-			status.photo = {
-				largeurl: url + '?size=l',
-				imageurl: url,
-				thumburl: url + '?size=t',
-				url: ''
-			};
-		}
+	if (status.photo) {
+		processPhoto(status, status.photo);
+	} else {
+		status.photo = {
+			largeurl: '',
+			imageurl: '',
+			thumburl: '',
+			url: '',
+			thumb_height: '',
+			thumb_width: ''
+		};
+
 	}
 
-	if (status.photo) {
-		var img = new Image;
-		img.src = status.photo.thumburl;
-		waitFor(function() {
-			return img.naturalWidth;
-		}, function() {
-			var width = img.naturalWidth;
-			var height = img.naturalHeight;
-			if (width > height) {
-				if (width > 120) {
-					var k = width / 120;
-					width = 120;
-					height /= k;
-				}
-			} else {
-				if (height > 120) {
-					var k = height / 120;
-					height = 120;
-					width /= k;
-				}
-			}
-			status.photo.thumb_width = Math.round(width) + 'px';
-			status.photo.thumb_height = Math.round(height) + 'px';
-			img.src = status.photo.largeurl;
-		});
-	}
+	enrichStatus(status);
 
 	if (status.repost_status) {
 		arguments.callee.call(this, status.repost_status);

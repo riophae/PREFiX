@@ -72,7 +72,7 @@
 				<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
 			</div>
 			<div class="status-content" ms-html="status.fixedText"></div>
-			<div class="photo" ms-if="!! status.photo">
+			<div class="photo" ms-if="!! status.photo.thumburl">
 				<img ms-css-width="status.photo.thumb_width" ms-css-height="status.photo.thumb_height" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
 			</div>
 			</div>
@@ -126,7 +126,7 @@
 								<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
 							</div>
 							<div class="status-content" ms-html="status.fixedText"></div>
-							<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
+							<div class="photo" ms-if="!! status.photo.thumburl" title="查看大图 (快捷键 V)">
 								<img ms-css-width="status.photo.thumb_width" ms-css-height="status.photo.thumb_height" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
 							</div>
 						</div>
@@ -155,7 +155,7 @@
 								<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
 							</div>
 							<div class="status-content" ms-html="status.fixedText"></div>
-							<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
+							<div class="photo" ms-if="!! status.photo.thumburl" title="查看大图 (快捷键 V)">
 								<img ms-css-width="status.photo.thumb_width" ms-css-height="status.photo.thumb_height" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
 							</div>
 						</div>
@@ -206,7 +206,7 @@
 								<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
 							</div>
 							<div class="status-content" ms-html="status.fixedText" ms-class-bold="status.is_unread"></div>
-							<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
+							<div class="photo" ms-if="!! status.photo.thumburl" title="查看大图 (快捷键 V)">
 								<img ms-css-width="status.photo.thumb_width" ms-css-height="status.photo.thumb_height" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
 							</div>
 						</div>
@@ -253,7 +253,7 @@
 								<span class="timestamp-client" ms-html="status.relativeTime + ' | ' + status.source"></span>
 							</div>
 							<div class="status-content" ms-html="status.fixedText"></div>
-							<div class="photo" ms-if="!! status.photo" title="查看大图 (快捷键 V)">
+							<div class="photo" ms-if="!! status.photo.thumburl" title="查看大图 (快捷键 V)">
 								<img ms-css-width="status.photo.thumb_width" ms-css-height="status.photo.thumb_height" ms-src="status.photo && status.photo.thumburl" ms-data-large-img="status.photo && status.photo.largeurl" />
 							</div>
 						</div>

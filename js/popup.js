@@ -342,7 +342,7 @@ function initKeyboardControlEvents() {
 				hideAllOverlays(e);
 			} else {
 				$textarea.focus();
-				if (compose-bar.type === 'repost') {
+				if (composebar_model.type === 'repost') {
 					$textarea[0].selectionStart = 0;
 					$textarea[0].selectionEnd = 0;
 				}
@@ -1797,6 +1797,10 @@ function showRelatedStatuses(e) {
 	})();
 }
 
+function onNewStatusInserted() {
+	this.forEach(bg_win.enrichStatus);
+}
+
 var nav_model = avalon.define('navigation', function(vm) {
 	vm.current = PREFiX.current;
 	vm.showHomeTimeline = function(e) {
@@ -2058,6 +2062,7 @@ tl_model.statuses.$watch('length', function() {
 		return s.$model || s;
 	});
 });
+tl_model.statuses.$watch('length', onNewStatusInserted);
 tl_model.initialize = function() {
 	$('#navigation-bar .home-timeline').addClass('current');
 	$('#title h2').text('Timeline');
@@ -2155,6 +2160,7 @@ mentions_model.statuses.$watch('length', function() {
 		return s.$model || s;
 	});
 });
+mentions_model.statuses.$watch('length', onNewStatusInserted);
 mentions_model.initialize = function() {
 	$('#navigation-bar .mentions').addClass('current');
 	$('#title h2').text('Mentions');
@@ -2279,6 +2285,7 @@ privatemsgs_model.messages.$watch('length', function() {
 		return m.$model || m;
 	});
 });
+privatemsgs_model.messages.$watch('length', onNewStatusInserted);
 privatemsgs_model.initialize = function() {
 	$('#navigation-bar .privatemsgs').addClass('current');
 	$('#title h2').text('Private Messages');
@@ -2353,6 +2360,7 @@ var searches_model = avalon.define('saved-searches', function(vm) {
 searches_model.$watch('keyword', function() {
 	PREFiX.keyword = searches_model.keyword;
 });
+searches_model.statuses.$watch('length', onNewStatusInserted);
 searches_model.initialize = function() {
 	$('#navigation-bar .saved-searches').addClass('current');
 	$('#title h2').text('Discover');
@@ -2541,6 +2549,7 @@ var usertl_model = avalon.define('user-timeline', function(vm) {
 
 	vm.is_replying = false;
 });
+usertl_model.statuses.$watch('length', onNewStatusInserted);
 usertl_model.initialize = function() {
 	$('#title').hide();
 	$('#user-timeline').addClass('current');
@@ -2605,6 +2614,7 @@ context_tl_model.statuses.$watch('length', function(length) {
 		}.bind(this), i * 100);
 	});
 });
+context_tl_model.statuses.$watch('length', onNewStatusInserted);
 
 $(function() {
 	require('avalon.live', function() {
