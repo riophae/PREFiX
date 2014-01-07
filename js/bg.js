@@ -926,6 +926,11 @@ var enrichStatus = (function() {
 				fetch.call(self);
 			});
 			return;
+		} else if (self.url.indexOf('fanfou.com') === -1 &&
+			! self.longUrl) {
+			setTimeout(function() {
+				self.longUrl = self.url;
+			});
 		}
 
 		if (! isPhotoLink(url)) {
@@ -1099,6 +1104,37 @@ var enrichStatus = (function() {
 			});
 			return;
 		}
+
+		var result = url.match(fanfou_re);
+		if (result) {
+			Ripple.ajax.get(url).
+			next(function(html) {
+				var $html = $(html);
+				var large_url = $html.find('#photo img').attr('src');
+				$html.length = 0;
+				$html = null;
+				if (large_url) {
+					loadImage({
+						url: self.url,
+						large_url: large_url,
+						urlItem: self
+					});
+				} else {
+					self.status = 'ignored';
+					lscache.set('url-' + url, self);
+				}
+			});
+			return;
+		}
+
+		var result = picture_re.test(url);
+		if (result) {
+			loadImage({
+				url: self.url,
+				large_url: url,
+				urlItem: self
+			});
+		}
 	}
 
 	UrlItem.prototype.call = function() {
@@ -1158,6 +1194,8 @@ var enrichStatus = (function() {
 	var lofter_re = /\.lofter\.com\/post\/[a-zA-Z0-9_]+/;
 	var imgur_re = /imgur\.com\//;
 	var tinypic_re = /tinypic\.com\//;
+	var fanfou_re = /https?:\/\/fanfou\.com\/photo\//;
+	var picture_re = /\.(?:jpg|jpeg|png|gif|webp)(?:\??\S*)?$/i;
 
 	var photo_res = [
 		instagram_re,
@@ -1166,7 +1204,9 @@ var enrichStatus = (function() {
 		imgly_re,
 		lofter_re,
 		imgur_re,
-		tinypic_re
+		tinypic_re,
+		fanfou_re,
+		picture_re
 	];
 
 	function isPhotoLink(url) {
@@ -1181,15 +1221,15 @@ var enrichStatus = (function() {
 		short_url_re = PREFiX.shortUrlRe || short_url_re;
 		var urls = [];
 		var result;
-		while (result = status_url_re.exec(status.text)) {
+		while (result = url_re.exec(status.text)) {
 			urls.push(result[1]);
 		}
 		if (! urls.length)
 			return;
 		urls.forEach(function(url) {
 			if (! url.split('/')[3]) return;
-			var is_short_url = short_url_re.test(url);
-			var is_photo_link = isPhotoLink(url) || is_short_url;
+			var is_url = url_re.test(url);
+			var is_photo_link = isPhotoLink(url) || is_url;
 			if (! is_photo_link) return;
 			var cached, url_item;
 			lib.some(function(url_item) {
@@ -1200,7 +1240,6 @@ var enrichStatus = (function() {
 			});
 			ls_cached = lscache.get('oembed-' + url);
 			cached = cached || ls_cached;
-			cached = false;
 			if (cached) {
 				cached.__proto__ = UrlItem.prototype;
 				cached.done(function() {
@@ -1213,7 +1252,7 @@ var enrichStatus = (function() {
 					process(status, url_item);
 				});
 			}
-			if (is_short_url) {
+			if (is_url) {
 				setTimeout(function() {
 					waitFor(function() {
 						return url_item.longUrl;
@@ -1589,6 +1628,17 @@ Ripple.events.observe('process_status', function(status) {
 			')" data-userid="' + id + '">' + name + '</a>';
 	});
 
+	if (status.sender) {
+		// 私信, 由于饭否的 API 返回的 direct_message 对象没有
+		// 自动转换 URL 为超链接的参数, 所以手动转换一下
+		html = html.replace(url_re, function(url) {
+			return '<a href="' + url + '" title="' +
+				url + '" rel="nofollow" target="_blank">' +
+				url + '</a>';
+		});
+	}
+
+	// 转发或回复的消息显示查看上下文的按钮
 	if (status.repost_status || status.in_reply_to_status_id) {
 		html += '<span class="context" title="查看上下文消息 (快捷键 C)"></span>';
 	}

@@ -10,7 +10,8 @@
 			"js/lib/avalon.js",
 			"js/common.js",
 			"js/bg.js",
-			"js/versions.js"
+			"js/versions.js",
+			"js/shortening-url.js"
 		]
 	},
 	"content_scripts": [ {
