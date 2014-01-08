@@ -186,15 +186,8 @@
             return a.contains(b)
         },
         bind: function(el, type, fn, phase) {
-            function callback(ex) {
-                var ret = fn.call(el, ex)
-                if (ret === false) {
-                    ex.preventDefault(), ex.stopPropagation()
-                }
-                return ret
-            }
-            el.addEventListener(eventMap[type] || type, callback, !!phase)
-            return callback
+            el.addEventListener(eventMap[type] || type, fn, !!phase)
+            return fn
         },
         unbind: function(el, type, fn, phase) {
             el.removeEventListener(eventMap[type] || type, fn || noop, !!phase)
@@ -206,7 +199,6 @@
         },
         css: function(node, name, value) {
             if (node instanceof avalon) {
-                var that = node
                 node = node[0]
             }
             var prop = /[_-]/.test(name) ? camelize(name) : name
@@ -227,7 +219,6 @@
                 fn = cssHooks[prop + ":set"] || cssHooks["@:set"]
                 fn(node, name, value)
             }
-            return that
         },
         Array: {
             ensure: function(target, item) {
@@ -453,7 +444,14 @@
             return this
         },
         css: function(name, value) {
-            return avalon.css(this, name, value)
+            if (avalon.isPlainObject(name)) {
+                for (var i in name) {
+                    avalon.css(this, i, name[i])
+                }
+            } else {
+                var ret = avalon.css(this, name, value)
+            }
+            return ret !== void 0 ? ret : this
         },
         position: function() {
             var offsetParent, offset,
@@ -939,9 +937,17 @@
     function updateModel(a, b, valueType) {
         //a为原来的VM， b为新数组或新对象
         if (valueType === "array") {
-            var bb = b.concat()
-            a.clear()
-            a.push.apply(a, bb)
+            var an = a.length,
+                    bn = b.length
+            if (an > bn) {
+                a.splice(bn, an - bn)
+            } else if (bn > an) {
+                a.push.apply(a, b.slice(an))
+            }
+            var n = Math.min(an, bn)
+            for (var i = 0; i < n; i++) {
+                a.set(i, b[i])
+            }
             return a
         } else {
             var iterators = a[subscribers]
@@ -1162,9 +1168,6 @@
                 var el = fn.element
                 if (el && !ifSanctuary.contains(el) && (!root.contains(el))) {
                     list.splice(i, 1)
-                    for (var j in fn) {
-                        fn[j] = null
-                    }
                 } else if (typeof fn === "function") {
                     fn.apply(0, args) //强制重新计算自身
                 } else if (fn.getter) {
@@ -1290,7 +1293,7 @@
                     }
                     if (type === "widget") {
                         hasWidget = true
-                    } 
+                    }
                     if (type === "repeat") {
                         repeatBinding = binding
                     } else if (type === "if") {
@@ -1806,7 +1809,7 @@
                     log(new Date - now)
                     break
                 case "del":
-                    proxies.splice(pos, el) //移除对应的子VM
+                    proxies.splice(pos, el)//移除对应的子VM
                     removeFromSanctuary(removeView(locatedNode, group, el))
                     break
                 case "index":
@@ -2030,9 +2033,12 @@
                 if (!elem.name) { //如果用户没有写name属性，浏览器默认给它一个空字符串
                     elem.name = generateID()
                 }
-
                 //由于情况特殊，不再经过parseExprProxy
                 parseExpr(data.value, vmodels, data, "duplex")
+                var form = elem.form
+                if (form && form.msValidate) {
+                    form.msValidate(elem)
+                }
                 modelBinding[elem.tagName](elem, data.evaluator, vm, data)
             }
         },
@@ -2083,28 +2089,8 @@
             } catch (e) {
                 return
             }
-
-            data.rollback = function() {
-                var parent = this.parent
-                if (type == "repeat") {
-                    this.handler("clear", 0)
-                    this.element = this.template.firstChild
-                    parent.replaceChild(this.element, this.startRepeat)
-                    parent.removeChild(this.endRepeat)
-                } else {
-                    var deleteFragment = documentFragment.cloneNode(false)
-                    while (parent.firstChild) {
-                        deleteFragment.appendChild(parent.firstChild)
-                    }
-                    removeFromSanctuary(deleteFragment)
-                    parent.appendChild(this.template)
-                }
-            }
             list[subscribers] && list[subscribers].push(data)
-            if (type != "with") {
-                data.proxies = []
-                data.handler("add", 0, list)
-            } else {
+            if (type === "with") {
                 var pool = withProxyPool[list.$id]
                 if (!pool) {
                     withProxyCount++
@@ -2115,7 +2101,19 @@
                         }
                     }
                 }
+                data.rollback = function() {
+                    var parent = this.parent
+                    var deleteFragment = documentFragment.cloneNode(false)
+                    while (parent.firstChild) {
+                        deleteFragment.appendChild(parent.firstChild)
+                    }
+                    removeFromSanctuary(deleteFragment)
+                    parent.appendChild(this.template)
+                }
                 data.handler("append", list, pool)
+            } else {
+                data.proxies = []
+                data.handler("add", 0, list)
             }
         },
         "html": function(data, vmodels) {
@@ -2177,7 +2175,8 @@
         "widget": function(data, vmodels) {
             var args = data.value.match(rword),
                     element = data.element,
-                    widget = args[0]
+                    widget = args[0],
+                    vmOptions = {}
             if (args[1] === "$") {
                 args[1] = void 0
             }
@@ -2188,17 +2187,18 @@
             var constructor = avalon.ui[widget]
             if (typeof constructor === "function") { //ms-widget="tabs,tabsAAA,optname"
                 for (var i = 0, v; v = vmodels[i++]; ) {
-                    if (VMODELS[v.$id]) {
-                        var vmodel = v
+                    if (VMODELS[v.$id]) {//取得离它最近由用户定义的VM
+                        var nearestVM = v
                         break
                     }
                 }
-                var opts = args[2] || widget //options在最近的一个VM中的名字
-                var vmOptions = {}
-                if (vmodel && opts && typeof vmodel[opts] === "object") {
-                    vmOptions = vmodel[opts]
-                    if (vmOptions.$model) {
-                        vmOptions = vmOptions.$model
+                var optName = args[2] || widget //尝试获得配置项的名字，没有则取widget的名字
+                if (nearestVM && typeof nearestVM[optName] === "object") {
+                    vmOptions = nearestVM[optName]
+                    vmOptions = vmOptions.$model || vmOptions
+                    var id = vmOptions[widget + "Id"]
+                    if (typeof id === "string") {
+                        args[1] = id
                     }
                 }
                 var elemData = filterData(avalon(element).data(), args[0]) //抽取data-tooltip-text、data-tooltip-attr属性，组成一个配置对象
@@ -2208,7 +2208,7 @@
                 constructor(element, data, vmodels)
                 data.evaluator = noop
             } //如果碰到此组件还没有加载的情况，将停止扫描它的内部
-            return  true
+            return true
         }
 
     }
@@ -2607,6 +2607,7 @@
         }
         return ret
     }
+
     //将通过ms-if移出DOM树放进ifSanctuary的元素节点移出来，以便垃圾回收
 
     function removeFromSanctuary(parent) {
