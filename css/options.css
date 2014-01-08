@@ -454,6 +454,7 @@ b {
 }
 #filters-list input[type="text"] {
 	width: 145px;
+	height: 15px;
 	margin-left: 3px;
 }
 #filters-list .filter-item:not(.last) input[type="text"]:not(:focus) {

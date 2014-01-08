@@ -784,15 +784,19 @@ function filterOutAllLists() {
 	var lists = [
 		tl_model,
 		mentions_model,
-		privatemsgs_model
+		privatemsgs_model,
+		usertl_model,
+		searches_model
 	];
 	lists.forEach(function(list) {
 		[ 'statuses', 'messages' ].forEach(function(type) {
 			if (! list[type]) return;
-			list[type] = list[type].filter(function(status) {
+			var new_list = list[type].filter(function(status) {
 				bg_win.filterOut(status);
 				return ! status.filtered_out;
 			});
+			list[type] = [];
+			list[type] = new_list;
 		});
 	});
 }
@@ -1870,8 +1874,9 @@ function blockUser(e) {
 		return;
 	e.preventDefault();
 	var status = this.$vmodel.status || this.$vmodel.message;
-	var userid = (status.user || status.sender).id;
-	var username = (status.user || status.sender).name;
+	var user = status.user || status.sender;
+	var userid = user.id;
+	var username = user.name;
 	var real_id = '';
 	r.postStatus({
 		status: '@' + username
