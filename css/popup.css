@@ -917,6 +917,7 @@ div.notify-box p {
 	float: left;
 	line-height: 20px;
 	font-size: 12px;
+	width: 238px;
 	padding: 0;
 	margin: 0;
 }

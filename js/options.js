@@ -141,6 +141,77 @@ $(function() {
 		alert(update.join('\n'));
 	});
 
+	$('#filters-overlay').click(function(e) {
+		var $page = $(this).find('.page');
+		$page.removeClass('pulse');
+		setTimeout(function() {
+			$page.addClass('pulse');
+		});
+	});
+
+	$('#filters-area').click(function(e) {
+		e.stopPropagation();
+	});
+
+	var timeout;
+	var filters_model = avalon.define('filters', function(vm) {
+		vm.items = [];
+		vm.remove = function(e) {
+			this.$vmodel.$remove();
+		}
+		vm.blur = function(e) {
+			if (! this.value.trim()) {
+				return vm.remove.call(this, e);
+			}
+		}
+	});
+
+	filters_model.items = current.filters;
+
+	$('#show-filters').click(function(e) {
+		$('#filters-overlay').
+		show().
+		css('animation', 'fadeIn .2s');
+	});
+
+	function addFilter() {
+		var pattern = $pattern.val();
+		var type = $type.val();
+		if (pattern && pattern.trim().length) {
+			filters_model.items.push({
+				pattern: pattern,
+				type: type
+			});
+			$pattern.val('');
+		}
+	}
+
+	var $pattern = $('#filters-list .last .filter-pattern');
+	$pattern.
+	keyup(function(e) {
+		if (e.keyCode === 13) {
+			this.blur();
+		}
+	}).
+	blur(function(e) {
+		timeout = setTimeout(addFilter, 250);
+	});
+
+	$type = $('#filters-list .last .filter-type');
+	$type.
+	click(function(e) {
+		clearTimeout(timeout);
+	}).
+	change(addFilter);
+
+	$('#filters-overlay-confirm, #filters-overlay .close-button').
+	click(function(e) {
+		$('#filters-overlay').
+		css('animation', 'fadeOut .2s').
+		delay(200).
+		hide(0);
+	});
+
 	onunload = function(e) {
 		$('[key]').each(function() {
 			var $item = $(this);
@@ -160,6 +231,13 @@ $(function() {
 			}
 			current[key] = value;
 		});
+
+		var filters = filters_model.items.map(function(item) {
+			return item.$model;
+		});
+
+		current.filters = filters;
+
 		PREFiX.settings.save();
 		PREFiX.settings.onSettingsUpdated();
 	}

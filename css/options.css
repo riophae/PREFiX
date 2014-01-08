@@ -64,6 +64,191 @@ input, textarea, select {
 	vertical-align: middle;
 }
 
+/* Overlay */
+
+/* The shield that overlays the background. */
+.overlay {
+	-webkit-box-align: center;
+	-webkit-box-orient: vertical;
+	-webkit-box-pack: center;
+	-webkit-transition: 200ms opacity;
+	background-color: rgba(255, 255, 255, 0.75);
+	bottom: 0;
+	display: -webkit-box;
+	left: 0;
+	overflow: auto;
+	padding: 20px;
+	position: fixed;
+	right: 0;
+	top: 0;
+	z-index: 100;
+}
+/* Used to slide in the overlay. */
+.overlay.transparent .page {
+	/* TODO(flackr): Add perspective(500px) rotateX(5deg) when accelerated
+		* compositing is enabled on chrome:// pages. See http://crbug.com/116800. */
+	-webkit-transform: scale(0.99) translateY(-20px);
+}
+/* The foreground dialog. */
+.overlay .page {
+	-webkit-border-radius: 3px;
+	-webkit-box-orient: vertical;
+	-webkit-transition: 200ms -webkit-transform;
+	background: white;
+	box-shadow: 0 4px 23px 5px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0,0,0,0.15);
+	color: #333;
+	display: -webkit-box;
+	min-width: 400px;
+	padding: 0;
+	position: relative;
+	z-index: 0;
+}
+/* If the options page is loading don't do the transition. */
+.loading .overlay,
+.loading .overlay .page {
+	-webkit-transition-duration: 0 !important;
+}
+/* keyframes used to pulse the overlay */
+@-webkit-keyframes pulse {
+	0% {
+		-webkit-transform: scale(1);
+	}
+	40% {
+		-webkit-transform: scale(1.02);
+		}
+	 60% {
+		-webkit-transform: scale(1.02);
+	}
+	 100% {
+		-webkit-transform: scale(1);
+	}
+}
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+		-webkit-transform: scale(.95) translateY(-25px);
+		transform: scale(.95) translateY(-25px);
+	}
+	100% {
+		opacity: 1;
+		-webkit-transform: scale(1) translateY(0);
+		transform: scale(1) translateY(0);
+	}
+}
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+		-webkit-transform: scale(.95) translateY(-25px);
+		transform: scale(.95) translateY(-25px);
+	}
+	100% {
+		opacity: 1;
+		-webkit-transform: scale(1) translateY(0);
+		transform: scale(1) translateY(0);
+	}
+}
+@-webkit-keyframes fadeOut {
+	0% {
+		opacity: 1;
+		-webkit-transform: scale(1) translateY(0);
+		transform: scale(1) translateY(0);
+	}
+	100% {
+		opacity: 0;
+		-webkit-transform: scale(.95) translateY(-25px);
+		transform: scale(.95) translateY(-25px);
+	}
+}
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+		-webkit-transform: scale(1) translateY(0);
+		transform: scale(1) translateY(0);
+	}
+	100% {
+		opacity: 0;
+		-webkit-transform: scale(.95) translateY(-25px);
+		transform: scale(.95) translateY(-25px);
+	}
+}
+.overlay .page.pulse {
+	-webkit-animation-duration: 180ms;
+	-webkit-animation-iteration-count: 1;
+	-webkit-animation-name: pulse;
+	-webkit-animation-timing-function: ease-in-out;
+}
+.overlay .page > .close-button {
+	background-image: url('/images/close-dialog.png');
+	background-position: center;
+	background-repeat: no-repeat;
+	height: 14px;
+	position: absolute;
+	right: 7px;
+	top: 7px;
+	width: 14px;
+	z-index: 1;
+}
+.overlay .page > .close-button:hover {
+	background-image: url('/images/close-dialog-h.png');
+}
+.overlay .page > .close-button:active {
+	background-image: url('/images/close-dialog-p.png');
+}
+.overlay .page h4 {
+	-webkit-padding-end: 24px;
+	-webkit-user-select: none;
+	color: #333;
+	/* 120% of the body's font-size of 84% is 16px. This will keep the relative
+		* size between the body and these titles consistent. */
+	font-size: 120%;
+	/* TODO(flackr): Pages like sync-setup and delete user collapse the margin
+		* above the top of the page. Use padding instead to make sure that the
+		* headers of these pages have the correct spacing, but this should not be
+		* necessary. See http://crbug.com/119029. */
+	margin: 0;
+	padding: 14px 17px 14px;
+	text-shadow: white 0 1px 2px;
+}
+.overlay .page .content-area {
+	-webkit-box-flex: 1;
+	overflow: auto;
+	padding: 6px 17px 6px;
+	position: relative;
+}
+.overlay .page .action-area {
+	-webkit-box-align: center;
+	-webkit-box-orient: horizontal;
+	-webkit-box-pack: end;
+	display: -webkit-box;
+	padding: 14px 17px;
+}
+.overlay .page .action-area-right {
+	display: -webkit-box;
+}
+.overlay .page .button-strip {
+	-webkit-box-orient: horizontal;
+	display: -webkit-box;
+}
+.overlay .page .button-strip > button {
+	-webkit-margin-start: 10px;
+	display: block;
+}
+.overlay .page .button-strip > .default-button:not(:focus) {
+	border-color: rgba(0, 0, 0, 0.5);
+}
+/* On OSX 10.7, hidden scrollbars may prevent the user from realizing that the
+ * overlay contains scrollable content. To resolve this, style the scrollbars on
+ * OSX so they are always visible. See http://crbug.com/123010. */
+.gray-bottom-bar {
+	background-color: #f5f5f5;
+	border-color: #e7e7e7;
+	border-top-style: solid;
+	border-width: 1px;
+	color: #888;
+	display: -webkit-box;
+	padding: 14px 17px;
+}
+
 /* Private */
 body {
 	font: 400 12px/1.5 "Segoe UI", "Lucida Grande", "Hevetica Neue", Hevetica, Tahoma, "Hiragino Sans GB", "Microsoft Yahei", "Wenquanyi MicroHei", sans-serif;
@@ -211,6 +396,94 @@ ol li {
 b {
 	font-weight: bold;
 }
+.fix::after {
+	display: block;
+	content: 'clear';
+	clear: both;
+	line-height: 0;
+	visibility: hidden;
+}
 #show-updates {
 	cursor: pointer;
+}
+#filters-area tr {
+	display: block;
+}
+#filters-area .content-area {
+	margin: 17px 0;
+}
+#filter-column-headers {
+	margin: 2px 0;
+}
+#filters-list {
+	outline: 1px solid #ddd;
+	height: 252px;
+	overflow-x: hidden;
+	display: block;
+}
+#filters-list tr {
+	padding: 6px 10px;
+	height: 24px;
+	background: #fff;
+	-webkit-transition: background .1s;
+	transition: background .1s;
+}
+#filters-list tr:hover {
+	background: #E4ECF7;
+}
+#filter-column-headers td {
+	padding-left: 14px;
+	font-weight: bold;
+}
+#filters-area td:first-of-type,
+#filter-column-headers td:first-of-type {
+	width: 254px;
+}
+#filters-area td:first-of-type {
+}
+#filters-area td:nth-of-type(2) {
+	width: 128px;
+	padding: 0 6px;
+}
+.filter-item {
+	position: relative;
+}
+#filters-area select {
+	margin-left: 0 !important;
+	width: 120px;
+}
+#filters-list input[type="text"] {
+	width: 145px;
+	margin-left: 3px;
+}
+#filters-list .filter-item:not(.last) input[type="text"]:not(:focus) {
+	border-color: transparent;
+	background: transparent;
+	padding-left: 0;
+	width: 202px;
+}
+#filters-list .delete {
+	opacity: 0;
+	position: absolute;
+	right: 4px;
+	top: 10px;
+	width: 16px;
+	height: 16px;
+	text-indent: 9999px;
+	overflow: hidden;
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAiElEQVR42r2RsQrDMAxEBRdl8SDcX8lQPGg1GBI6lvz/h7QyRRXV0qUULwfvwZ1tenw5PxToRPWMC52eA9+WDnlh3HFQ/xBQl86NFYJqeGflkiogrOvVlIFhqURFVho3x1moGAa3deMs+LS30CAhBN5nNxeT5hbJ1zwmji2k+aF6NENIPf/hs54f0sZFUVAMigAAAABJRU5ErkJggg==');
+	background-position: left top;
+	background-repeat: no-repeat;
+}
+#filters-list .delete:hover {
+	background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAAqUlEQVR4XqWRMQqEMBBF/1E8Ra6x6V3FRnS9QbCxtJg6Z7CzE9lTiIXXyUb3C8EULixDIMM8Zt4kcDfxM5A45U+cgeXnC1tREgkzAgob3hiq3CUHvGLG4FTQoSgxQGDrzN8WTLBGnx2IVDksen9GH7Z9hA5E6uxABMJyCHDMCEGHzugLQPPlBCBNGq+5YtpnGw1Bv+te15ypljTpVzdak5Opy+z+qf//zQ+Lg+07ay5KsgAAAABJRU5ErkJggg==');
+}
+#filters-list .filter-item:hover .delete {
+	opacity: 1;
+}
+#filters-area .action-area {
+	padding: 14px 17px;
+}
+#filters-area .action-area button {
+	float: right;
 }

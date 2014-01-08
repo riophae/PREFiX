@@ -47,6 +47,10 @@
 		<p>今天是 <span id="birthday-friend-list"></span> 的生日, 快去送上生日祝福吧! </p>
 		<div class="buttons"><a class="confirm-btn" id="send-birthday-message">好的</a><br /><a class="reject-btn" id="hide-birthday-tip">不用了</a></div>
 	</div>
+	<div id="block-tip" class="fix notify-box" style="display: none;">
+		<p>您确定要屏蔽用户 <span id="blocked-user-name"></span> 吗? 您将会不再看到所有 TA 发送的和提及 TA 的消息. </p>
+		<div class="buttons"><a class="confirm-btn" id="block-user">是的</a><br /><a class="reject-btn" id="hide-block-tip">不要</a></div>
+	</div>
 	<div id="notification"></div>
 	<div id="picture-overlay">
 		<div class="loading-tip slide-effect" data-id="1"><span>LOADING</span></div>
@@ -115,9 +119,9 @@
 							<a ms-live-click="toggleFavourite" ms-class="favourited: status.favorited" class="favourite" ms-title="status.favorited ? '取消收藏 (快捷键 Shift + F)' : '收藏 (快捷键 F)'"></a>
 						</div>
 						<div class="avatar">
-						<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-							<img ms-src="status.user.profile_image_url_large" />
-						</a>
+							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
+								<img ms-src="status.user.profile_image_url_large" ms-live-contextmenu="blockUser" />
+							</a>
 						</div>
 						<div class="content">
 							<div class="info fix">
@@ -145,7 +149,7 @@
 						</div>
 						<div class="avatar">
 							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-								<img ms-src="status.user.profile_image_url_large" />
+								<img ms-src="status.user.profile_image_url_large" ms-live-contextmenu="blockUser" />
 							</a>
 						</div>
 						<div class="content">
@@ -171,7 +175,7 @@
 						</div>
 						<div class="avatar">
 							<a ms-title="{{message.sender.name}} ({{message.sender.id}})" ms-href="'http://fanfou.com/' + message.sender.id">
-								<img ms-src="message.sender.profile_image_url_large" />
+								<img ms-src="message.sender.profile_image_url_large" ms-live-contextmenu="blockUser" />
 							</a>
 						</div>
 						<div class="content">
@@ -199,7 +203,7 @@
 						</div>
 						<div class="avatar">
 							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-								<img ms-src="status.user.profile_image_url_large" />
+								<img ms-src="status.user.profile_image_url_large" ms-live-contextmenu="blockUser" />
 							</a>
 						</div>
 						<div class="content">
@@ -246,7 +250,7 @@
 						</div>
 						<div class="avatar">
 							<a ms-title="{{status.user.name}} ({{status.user.id}})" ms-href="'http://fanfou.com/' + status.user.id">
-								<img ms-src="status.user.profile_image_url_large" />
+								<img ms-src="status.user.profile_image_url_large" ms-live-contextmenu="blockUser" />
 							</a>
 						</div>
 						<div class="content">

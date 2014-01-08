@@ -652,14 +652,14 @@ function initStreamingAPI() {
 			if (object.is_self) {
 				batchProcess(function(view) {
 					setTimeout(function() {
-						view.deleteStatusFromAllLists(object.id);
+						view.deleteStatusFromAllLists && view.deleteStatusFromAllLists(object.id);
 					}, 2000);
 				});
 			}
 		} else if (data.event === 'fav.create') {
 			if (data.source.id === PREFiX.account.id) {
 				batchProcess(function(view) {
-					view.markStatusAsFavourited(object.id);
+					view.markStatusAsFavourited && view.markStatusAsFavourited(object.id);
 				});
 				return;
 			}
@@ -674,7 +674,7 @@ function initStreamingAPI() {
 		} else if (data.event === 'fav.delete') {
 			if (data.source.id === PREFiX.account.id) {
 				batchProcess(function(view) {
-					view.markStatusAsUnfavourited(object.id);
+					view.markStatusAsUnfavourited && view.markStatusAsUnfavourited(object.id);
 				});
 				return;
 			}
@@ -1275,6 +1275,73 @@ var enrichStatus = (function() {
 	}
 })();
 
+var cached_res = { };
+function prepareRE(str) {
+	if (cached_res[str]) {
+		return cached_res[str];
+	}
+	var re = /^\/(\S+)\/([igm]*)$/;
+	if (re.test(str)) {
+		var result = str.match(re);
+		re = new RegExp(result[1], result[2] || '');
+	} else {
+		re = new RegExp(
+			str.
+			replace(/(\.|\||\+|\{|\}|\[|\]|\(|\)|\\)/g, '\\$1').
+			replace(/\?/g, '.').
+			replace(/\*/g, '.*'),
+			'i'
+		);
+	}
+	cached_res[str] = re;
+	return re;
+}
+
+function filterOut(status) {
+	if (status.is_self) {
+		status.filtered_out = false;
+		return;
+	}
+	settings.current.filters.some(function(filter) {
+		var re = prepareRE(filter.pattern);
+		var str = '';
+		switch (filter.type) {
+			case 'id':
+				str = (status.user || status.sender).id;
+				break;
+			case 'name':
+				str = (status.user || status.sender).name;
+				break;
+			case 'content':
+				str = status.fixedText;
+				break;
+			case 'client':
+				str = status.source;
+				break;
+		}
+		var result = re.test(str);
+		status.filtered_out = result;
+		return result;
+	});
+}
+
+function filterOutAllLists() {
+	var lists = [
+		PREFiX.homeTimeline,
+		PREFiX.mentions,
+		PREFiX.privatemsgs
+	];
+	lists.forEach(function(list) {
+		[ 'buffered', 'statuses', 'messages' ].forEach(function(type) {
+			if (! list[type]) return;
+			list[type] = list[type].filter(function(status) {
+				filterOut(status);
+				return ! status.filtered_out;
+			});
+		});
+	});
+}
+
 var init_interval;
 
 function load() {
@@ -1666,6 +1733,8 @@ Ripple.events.observe('process_status', function(status) {
 	if (status.repost_status) {
 		arguments.callee.call(this, status.repost_status);
 	}
+
+	filterOut(status);
 });
 
 Ripple.events.addGlobalObserver('after', function(data, e) {
@@ -1733,7 +1802,10 @@ var settings = {
 		notif_friendreq: false,
 		notif_favourite: true,
 		repostFormat: '转@$name$ $text$',
-		newlineAfterMyName: true
+		newlineAfterMyName: true,
+		filters: [
+			{ pattern: '街旁', type: 'client' }
+		]
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
@@ -1753,6 +1825,9 @@ var settings = {
 	onSettingsUpdated: function() {
 		detectFriendBirthday();
 		initSavedSearches();
+		batchProcess(function(view) {
+			view.filterOutAllLists && view.filterOutAllLists();
+		});
 		chrome.extension.getViews().forEach(function(view) {
 			if (view.location.pathname === '/popup.html' &&
 				view.location.search === '?new_window=true') {
@@ -1795,7 +1870,8 @@ var usage_tips = [
 	'如果您希望查看完整的使用技巧, 参见设置页. ',
 	'如果您希望旋转图片, 请按快捷键 R 键. ',
 	'点击头像在应用内打开个人消息页面, 按住 Shift 点击打开该用户的饭否个人页面. ',
-	'您可以自由定义转发时消息的格式, 详见设置页. '
+	'您可以自由定义转发时消息的格式, 详见设置页. ',
+	'您可以在设置页中设置过滤消息的规则, 也可以按住 Shift 键右击用户头像来屏蔽 TA. '
 ];
 
 var PREFiX = this.PREFiX = {

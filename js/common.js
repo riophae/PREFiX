@@ -140,8 +140,9 @@ var getYMD = Ripple.helpers.generateTimeFormater(function(table) {
 });
 
 function fixStatusList(statuses) {
-	statuses.forEach(function(status) {
+	statuses = statuses.filter(function(status) {
 		status.relativeTime = getRelativeTime(status.created_at);
+		return ! status.filtered_out;
 	});
 	return statuses.sort(function(status_a, status_b) {
 		return status_a.rawid ?

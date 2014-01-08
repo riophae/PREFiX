@@ -780,6 +780,23 @@ function deleteStatusFromAllLists(status_id) {
 	});
 }
 
+function filterOutAllLists() {
+	var lists = [
+		tl_model,
+		mentions_model,
+		privatemsgs_model
+	];
+	lists.forEach(function(list) {
+		[ 'statuses', 'messages' ].forEach(function(type) {
+			if (! list[type]) return;
+			list[type] = list[type].filter(function(status) {
+				bg_win.filterOut(status);
+				return ! status.filtered_out;
+			});
+		});
+	});
+}
+
 function hideAllOverlays(e) {
 	if ($('body.show-picture').length) {
 		e.preventDefault();
@@ -1844,6 +1861,56 @@ function showRelatedStatuses(e) {
 	})();
 }
 
+function hideBlockTip() {
+	$('#block-tip').css('animation', 'wobbleOut .4s').delay(400).hide(0);
+}
+
+function blockUser(e) {
+	if (! e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)
+		return;
+	e.preventDefault();
+	var status = this.$vmodel.status || this.$vmodel.message;
+	var userid = (status.user || status.sender).id;
+	var username = (status.user || status.sender).name;
+	var real_id = '';
+	r.postStatus({
+		status: '@' + username
+	}).next(function(status) {
+		r.showStatus({
+			id: status.id,
+			format: 'html'
+		}).next(function(status) {
+			var mention_re = /<a href="http:\/\/fanfou\.com\/([^"]+)" class="former">([^<]+)<\/a>/i;
+			real_id = status.text.match(mention_re)[1];
+			r.destroyStatus({
+				id: status.id
+			});
+		});
+	});
+	$('#blocked-user-name').text('@' + username + ' (' + userid + ')');
+	$('#block-tip').show().css('animation', 'wobbleIn .4s');
+	$('#block-user').off().click(function(e) {
+		var filters = PREFiX.settings.current.filters;
+		filters.push({
+			pattern: userid,
+			type: 'id'
+		}, {
+			pattern: username,
+			type: 'name'
+		});
+		if (real_id) {
+			filters.push({
+				pattern: 'http://fanfou.com/' + real_id,
+				type: 'content'
+			});
+		}
+		PREFiX.settings.save();
+		filterOutAllLists();
+		bg_win.filterOutAllLists();
+	}).click(hideBlockTip);
+	$('#hide-block-tip').off().click(hideBlockTip);
+}
+
 function onNewStatusInserted() {
 	this.forEach(bg_win.enrichStatus);
 }
@@ -2091,6 +2158,8 @@ var tl_model = avalon.define('home-timeline', function(vm) {
 
 	vm.showContextTimeline = showContextTimeline;
 
+	vm.blockUser = blockUser;
+
 	vm.statuses = [];
 
 	vm.scrollTop = 0;
@@ -2188,6 +2257,8 @@ var mentions_model = avalon.define('mentions', function(vm) {
 	vm.toggleFavourite = toggleFavourite;
 
 	vm.showContextTimeline = showContextTimeline;
+
+	vm.blockUser = blockUser;
 
 	vm.statuses = [];
 
@@ -2319,6 +2390,8 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 		$textarea.focus();
 	}
 
+	vm.blockUser = blockUser;
+
 	vm.messages = [];
 
 	vm.scrollTop = 0;
@@ -2399,6 +2472,8 @@ var searches_model = avalon.define('saved-searches', function(vm) {
 	vm.toggleFavourite = toggleFavourite;
 
 	vm.showContextTimeline = showContextTimeline;
+
+	vm.blockUser = blockUser;
 
 	vm.keyword = PREFiX.keyword;
 
@@ -2593,6 +2668,8 @@ var usertl_model = avalon.define('user-timeline', function(vm) {
 	vm.toggleFavourite = toggleFavourite;
 
 	vm.showContextTimeline = showContextTimeline;
+
+	vm.blockUser = blockUser;
 
 	vm.statuses = [];
 

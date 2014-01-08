@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="css/options.css"/>
 		<link rel="stylesheet" href="css/chrome-shared.css"/>
 		<script src="js/lib/jquery-min.js"></script>
+		<script src="js/lib/avalon.js"></script>
 		<script src="js/options.js"></script>
 	</head>
 	<body>
@@ -132,6 +133,10 @@
 							<li>您可以自由定义转发时消息的格式. $name$ 代表原消息的作者名字, $text$ 代表原消息的文本内容. </li>
 							<li><input type="text" key="repostFormat" id="repostFormat" /></li>
 						</ul>
+						<ul>
+							<h3>过滤消息</h3>
+							<li>您可以添加过滤规则来屏蔽不希望看到的消息. <br /><button id="show-filters">管理过滤规则</button></li>
+						</ul>
 						<ul id="custom-consumer">
 							<h3>自定义尾巴 (修改 "通过...发送" 字样)</h3>
 							<li>关于设置尾巴的详细步骤请参考<a href="https://github.com/riophae/PREFiX/wiki/PREFiX-自定义尾巴的详细步骤" target="_blank">这里</a>. </li>
@@ -190,6 +195,56 @@
 							<li>按退格键返回之前的页面</li>
 						</ol>
 					</div>
+				</div>
+			</div>
+		</div>
+		<div id="filters-overlay" class="overlay" style="display: none;">
+			<div id="filters-area" class="page" style="max-height: 640px;">
+				<div class="close-button"></div>
+				<h4>过滤规则</h4>
+				<div class="content-area">
+					<table id="filter-column-headers">
+						<tbody>
+							<tr>
+								<td>关键字或正则表达式</td>
+								<td>过滤项目</td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="filters-list">
+						<tbody ms-controller="filters">
+							<tr class="filter-item" ms-repeat-item="items">
+								<td>
+									<input type="text" class="filter-pattern" placeholder="example*" ms-duplex="item.pattern" ms-blur="blur" />
+								</td>
+								<td>
+									<select class="filter-type" ms-duplex="item.type">
+										<option value="id">用户 ID</option>
+										<option value="name">用户名</option>
+										<option value="content">消息内容</option>
+										<option value="client">客户端</option>
+									</select>
+									<span class="delete" ms-click="remove">删除</span>
+								</td>
+							</tr>
+							<tr class="filter-item last">
+								<td>
+									<input type="text" class="filter-pattern" placeholder="example*" />
+								</td>
+								<td>
+									<select class="filter-type">
+										<option value="id">用户 ID</option>
+										<option value="name">用户名</option>
+										<option value="content">消息内容</option>
+										<option value="client">客户端</option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="action-area">
+					&nbsp;<button id="filters-overlay-confirm">完成</button>
 				</div>
 			</div>
 		</div>
