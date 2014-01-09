@@ -179,7 +179,11 @@ function findView(model, id) {
 		return model.$elem.find('[data-id=' + id + ']');
 	} else {
 		id = getFirstItemInScreen(model);
-		return findView(model, id)
+		if (id) {
+			return findView(model, id);
+		} else {
+			return model.$elem.find('[data-id]').first();
+		}
 	}
 }
 
@@ -1570,6 +1574,37 @@ function insertKeepScrollTop(insert) {
 	}, 50);
 }
 
+function getRealId(username, id, callback) {
+	var real_id = lscache.get('real_id_of_' + id);
+	if (id.indexOf('~') !== 0) {
+		real_id = id;
+	}
+	if (real_id) {
+		setTimeout(function() {
+			callback(real_id);
+		});
+		return;
+	}
+	r.postStatus({
+		status: '@' + username
+	}).next(function(status) {
+		r.showStatus({
+			id: status.id,
+			format: 'html'
+		}).next(function(status) {
+			r.destroyStatus({
+				id: status.id
+			});
+			var mention_re = /<a href="http:\/\/fanfou\.com\/([^"]+)" class="former">([^<]+)<\/a>/i;
+			real_id = status.text.match(mention_re)[1];
+			if (real_id.indexOf('~') !== 0) {
+				lscache.set('real_id_of_' + id, real_id);
+			}
+			callback(real_id);
+		});
+	});
+}
+
 function autoScroll(model, list) {
 	list = fixStatusList(list);
 	var first_item = list[0];
@@ -1878,19 +1913,8 @@ function blockUser(e) {
 	var userid = user.id;
 	var username = user.name;
 	var real_id = '';
-	r.postStatus({
-		status: '@' + username
-	}).next(function(status) {
-		r.showStatus({
-			id: status.id,
-			format: 'html'
-		}).next(function(status) {
-			var mention_re = /<a href="http:\/\/fanfou\.com\/([^"]+)" class="former">([^<]+)<\/a>/i;
-			real_id = status.text.match(mention_re)[1];
-			r.destroyStatus({
-				id: status.id
-			});
-		});
+	getRealId(username, userid, function(id) {
+		real_id = id;
 	});
 	$('#blocked-user-name').text('@' + username + ' (' + userid + ')');
 	$('#block-tip').show().css('animation', 'wobbleIn .4s');
@@ -2704,6 +2728,9 @@ usertl_model.initialize = function() {
 				id: PREFiX.userid
 			}).next(function(statuses) {
 				unshift(usertl_model.statuses, statuses);
+				getRealId(user.name, user.id, function(id) {
+					usertl_model.statuses[0].user.id = id;
+				});
 				setTimeout(initKeyboardControl);
 				if (following) {
 					r.showRelationshipById(user.id, PREFiX.account.id).
