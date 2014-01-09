@@ -1238,7 +1238,7 @@ var enrichStatus = (function() {
 					return true;
 				}
 			});
-			ls_cached = lscache.get('oembed-' + url);
+			var ls_cached = lscache.get('oembed-' + url);
 			cached = cached || ls_cached;
 			if (cached) {
 				cached.__proto__ = UrlItem.prototype;
