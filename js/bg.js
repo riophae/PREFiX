@@ -5,6 +5,7 @@ var popup_url = ce.getURL('popup.html');
 
 var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp)\//;
 var status_url_re = /<a href="([^"]+)" title="([^"]+)" rel="nofollow" target="_blank">([^<]+)<\/a>/g;
+var fanfou_url_re = /^http:\/\/(?:\S+\.)?fanfou\.com\//;
 
 var $temp = $('<div />');
 
@@ -1228,6 +1229,8 @@ var enrichStatus = (function() {
 			return;
 		urls.forEach(function(url) {
 			if (! url.split('/')[3]) return;
+			if (fanfou_url_re.test(url) && ! fanfou_re.test(url))
+				return;
 			var is_url = url_re.test(url);
 			var is_photo_link = isPhotoLink(url) || is_url;
 			if (! is_photo_link) return;
