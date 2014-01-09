@@ -1653,6 +1653,10 @@ Ripple.events.observe('process_status', function(status) {
 
 	if (status.user) {
 		status.is_self = status.user.id === PREFiX.account.id;
+	} else if (status.sender) {
+		status.is_self = status.sender.id === PREFiX.account.id;
+	} else if (status.sender_id) {
+		status.is_self = status.sender_id === PREFiX.account.id;
 	}
 
 	var created_at = status.created_at;
