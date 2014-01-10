@@ -235,6 +235,10 @@ function updateDetails(flag) {
 	var user = Ripple(PREFiX.accessToken);
 	var verify = user.verify().next(function(details) {
 		lscache.set('account_details', details);
+		if (details.friends_count >= 85 && is_first_run) {
+			settings.current.autoFlushCache = true;
+			settings.save();
+		}
 		is_first_run = false;
 		PREFiX.account = details;
 		birthday_interval = setInterval(checkBirthday, 60000);
@@ -777,14 +781,18 @@ function update(retry_chances, new_status_id) {
 					}
 				}
 				unshift(tl.buffered, statuses);
+				if (! settings.current.autoFlushCache)
+					return;
 				if (! PREFiX.popupActive && tl.scrollTop < 30) {
-					var buffered = PREFiX.homeTimeline.buffered;
-					var read = PREFiX.homeTimeline.statuses;
-					var all_statuses = buffered.concat(read);
-					all_statuses = fixStatusList(all_statuses);
-					all_statuses.forEach(function(status, i) {
-						status.hidden = i >= 20;
-					});
+					var buffered_count = tl.buffered.length;
+					var read_count = tl.statuses.length;
+					var cache_amount = settings.current.cacheAmount;
+					if (buffered_count + read_count > cache_amount) {
+						tl.statuses.splice(Math.max(0, cache_amount - buffered_count));
+						if (buffered_count > cache_amount) {
+							tl.buffered.splice(cache_amount);
+						}
+					}
 				}
 			});
 	}
@@ -1646,8 +1654,6 @@ var playSound = (function() {
 Ripple.events.observe('process_status', function(status) {
 	if (! status) return;
 
-	status.hidden = false;
-
 	if (status.user) {
 		status.is_self = status.user.id === PREFiX.account.id;
 	} else if (status.sender) {
@@ -1788,6 +1794,7 @@ var settings = {
 		birthdayNotice: true,
 		birthdayNoticeType: 'only_friends',
 		birthdayGreetingType: 'post_status',
+		autoFlushCache: false,
 		cacheAmount: 75,
 		zoomRatio: '1',
 		drawAttention: ! is_mac,
@@ -1805,7 +1812,8 @@ var settings = {
 		newlineAfterMyName: true,
 		filters: [
 			{ pattern: '街旁', type: 'client' }
-		]
+		],
+		flushCacheWhenTop: true
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };

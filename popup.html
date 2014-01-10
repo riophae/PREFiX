@@ -110,7 +110,7 @@
 		</div>
 		<div id="stream">
 			<ul id="home-timeline" class="status-list fix" ms-controller="home-timeline" ms-each-status="statuses" ms-attr-replying="is_replying">
-				<li ms-if="! status.hidden" ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
+				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
 					<div class="status fix">
 						<div class="action-icons">
 							<a ms-if="status.is_self" ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
@@ -139,7 +139,7 @@
 				<li class="breakpoint" ms-if="status.is_breakpoint" ms-text="status.loaded_at"></li>
 			</ul>
 			<ul id="mentions" class="status-list fix" ms-controller="mentions" ms-each-status="statuses" ms-attr-replying="is_replying">
-				<li ms-if="! status.hidden" ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
+				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
 					<div class="status fix">
 						<div class="action-icons">
 							<a ms-if="status.is_self" ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
@@ -167,7 +167,7 @@
 				</li>
 			</ul>
 			<ul id="privatemsgs" class="status-list fix" ms-controller="privatemsgs" ms-each-message="messages">
-				<li ms-if="! message.hidden" ms-data-id="message.id">
+				<li ms-data-id="message.id">
 					<div class="status fix">
 						<div class="action-icons">
 							<a ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
@@ -193,7 +193,7 @@
 				</li>
 			</ul>
 			<ul id="saved-searches" class="status-list fix" ms-controller="saved-searches" ms-each-status="statuses" ms-attr-replying="is_replying">
-				<li ms-if="! status.hidden" ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
+				<li ms-data-id="status.id" ms-class-my-status="status.is_self" ms-class-protected="status.user.protected" ms-attr-current-replied="status.current_replied">
 					<div class="status fix">
 						<div class="action-icons">
 							<a ms-if="status.is_self" ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>
