@@ -122,6 +122,9 @@
 						<ul>
 							<h3>内部处理规则</h3>
 							<li>
+								<label><input type="checkbox" key="flushCacheWhenTop" />滑动页面到顶端自动清理旧消息</lable>
+							</li>
+							<li>
 								<label><input type="checkbox" key="autoFlushCache" />自动抛弃缓存中较旧的数据</lable>
 								<input type="range" key="cacheAmount" min=20 max=200 step=5 />
 								只在缓存中保留最新的 <span id="cacheAmount"></span> 条消息

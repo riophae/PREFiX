@@ -1812,7 +1812,8 @@ var settings = {
 		newlineAfterMyName: true,
 		filters: [
 			{ pattern: '街旁', type: 'client' }
-		]
+		],
+		flushCacheWhenTop: true
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };

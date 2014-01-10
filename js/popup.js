@@ -1091,7 +1091,15 @@ function initMainUI() {
 		}
 	}
 
+	var flush_cache_timeout;
 	$main.scroll(_.throttle(function(e) {
+		clearTimeout(flush_cache_timeout);
+		flush_cache_timeout = setTimeout(function() {
+			if ($main.scrollTop() < 30 &&
+				PREFiX.settings.current.flushCacheWhenTop) {
+				cutStream();
+			}
+		}, 5000);
 		if (pointer_events_disabled) {
 			pointer_events_disabled = false;
 			$stream.css('pointer-events', '');
