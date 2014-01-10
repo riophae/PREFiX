@@ -287,7 +287,6 @@ function initKeyboardControlEvents() {
 			if ($scrolling_elem === $main) {
 				if ($main.scrollTop() === 0) {
 					PREFiX.update();
-					cutStream();
 				}
 				setCurrent(current_model, list[0].id);
 			}
@@ -299,6 +298,11 @@ function initKeyboardControlEvents() {
 			var $next_view = $current_view.nextAll('li[data-id]').first();
 			if (! $next_view.length) return;
 			var delta = $next_view.offset().top;
+			if (delta < parseInt($main.css('top'))) {
+				current_model.current = '';
+				initKeyboardControl();
+				return;
+			}
 			var current_pos = $main.scrollTop();
 			var height = $current_view.height();
 			var next_view_height = $next_view.height();
@@ -1091,15 +1095,10 @@ function initMainUI() {
 		}
 	}
 
-	var flush_cache_timeout;
 	$main.scroll(_.throttle(function(e) {
-		clearTimeout(flush_cache_timeout);
-		flush_cache_timeout = setTimeout(function() {
-			if ($main.scrollTop() < 30 &&
-				PREFiX.settings.current.flushCacheWhenTop) {
-				cutStream();
-			}
-		}, 5000);
+		if ($main.scrollTop() < 30) {
+			cutStream();
+		}
 		if (pointer_events_disabled) {
 			pointer_events_disabled = false;
 			$stream.css('pointer-events', '');
@@ -1207,7 +1206,6 @@ function initMainUI() {
 			if (PREFiX.current === 'searches_model') {
 				$('#topic-selector').trigger('change');
 			} else {
-				cutStream();
 				PREFiX.update();
 			}
 		}
@@ -1342,13 +1340,10 @@ function initMainUI() {
 
 function cutStream() {
 	var current = getCurrent();
-	if (current.statuses) {
-		current.statuses = current.statuses.slice(0, 20);
-		current.current = current.statuses[0].id;
-	} else {
-		current.messages = current.messages.slice(0, 20);
-		current.current = current.messages[0].id;
-	}
+	var list = current.statuses || current.messages;
+	list.forEach(function(item, i) {
+		item.hidden = i >= 20;
+	});
 }
 
 function computePosition(data, no_minus_left) {
@@ -1643,6 +1638,20 @@ function autoScroll(model, list) {
 
 function loadOldder() {
 	var model = getCurrent();
+	var list = model.statuses || model.messages;
+	var hidden_items = list.filter(function(item) {
+		return item.hidden;
+	});
+	if (hidden_items.length) {
+		for (var i = 0; i < 20; i++) {
+			if (hidden_items[i]) {
+				hidden_items[i].hidden = false;
+			} else {
+				break;
+			}
+		}
+		return;
+	}
 	if (model === searches_model) {
 		var oldest_status = searches_model.statuses[searches_model.statuses.length - 1];
 		if (! oldest_status) return;
@@ -2250,24 +2259,27 @@ tl_model.initialize = function() {
 			return;
 		var buffered = tl.buffered;
 		tl.buffered = [];
-		if (! tl.statuses.length) {
+		if (buffered.length >= 20) {
+			var now = Date.now();
+			var is_breakpoint = breakpoints.some(function(time) {
+				return Math.abs(time - now) < 500;
+			});
+			if (is_breakpoint) {
+				buffered = fixStatusList(buffered);
+				var oldest_status = buffered[buffered.length - 1];
+				oldest_status.is_breakpoint = true;
+				oldest_status.loaded_at = 'Loaded @ ' + getShortTime(now) + '.';
+			}
+		}
+		var showing_read_statuses_count = tl.statuses.filter(function(status) {
+			return ! status.hidden;
+		}).length;
+		if (! showing_read_statuses_count) {
 			unshift(tl_model.statuses, buffered);
 		} else {
 			setTimeout(function() {
 				var scroll_top = $main.scrollTop();
 				insertKeepScrollTop(function() {
-					if (buffered.length >= 50) {
-						var now = Date.now();
-						var is_breakpoint = breakpoints.some(function(time) {
-							return Math.abs(time - now) < 500;
-						});
-						if (is_breakpoint) {
-							buffered = fixStatusList(buffered);
-							var oldest_status = buffered[buffered.length - 1];
-							oldest_status.is_breakpoint = true;
-							oldest_status.loaded_at = 'Loaded @ ' + getShortTime(now) + '.';
-						}
-					}
 					unshift(tl_model.statuses, buffered);
 					if (scroll_top <= 30) {
 						autoScroll(tl_model, buffered);
@@ -2816,8 +2828,6 @@ $(function() {
 
 onunload = function() {
 	PREFiX.popupActive = false;
-	if ($main[0].scrollTop < 30)
-		cutStream();
 	if (is_panel_mode) {
 		var pos = {
 			x: screenX,

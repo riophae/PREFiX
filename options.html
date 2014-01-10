@@ -120,18 +120,6 @@
 							<h2>高级设置</h2>
 						</header>
 						<ul>
-							<h3>内部处理规则</h3>
-							<li>
-								<label><input type="checkbox" key="flushCacheWhenTop" />滑动页面到顶端自动清理旧消息</lable>
-							</li>
-							<li>
-								<label><input type="checkbox" key="autoFlushCache" />自动抛弃缓存中较旧的数据</lable>
-								<input type="range" key="cacheAmount" min=20 max=200 step=5 />
-								只在缓存中保留最新的 <span id="cacheAmount"></span> 条消息
-							</li>
-							<li>可以改善性能, 但仅建议当关注的人较多时启用. </li>
-						</ul>
-						<ul>
 							<h3>自定义转发格式</h3>
 							<li>您可以自由定义转发时消息的格式. $name$ 代表原消息的作者名字, $text$ 代表原消息的文本内容. </li>
 							<li><input type="text" key="repostFormat" id="repostFormat" /></li>
