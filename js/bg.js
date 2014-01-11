@@ -1154,7 +1154,7 @@ var enrichStatus = (function() {
 		if (this.status === 'loading') {
 			this.callbacks.push(callback);
 		} else if (this.status === 'completed') {
-			callback();
+			setTimeout(callback);
 		}
 	}
 
@@ -1216,6 +1216,16 @@ var enrichStatus = (function() {
 			});
 	}
 
+	function setLink($link, url) {
+		$link.prop('title', url);
+		$link.prop('href', url);
+		var display_url = url.replace(/^https?:\/\/(?:www\.)?/, '');
+		if (display_url.length > 25) {
+			display_url = display_url.substring(0, 25) + '...';
+		}
+		$link.text(display_url);
+	}
+
 	return function(status) {
 		if (status.urlProcessed)
 			return;
@@ -1229,8 +1239,20 @@ var enrichStatus = (function() {
 			return;
 		urls.forEach(function(url) {
 			if (! url.split('/')[3]) return;
-			if (fanfou_url_re.test(url) && ! fanfou_re.test(url))
-				return;
+			if (fanfou_url_re.test(url)) {
+				var text = status.fixedText;
+				$temp.html(text);
+				var $link = $temp.find('[href="' + url + '"]');
+				if ($link.length) {
+					var text = $link.text();
+					if (/^http:\/\//.test(text)) {
+						setLink($link, url)
+						status.fixedText = $temp.html();
+					}
+				}
+				if (! fanfou_re.test(url))
+					return;
+			}
 			var is_url = url_re.test(url);
 			var is_photo_link = isPhotoLink(url) || is_url;
 			if (! is_photo_link) return;
@@ -1263,13 +1285,7 @@ var enrichStatus = (function() {
 						var text = status.fixedText;
 						$temp.html(text);
 						var $link = $temp.find('[href="' + url_item.url + '"]');
-						$link.prop('title', url_item.longUrl);
-						$link.prop('href', url_item.longUrl);
-						var display_url = url_item.longUrl.replace(/^https?:\/\/(?:www\.)?/, '');
-						if (display_url.length > 25) {
-							display_url = display_url.substring(0, 25) + '...';
-						}
-						$link.text(display_url);
+						setLink($link, url_item.longUrl)
 						status.fixedText = $temp.html();
 					});
 				});
