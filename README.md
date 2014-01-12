@@ -63,4 +63,11 @@ PREFiX
 * 可以自定义缓存数量
 * 旋转图片功能
 
+**ver 0.7.0**
+* Streaming API 支持、实时推送桌面通知
+* 过滤消息
+* 应用内查看用户个人页面
+* 自定义转发格式
+* 全自动展开短链接、应用内预览第三方内容
+
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
