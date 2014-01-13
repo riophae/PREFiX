@@ -604,7 +604,7 @@ function initStreamingAPI() {
 		var object = data.object;
 		if (object && object.text) {
 			Ripple.events.trigger('process_status', object);
-			if (object.photo) {
+			if (object.photo && object.photo.url) {
 				object.textWithoutTags += '[Photo]';
 			}
 		}
