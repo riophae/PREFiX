@@ -520,6 +520,7 @@ function showUsageTip() {
 	$('#hide-usage-tip').click(function(e) {
 		lscache.set('usage_tip_pos', usage_tips.length);
 		$title.removeClass('show-usage-tip');
+		$usage_tip.stop(true).css('margin-left', 0);
 	});
 	$('#usage-tip-content').html(tip);
 	var $title = $('#title');
