@@ -166,8 +166,8 @@
 					</div>
 				</li>
 			</ul>
-			<ul id="privatemsgs" class="status-list fix" ms-controller="privatemsgs" ms-each-message="messages">
-				<li ms-data-id="message.id">
+			<ul id="privatemsgs" class="status-list fix" ms-controller="privatemsgs" ms-each-message="messages" ms-attr-replying="is_replying">
+				<li ms-data-id="message.id" ms-attr-current-replied="message.current_replied">
 					<div class="status fix">
 						<div class="action-icons">
 							<a ms-live-dblclick="remove" class="remove" title="双击删除 (快捷键 Shift + D)"></a>

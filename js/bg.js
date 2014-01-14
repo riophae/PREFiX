@@ -1436,7 +1436,8 @@ function unload() {
 	PREFiX.privatemsgs = { 
 		messages: [],
 		scrollTop: 0,
-		current: ''
+		current: '',
+		is_replying: false
 	};
 	PREFiX.keyword = '';
 	PREFiX.friends = [];
@@ -1945,7 +1946,8 @@ var PREFiX = this.PREFiX = {
 	privatemsgs: { 
 		messages: [],
 		scrollTop: 0,
-		current: ''
+		current: '',
+		is_replying: false
 	},
 	friends: [],
 	rateLimit: 1500,

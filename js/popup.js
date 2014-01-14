@@ -1741,6 +1741,7 @@ function loadOldder() {
 }
 
 function remove(e) {
+	cancelReply();
 	showNotification('正在删除..');
 	var current_model = getCurrent();
 	var current = current_model.current;
@@ -1787,13 +1788,21 @@ function remove(e) {
 }
 
 function cancelReply() {
-	var current_model = getCurrent();
-	current_model.is_replying = false;
-	current_model.statuses.some(function(status) {
-		if (status.current_replied) {
-			status.current_replied = false;
-			return true;
-		}
+	var models = [
+		tl_model,
+		mentions_model,
+		privatemsgs_model,
+		searches_model,
+		usertl_model
+	];
+	models.forEach(function(model) {
+		model.is_replying = false;
+		(model.statuses || model.messages).some(function(status) {
+			if (status.current_replied) {
+				status.current_replied = false;
+				return true;
+			}
+		});
 	});
 }
 
@@ -2094,6 +2103,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 					}).next(function() {
 						showNotification('发表成功!');
 						vm.text = '';
+						cancelReply();
 						$textarea.blur();
 					}).error(function(e) {
 						if (e.status && e.response) {
@@ -2377,6 +2387,7 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 	vm.current = PREFiX.privatemsgs.current;
 
 	vm.remove = function() {
+		cancelReply();
 		showNotification('正在删除..')
 		var current_model = privatemsgs_model;
 		var current = current_model.current;
@@ -2419,6 +2430,7 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 	}
 
 	vm.reply = function() {
+		cancelReply();
 		var message = this.$vmodel.message;
 		composebar_model.text = '';
 		composebar_model.type = 'reply-pm';
@@ -2426,6 +2438,8 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 		composebar_model.user = message.sender.id;
 		composebar_model.username = message.sender.name;
 		$textarea.focus();
+		privatemsgs_model.is_replying = true;
+		message.current_replied = true;
 	}
 
 	vm.blockUser = blockUser;
@@ -2433,9 +2447,14 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 	vm.messages = [];
 
 	vm.scrollTop = 0;
+
+	vm.is_replying = PREFiX.privatemsgs.is_replying;
 });
 privatemsgs_model.$watch('current', function(value) {
 	PREFiX.privatemsgs.current = value;
+});
+privatemsgs_model.$watch('is_replying', function(value) {
+	PREFiX.privatemsgs.is_replying = value;
 });
 privatemsgs_model.$watch('scrollTop', function(value) {
 	PREFiX.privatemsgs.scrollTop = value;
