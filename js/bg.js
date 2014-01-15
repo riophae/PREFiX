@@ -1152,7 +1152,7 @@ var enrichStatus = (function() {
 					});
 				} else {
 					self.status = 'ignored';
-					lscache.set('oembed-' + url, self);
+					lscache.set('url' + url, self);
 				}
 			});
 			return;
