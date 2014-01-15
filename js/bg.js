@@ -187,6 +187,8 @@ function onInputEntered(text) {
 function initUrlExpand() {
 	var short_url_services = lscache.get('short_url_services');
 	if (short_url_services) {
+		// 识别更多短链接
+		short_url_services['[a-z0-9]{1,5}\.[a-z]{2,3}'] = true;
 		var re = '^https?:\\/\\/';
 		re += '(?:' + Object.keys(short_url_services).join('|') + ')';
 		re += '\\/\\S+';
