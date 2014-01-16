@@ -924,11 +924,15 @@ var enrichStatus = (function() {
 
 		short_url_re = PREFiX.shortUrlRe || short_url_re;
 		if (short_url_re.test(url)) {
-			expandUrl(url).next(function(long_url) {
-				self.longUrl = long_url;
-				fetch.call(self);
-			});
-			return;
+			if (! isPhotoLink(url)) {
+				expandUrl(url).next(function(long_url) {
+					if (self.longUrl && self.longUrl === long_url)
+						return;
+					self.longUrl = long_url;
+					fetch.call(self);
+				});
+				return;
+			}
 		} else if (self.url.indexOf('fanfou.com') === -1 &&
 			! self.longUrl) {
 			setTimeout(function() {
@@ -1134,15 +1138,26 @@ var enrichStatus = (function() {
 		if (result) {
 			Ripple.ajax.get(url).
 			next(function(html) {
-				var $html = $(html);
-				var large_code = $html.find('#share-options-embed-textarea-l-bbcode').text();
-				var result = large_code.match(/\[img\](\S+)\[\/img\]/);
-				var large_url = result && result[1];
-				var thumbnail_code = $html.find('#share-options-embed-textarea-t-bbcode').text();
-				var result = thumbnail_code.match(/\[img\](\S+)\[\/img\]/);
-				var thumbnail_url = result && result[1];
-				$html.length = 0;
-				$html = null;
+				function createPhotoURL(size) {
+					var url;
+					if (size.secret) {
+						url = base_url.replace(/_.*\.jpg$/, '_' + size.secret + size.fileExtension + '.jpg');
+					} else {
+						url = base_url.replace(/\.jpg$/, size.fileExtension + '.jpg');
+					}
+					if (size.queryString) {
+						url += size.queryString;
+					}
+					return url;
+				}
+				var result = html.match(/baseURL: '(\S+)',/);
+				var base_url = result && result[1];
+				var result = html.match(/sizeMap: (\[[^\]]+\])/);
+				var size_map = result && JSON.parse(result[1]);
+				var size_t = size_map[0];
+				var size_l = size_map.reverse()[0];
+				var large_url = createPhotoURL(size_l);
+				var thumbnail_url = createPhotoURL(size_t);
 				if (large_url) {
 					loadImage({
 						url: self.url,
