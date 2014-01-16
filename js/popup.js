@@ -1959,7 +1959,11 @@ function blockUser(e) {
 }
 
 function onNewStatusInserted() {
-	this.forEach(bg_win.enrichStatus);
+	this.forEach(function(s) {
+		setTimeout(function() {
+			bg_win.enrichStatus(s);
+		});
+	});
 }
 
 var nav_model = avalon.define('navigation', function(vm) {
