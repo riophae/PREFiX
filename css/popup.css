@@ -1481,10 +1481,10 @@ html.panel-mode #new-window {
 	text-indent: 30px;
 	overflow: hidden;
 	resize: none;
-	-webkit-transition-property: box-shadow, height, background-size;
+	-webkit-transition-property: box-shadow, background-size;
 	-webkit-transition-timing-function: ease-in-out;
 	-webkit-transition-duration: .2s;
-	transition-property: box-shadow, height, background-size;
+	transition-property: box-shadow, background-size;
 	transition-timing-function: ease-in-out;
 	transition-duration: .2s;
 }
