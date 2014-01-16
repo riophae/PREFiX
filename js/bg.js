@@ -210,24 +210,37 @@ function initUrlExpand() {
 	});
 }
 
-var cachedShortUrls = { };
+var cached_short_urls = { };
 function expandUrl(url) {
 	var d = new Deferred;
-	if (cachedShortUrls[url]) {
+	if (cached_short_urls[url]) {
 		setTimeout(function() {
-			d.call(cachedShortUrls[url]);
+			d.call(cached_short_urls[url]);
 		});
 	} else {
-		Ripple.ajax.get('http://api.longurl.org/v2/expand', {
-			params: {
-				url: url,
-				format: 'json'
-			}
-		}).next(function(data) {
-			var long_url = data['long-url'];
-			cachedShortUrls[url] = long_url;
+		function cb(long_url) {
+			cached_short_urls[url] = long_url;
 			d.call(long_url);
-		});
+		}
+		var is_gd_re = /https?:\/\/is\.gd\/([a-zA-Z0-9\-\_]+)/;
+		if (is_gd_re.test(url)) {
+			Ripple.ajax.get('http://is.gd/forward.php', {
+				params: {
+					shorturl: url.match(is_gd_re)[1],
+					format: 'simple'
+				},
+				success: cb
+			});
+		} else {
+			Ripple.ajax.get('http://api.longurl.org/v2/expand', {
+				params: {
+					url: url,
+					format: 'json'
+				}
+			}).next(function(data) {
+				cb(data['long-url']);
+			});
+		}
 	}
 	return d;
 }
