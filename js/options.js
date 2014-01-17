@@ -212,7 +212,7 @@ $(function() {
 		hide(0);
 	});
 
-	var save = onunload = function(e) {
+	function save(e) {
 		$('[key]').each(function() {
 			var $item = $(this);
 			var key = $item.attr('key');
@@ -239,8 +239,12 @@ $(function() {
 		current.filters = filters;
 
 		PREFiX.settings.save();
-		PREFiX.settings.onSettingsUpdated();
 	}
 
 	$('[key]').on('change', save);
+	$('#filters-overlay .close-button, #filters-overlay-confirm').click(save);
+	onunload = function(e) {
+		save();
+		PREFiX.settings.onSettingsUpdated();
+	}
 });
