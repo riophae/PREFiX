@@ -914,7 +914,9 @@ function processPhoto(status, photo) {
 		}
 		photo.thumb_width = Math.round(width) + 'px';
 		photo.thumb_height = Math.round(height) + 'px';
-		if (status.photo.url) return;
+		if (status.photo.url && photo.thumburl !== status.photo.thumburl) {
+			return;
+		}
 		$.extend(true, status.photo, photo);
 	});
 }

@@ -1619,12 +1619,13 @@ function autoScroll(model, list) {
 	var first_item = list[0];
 	var last_item = list[list.length - 1];
 	var pre_target, target;
+	var $breakpoint;
 	setTimeout(function() {
 		waitFor(function() {
 			pre_target = target;
 			var $item = model.$elem.find('li[data-id="' + last_item.id + '"]');
 			if (! $item.length) return;
-			var $breakpoint = $item.next('.breakpoint');
+			$breakpoint = $item.next('.breakpoint');
 			if ($breakpoint.length) {
 				$item = $breakpoint;
 			}
@@ -1636,7 +1637,11 @@ function autoScroll(model, list) {
 		}, function() {
 			setCurrent(model, target > 0 ? last_item.id : first_item.id);
 			if ($scrolling_elem === $main) {
-				smoothScrollTo(target);
+				if ($breakpoint && $breakpoint.length) {
+					$main.scrollTop(target);
+				} else {
+					smoothScrollTo(target);
+				}
 			}
 		});
 	}, 100);
@@ -1962,6 +1967,9 @@ function onNewStatusInserted() {
 	this.forEach(function(s) {
 		setTimeout(function() {
 			bg_win.enrichStatus(s);
+			if (s.photo && s.photo.url) {
+				bg_win.processPhoto(s, s.photo);
+			}
 		});
 	});
 }
