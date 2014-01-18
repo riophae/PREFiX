@@ -636,7 +636,7 @@ function initStreamingAPI() {
 						return;
 					}
 					updateTitle();
-					if (! object.is_self) {
+					if (! object.is_self && ! object.filtered_out) {
 						playSound();
 						var options = { };
 						if (data.event === 'message.create') {
