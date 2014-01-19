@@ -82,6 +82,7 @@ $(function() {
 			$item.addClass('current');
 			var page = $item.prop('id') + '-page';
 			$('#' + page).addClass('current');
+			$('body').scrollTop(0);
 			lscache.set('last_used_page', i);
 		});
 	}).eq(last_used_page).click();
