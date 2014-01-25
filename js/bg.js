@@ -229,7 +229,10 @@ function expandUrl(url) {
 					shorturl: url.match(is_gd_re)[1],
 					format: 'simple'
 				},
-				success: cb
+				success: function(data) {
+					var url = $temp.html(data).text();
+					return cb(url);
+				}
 			});
 		} else {
 			Ripple.ajax.get('http://api.longurl.org/v2/expand', {
