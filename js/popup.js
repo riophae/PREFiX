@@ -375,7 +375,8 @@ function initKeyboardControlEvents() {
 					return;
 
 			case 82 /* R */:
-				if ($('body.show-context-timeline').length)
+				if ($('body.show-context-timeline').length &&
+					! $('body.show-picture').length)
 					return;
 
 			case 8 /* Backspace*/:
