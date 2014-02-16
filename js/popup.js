@@ -1472,6 +1472,7 @@ function showPicture(img_url) {
 }
 
 function hidePicture() {
+	$('#picture-overlay').scrollTop(0);
 	$scrolling_elem = $main;
 	var $picture = $('#picture');
 	var width = $picture.width();
