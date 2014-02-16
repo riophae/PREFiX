@@ -662,10 +662,10 @@ function markBreakpoint() {
 	breakpoints.push(Date.now());
 }
 
-function createTab(url, active) {
+function createTab(url) {
 	chrome.tabs.create({
 		url: url,
-		active: active === true
+		active: true
 	});	
 }
 
@@ -692,7 +692,7 @@ function hideFollowingTip() {
 
 function showRatingPage() {
 	var url = 'https://chrome.google.com/webstore/detail/prefix/gjpcbbbopajjjnkbkeaflldnocoppcpc/reviews';
-	createTab(url, true);
+	createTab(url);
 	hideRatingTip();
 }
 
@@ -1163,7 +1163,7 @@ function initMainUI() {
 		e.preventDefault();
 		e.stopPropagation();
 		if (! e.currentTarget.dataset.userid || e.shiftKey) {
-			createTab(e.currentTarget.href, e.shiftKey);
+			createTab(e.currentTarget.href);
 		}
 	}).delegate('[data-userid]', 'click', function(e) {
 		if (e.shiftKey) return;
@@ -1203,13 +1203,13 @@ function initMainUI() {
 		var large_url = e.target.dataset.largeImg;
 		if (large_url) {
 			e.preventDefault();
-			createTab(large_url, e.shiftKey);
+			createTab(large_url);
 		}
 	}).delegate('.photo img', 'click', function(e) {
 		showPicture(e.target.dataset.largeImg);
 	}).delegate('#picture', 'contextmenu', function(e) {
 		e.preventDefault();
-		createTab(e.target.src, e.shiftKey);
+		createTab(e.target.src);
 		hidePicture();
 	}).delegate('#relationship', 'click', function(e) {
 		var $this = $(e.currentTarget);
