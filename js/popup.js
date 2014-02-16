@@ -49,6 +49,44 @@ function applyViewHeight() {
 	});
 }
 
+function ScrollHandler(elem) {
+	this.elem = elem;
+	this._listeners = [];
+	this._interval = null;
+	this.call = _.throttle(this._call.bind(this), 150);
+	this.start();
+}
+
+ScrollHandler.prototype = {
+	addListener: function(listener) {
+		this._listeners.push(listener);
+	},
+	start: function() {
+		this._interval = setInterval(this._check.bind(this), 100);
+	},
+	_call: function() {
+		var elem = this.elem;
+		this._listeners.forEach(function(listener) {
+			listener.call(elem);
+		});
+	},
+	_check: function() {
+		var is_scrolled = false;
+		var scroll_top = this.elem.scrollTop;
+		var scroll_left = this.elem.scrollLeft;
+		if (scroll_top !== this.scrollTop) {
+			is_scrolled = true;
+		} else if (scroll_left !== this.scrollLeft) {
+			is_scrolled = true;
+		}
+		this.scrollTop = scroll_top;
+		this.scrollLeft = scroll_left;
+		if (is_scrolled) {
+			this.call();
+		}
+	}
+};
+
 var goTop = (function() {
 	var s = 0;
 	var current;
@@ -1083,17 +1121,11 @@ function initMainUI() {
 	$main = $scrolling_elem = $('#main');
 
 	var $stream = $('#stream');
-	var pointer_events_disabled = false;
 
-	$main[0].onscroll = function(e) {
-		if (! pointer_events_disabled) {
-			pointer_events_disabled = true;
-			$stream.css('pointer-events', 'none');
-		}
-	}
+	var $main_scroll_handler = new ScrollHandler($main[0]);
 
 	var flush_cache_timeout;
-	$main.scroll(_.throttle(function(e) {
+	$main_scroll_handler.addListener(function(e) {
 		clearTimeout(flush_cache_timeout);
 		flush_cache_timeout = setTimeout(function() {
 			if ($main.scrollTop() < 30 &&
@@ -1101,10 +1133,6 @@ function initMainUI() {
 				cutStream();
 			}
 		}, 5000);
-		if (pointer_events_disabled) {
-			pointer_events_disabled = false;
-			$stream.css('pointer-events', '');
-		}
 		this.scrollLeft = 0;
 		var scroll_top = $main.scrollTop();
 		getCurrent().scrollTop = scroll_top;
@@ -1113,7 +1141,7 @@ function initMainUI() {
 			loadOldder();
 		if (scroll_top < 30)
 			markBreakpoint();
-	}, 100));
+	});
 
 	$('#app').delegate('a', 'click', function(e) {
 		if (e.currentTarget.href.indexOf('http://') !== 0 &&
