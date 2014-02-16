@@ -1124,6 +1124,15 @@ function initMainUI() {
 
 	var $main_scroll_handler = new ScrollHandler($main[0]);
 
+	var pointer_events_disabled = false;
+
+	$main_scroll_handler.addListener(function(e) {
+		if (! pointer_events_disabled) {
+			pointer_events_disabled = true;
+			$stream.css('pointer-events', 'none');
+		}
+	});
+
 	var flush_cache_timeout;
 	$main_scroll_handler.addListener(function(e) {
 		clearTimeout(flush_cache_timeout);
@@ -1133,6 +1142,10 @@ function initMainUI() {
 				cutStream();
 			}
 		}, 5000);
+		if (pointer_events_disabled) {
+			pointer_events_disabled = false;
+			$stream.css('pointer-events', '');
+		}
 		this.scrollLeft = 0;
 		var scroll_top = $main.scrollTop();
 		getCurrent().scrollTop = scroll_top;
