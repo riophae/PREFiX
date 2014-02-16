@@ -139,6 +139,10 @@ var getYMD = Ripple.helpers.generateTimeFormater(function(table) {
 	];
 });
 
+function fixUser(user) {
+	user.description = user.description.replace(/\s*\n\s*/g, '<br />');
+}
+
 function fixStatusList(statuses) {
 	statuses = statuses.filter(function(status) {
 		status.relativeTime = getRelativeTime(status.created_at);

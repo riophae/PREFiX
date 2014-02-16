@@ -1763,7 +1763,7 @@ Ripple.events.observe('process_status', function(status) {
 	}
 
 	if (status.user) {
-		status.user.created_at_ymd = getYMD(status.user.created_at);
+		fixUser(status.user);
 	}
 
 	var html = status.text;

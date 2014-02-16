@@ -2796,7 +2796,7 @@ usertl_model.initialize = function() {
 		id: PREFiX.userid
 	}).next(function(user) {
 		user.error = '';
-		user.created_at_ymd = getYMD(user.created_at);
+		fixUser(user);
 		var following = user.following;
 		var $relationship = $('#relationship');
 		if (user.protected && ! user.following) {

@@ -235,7 +235,7 @@
 					</li>
 					<li ms-if="!! status.user.description">
 						<div class="status-content" title="个人简介">
-							<p>{{ status.user.description }}</i></p>
+							<p ms-html="status.user.description"></i></p>
 						</div>
 					</li>
 					<li ms-if="!! status.user.error">{{ status.user.error }}</li>
