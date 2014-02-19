@@ -940,6 +940,11 @@ var enrichStatus = (function() {
 		var url = this.longUrl || this.url;
 		this.status = 'loading';
 
+		function markAsIgnored() {
+			self.status = 'ignored';
+			lscache.set('url-' + self.url, self);
+		}
+
 		short_url_re = PREFiX.shortUrlRe || short_url_re;
 		if (short_url_re.test(url)) {
 			if (! isPhotoLink(url)) {
@@ -959,8 +964,7 @@ var enrichStatus = (function() {
 		}
 
 		if (! isPhotoLink(url)) {
-			self.status = 'ignored';
-			lscache.set('url-' + url, self);
+			markAsIgnored();
 			return;
 		}
 
@@ -988,7 +992,7 @@ var enrichStatus = (function() {
 				[].some.call($html.find('script'), function(script) {
 					var code = script.textContent;
 					if (code.indexOf('var mediaJson') > -1) {
-						code = code.match(/var mediaJson = ([^;]+);/)[1];
+						code = (code.match(/var mediaJson = ([^;]+);/) || [ null, '[]' ])[1];
 						var media_json = JSON.parse(code);
 						media_json.some(function(item) {
 							if (item.id === id) {
@@ -1010,8 +1014,7 @@ var enrichStatus = (function() {
 						urlItem: self
 					});
 				} else {
-					self.status = 'ignored';
-					lscache.set('url-' + url, self);
+					markAsIgnored();
 				}
 			});
 			return;
@@ -1034,28 +1037,31 @@ var enrichStatus = (function() {
 			Ripple.ajax.get(url).
 			next(function(html) {
 				var $html = $(html);
-				var full_url = $html.find('#button-fullview a').attr('href');
+				var full_url = $html.find('#button-fullview a').attr('href') || '';
 				$html.length = 0;
 				$html = null;
-				if (! /^http/.test(full_url)) {
-					full_url = 'http://img.ly' + full_url;
-				}
-				Ripple.ajax.get(full_url).next(function(html) {
-					var $html = $(html);
-					var large_url = $html.find('#image-full img').attr('src');
-					$html.length = 0;
-					$html = null;
-					if (large_url) {
-						loadImage({
-							url: self.url,
-							large_url: large_url,
-							urlItem: self
-						});
-					} else {
-						self.status = 'ignored';
-						lscache.set('url-' + url, self);
+				if (full_url) {
+					if (! /^http/.test(full_url)) {
+						full_url = 'http://img.ly' + full_url;
 					}
-				})
+					Ripple.ajax.get(full_url).next(function(html) {
+						var $html = $(html);
+						var large_url = $html.find('#image-full img').attr('src');
+						$html.length = 0;
+						$html = null;
+						if (large_url) {
+							loadImage({
+								url: self.url,
+								large_url: large_url,
+								urlItem: self
+							});
+						} else {
+							markAsIgnored();
+						}
+					});
+				} else {
+					markAsIgnored();
+				}
 			});
 			return;
 		}
@@ -1075,8 +1081,7 @@ var enrichStatus = (function() {
 						urlItem: self
 					});
 				} else {
-					self.status = 'ignored';
-					lscache.set('url-' + url, self);
+					markAsIgnored();
 				}
 			});
 			return;
@@ -1101,8 +1106,7 @@ var enrichStatus = (function() {
 						urlItem: self
 					});
 				} else {
-					self.status = 'ignored';
-					lscache.set('url-' + url, self);
+					markAsIgnored();
 				}
 			});
 			return;
@@ -1123,8 +1127,7 @@ var enrichStatus = (function() {
 						urlItem: self
 					});
 				} else {
-					self.status = 'ignored';
-					lscache.set('url-' + url, self);
+					markAsIgnored();
 				}
 			});
 			return;
@@ -1135,18 +1138,19 @@ var enrichStatus = (function() {
 			Ripple.ajax.get(url).
 			next(function(html) {
 				var $html = $(html);
-				var large_url = $html.find('#photo img').attr('src');
+				var large_url = $html.find('#photo img').attr('src') || '';
+				var thumbnail_url = large_url.replace('/n0/', '/m0/');
 				$html.length = 0;
 				$html = null;
 				if (large_url) {
 					loadImage({
 						url: self.url,
 						large_url: large_url,
+						thumbnail_url: thumbnail_url,
 						urlItem: self
 					});
 				} else {
-					self.status = 'ignored';
-					lscache.set('url-' + url, self);
+					markAsIgnored();
 				}
 			});
 			return;
@@ -1172,10 +1176,12 @@ var enrichStatus = (function() {
 				var base_url = result && result[1];
 				var result = html.match(/sizeMap: (\[[^\]]+\])/);
 				var size_map = result && JSON.parse(result[1]);
-				var size_t = size_map[0];
-				var size_l = size_map.reverse()[0];
-				var large_url = createPhotoURL(size_l);
-				var thumbnail_url = createPhotoURL(size_t);
+				if (size_map) {
+					var size_t = size_map[0];
+					var size_l = size_map.reverse()[0];
+					var large_url = createPhotoURL(size_l);
+					var thumbnail_url = createPhotoURL(size_t);
+				}
 				if (large_url) {
 					loadImage({
 						url: self.url,
@@ -1184,8 +1190,7 @@ var enrichStatus = (function() {
 						urlItem: self
 					});
 				} else {
-					self.status = 'ignored';
-					lscache.set('url-' + url, self);
+					markAsIgnored();
 				}
 			});
 			return;
