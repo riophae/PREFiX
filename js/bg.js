@@ -516,7 +516,6 @@ function updateTitle() {
 	});
 	if (new_statuses.length) {
 		title.push(new_statuses.length + ' 条新消息');
-		switchTo('tl_model');
 	}
 	var saved_searches_count = getSavedSearchStatusesCount();
 	if (saved_searches_count) {
