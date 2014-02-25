@@ -1772,6 +1772,17 @@ Ripple.events.observe('process_status', function(status) {
 	var html = status.text;
 	$temp.html(html);
 	status.textWithoutTags = $temp.text();
+	// a 标签内可能含有 b 标签, 会影响到内容匹配
+	// (如搜索到的消息, 关键字会被加粗处理)
+	// 所以过滤掉 a 内的所有标签, 只留下纯文本
+	$temp.find('a').each(function() {
+		var $elem = $(this);
+		// 如果链接含有图片, 则忽略
+		if ($elem.find('img').length)
+			return;
+		$elem.html($elem.text());
+	});
+	html = $temp.html();
 	html = jEmoji.softbankToUnified(html);
 	html = jEmoji.googleToUnified(html);
 	html = jEmoji.docomoToUnified(html);
