@@ -1873,9 +1873,9 @@ function generateMethod(type) {
 		if (type === 'reply') {
 			var at_users = { };
 			at_users[status.user.name] = true;
-			var at_re = /([^"/]+)"\s+class=\"former">([^<>\s]+)/g;
+			var at_re = /data-userid="([^"\/]+)">([^<>\s]+)/g;
 			var result;
-			while (result = at_re.exec(status.text)) {
+			while (result = at_re.exec(status.fixedText)) {
 				if (result[1] != PREFiX.account.id && result[2] != PREFiX.account.name) {
 					at_users[result[2]] = true;
 				}
