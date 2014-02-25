@@ -666,7 +666,7 @@ function markBreakpoint() {
 function createTab(url, active) {
 	chrome.tabs.create({
 		url: url,
-		active: active === true
+		active: active === true || PREFiX.is_panel_mode
 	});	
 }
 
