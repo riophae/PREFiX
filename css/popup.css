@@ -1421,6 +1421,8 @@ html.panel-mode #new-window {
 	transition: -webkit-filter ease-in-out .2s;
 	-webkit-filter: brightness(.8);
 	filter: brightness(.8);
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
 }
 #navigation-bar li:hover,
 #navigation-bar li.current {
