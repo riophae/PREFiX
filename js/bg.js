@@ -340,7 +340,6 @@ function detectFriendBirthday() {
 
 var saved_searches_items = [];
 function initSavedSearches() {
-	var re = new RegExp('class="former">' + PREFiX.account.name + '<\\/a>');
 	stopSavedSearches();
 	function SavedSearchItem(q) {
 		this.keyword = q;
@@ -384,7 +383,7 @@ function initSavedSearches() {
 					self.unread_count = self.statuses.filter(function(s) {
 							s.is_unread = s.user.id !== PREFiX.account.id &&
 								s.rawid > last_read_status_rawid &&
-								! re.test(s.text);
+								s.textWithoutTags.indexOf('@' + PREFiX.account.name) === -1;
 							return s.is_unread;
 						}).length;
 				}
