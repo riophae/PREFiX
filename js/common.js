@@ -151,6 +151,28 @@ var getYMD = Ripple.helpers.generateTimeFormater(function(table) {
 	];
 });
 
+function searchStatusInCache(status_id) {
+	var status;
+	var lists = [
+		PREFiX.homeTimeline.buffered,
+		PREFiX.homeTimeline.statuses,
+		PREFiX.mentions.statuses
+	];
+	(window.saved_searches_items || bg_win.saved_searches_items).
+	forEach(function(item) {
+		lists.push(item.statuses);
+	});
+	lists.forEach(function(list) {
+		list.some(function(s) {
+			if (s.id === status_id) {
+				status = s;
+				return true;
+			}
+		});
+	});
+	return status;
+}
+
 function fixUser(user) {
 	user.description = user.description.replace(/\s*\n\s*/g, '<br />');
 }

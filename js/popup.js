@@ -1966,6 +1966,12 @@ function showRelatedStatuses(e) {
 				status = s;
 				get();
 			}).error(function() {
+				var s = searchStatusInCache(id);
+				if (s) {
+					status = s;
+					get();
+					return;
+				}
 				$context_tl.removeClass('loading');
 				unshift(context_tl_model.statuses, statuses, true);
 			});
