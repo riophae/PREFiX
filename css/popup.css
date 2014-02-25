@@ -1764,6 +1764,24 @@ html.panel-mode #new-window {
 	-webkit-transition: opacity ease-in-out .2s;
 	transition: opacity ease-in-out .2s;
 }
+.xiami-player {
+	width: 18px;
+	height: 18px;
+	overflow: hidden;
+	display: inline-block;
+	margin: 0 4px -4px 4px;
+	border-radius: 9px;
+	cursor: pointer;
+	background-color: #e5e5e5;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 12px;
+	background-image: url('/images/play.png');
+	opacity: .6;
+}
+.xiami-player:hover {
+	opacity: 1;
+}
 .status-list .info:hover .permanent-link {
 	opacity: .6;
 }

@@ -961,8 +961,37 @@ var enrichStatus = (function() {
 			});
 		}
 
-		if (! isPhotoLink(url)) {
+		if (! isPhotoLink(url) && ! isMusicLink(url)) {
 			markAsIgnored();
+			return;
+		}
+
+		var result = url.match(xiami_song_re);
+		if (result) {
+			var music_url = result[0];
+			self.data = {
+				type: 'music',
+				url: music_url,
+				id: music_url.match(/\d+$/)[0]
+			};
+			Ripple.ajax.get(music_url).
+			next(function(html) {
+				var re = /<img class="cdCDcover185" src="(\S+)" \/>/;
+				var cover_url = (html.match(re) || [])[1];
+				self.data.cover_url = cover_url || '';
+				self.data.cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
+				if (cover_url) {
+					getNaturalDimentions(cover_url, function(dimentions) {
+						self.cover_width = dimentions.width;
+						self.cover_height = dimentions.height;
+						self.status = 'completed';
+						lscache.set('url-' + self.url, self);
+						setTimeout(function() {
+							self.call();
+						});
+					});
+				}
+			});
 			return;
 		}
 
@@ -1194,6 +1223,48 @@ var enrichStatus = (function() {
 			return;
 		}
 
+		var result = url.match(xiami_album_re);
+		if (result) {
+			var album_url = result[0];
+			Ripple.ajax.get(album_url).
+			next(function(html) {
+				var re = /<img class="cdCover185"\s+src="(\S+)"\s+rel="v:photo"\s+alt="/;
+				var cover_url = (html.match(re) || [])[1] || '';
+				var cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
+				if (cover_url_large) {
+					loadImage({
+						url: self.url,
+						large_url: cover_url_large,
+						thumbnail_url: cover_url,
+						urlItem: self
+					});
+				}
+			});
+			return;
+		}
+
+		var result = url.match(xiami_collection_re);
+		if (result) {
+			var collection_url = result[0];
+			Ripple.ajax.get(collection_url).
+			next(function(html) {
+				var $html = $(html);
+				var cover_url = $html.find('#cover_logo .bigImgCover img').attr('src') || '';
+				var cover_url_large = $html.find('#cover_logo .bigImgCover').attr('href') || '';
+				$html.length = 0;
+				$html = null;
+				if (cover_url_large) {
+					loadImage({
+						url: self.url,
+						large_url: cover_url_large,
+						thumbnail_url: cover_url,
+						urlItem: self
+					});
+				}
+			});
+			return;
+		}
+
 		var result = picture_re.test(url);
 		if (result) {
 			loadImage({
@@ -1228,6 +1299,40 @@ var enrichStatus = (function() {
 		status.urlProcessed = true;
 		if (! url_item.data) return;
 		var data = url_item.data;
+		if (data.type === 'music') {
+			var url = data.url;
+			if (url.indexOf('xiami.com') > -1) {
+				var $item = $('<div>');
+				$item.html(status.fixedText);
+				var $same_player = $item.find('.xiami-player[song-id="' + data.id + '"]');
+				if ($same_player.length) return;
+				var $player = $('<span>');
+				$player.addClass('xiami-player');
+				$player.attr('song-id', data.id);
+				var $music_link;
+				waitFor(function() {
+					$item.html(status.fixedText);
+					$music_link = $item.find('[href^="' + url + '"]');
+					return $music_link.length;
+				}, function() {
+					$music_link.after($player);
+					var href = $music_link.prop('href');
+					$music_link.prop('href', href + '#processed');
+					$item.find('.xiami-player + .xiami-player').remove();
+					status.fixedText = $item.html();
+					$item.length = 0;
+					$item = null;
+				});
+				data = $.extend({ }, data);
+				data.type = 'photo';
+				data.url = data.cover_url_large;
+				data.thumbnail_url = data.cover_url;
+				data.width = data.cover_width;
+				data.height = data.cover_height;
+			}
+		}
+		if (data.type !== 'photo')
+			return;
 		processPhoto(status, {
 			largeurl: data.url,
 			thumburl: data.thumbnail_url,
@@ -1264,6 +1369,8 @@ var enrichStatus = (function() {
 	var tinypic_re = /tinypic\.com\//;
 	var fanfou_re = /https?:\/\/fanfou\.com\/photo\//;
 	var flickr_re = /https?:\/\/(?:www\.)?flickr\.com\/photos\//;
+	var xiami_album_re = /https?:\/\/(?:www\.)?xiami\.com\/album\/(\d+)/;
+	var xiami_collection_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/showcollect\/id\/(\d+)/;
 	var picture_re = /\.(?:jpg|jpeg|png|gif|webp)(?:\??\S*)?$/i;
 
 	var photo_res = [
@@ -1276,11 +1383,25 @@ var enrichStatus = (function() {
 		tinypic_re,
 		fanfou_re,
 		flickr_re,
+		xiami_album_re,
+		xiami_collection_re,
 		picture_re
 	];
 
 	function isPhotoLink(url) {
 		return photo_res.some(function(re) {
+				return re.test(url);
+			});
+	}
+
+	var xiami_song_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/(\d+)/;
+
+	var music_res = [
+		xiami_song_re
+	];
+
+	function isMusicLink(url) {
+		return music_res.some(function(re) {
 				return re.test(url);
 			});
 	}
@@ -1324,7 +1445,8 @@ var enrichStatus = (function() {
 			}
 			var is_url = url_re.test(url);
 			var is_photo_link = isPhotoLink(url) || is_url;
-			if (! is_photo_link) return;
+			var is_music_link = isMusicLink(url) || is_url;
+			if (! is_photo_link && ! is_music_link) return;
 			var cached, url_item;
 			lib.some(function(url_item) {
 				if (url_item.url === url) {

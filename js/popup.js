@@ -1228,6 +1228,11 @@ function initMainUI() {
 				$this.text('关注 TA').prop('title', '');
 			})
 		}
+	}).delegate('.xiami-player', 'click', function(e) {
+		var song_id = $(this).attr('song-id');
+		if (song_id) {
+			createXiamiPlayerPopup(song_id);
+		}
 	});
 
 	$('#back').click(function(e) {

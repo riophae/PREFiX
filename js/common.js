@@ -47,6 +47,18 @@ function createPopup() {
 	chrome.windows.create(options);
 }
 
+function createXiamiPlayerPopup(id) {
+	var size = getDefaultWindowSize(257, 33);
+	var options = {
+		url: 'http://www.xiami.com/widget/0_' + id + '/singlePlayer.swf',
+		focused: true,
+		type: 'panel',
+		width: Math.round(size.width),
+		height: Math.round(size.height)
+	};
+	chrome.windows.create(options);
+}
+
 var waitFor = (function() {
 	var waiting_list = [];
 
