@@ -1403,11 +1403,11 @@ function cutStream() {
 	}
 }
 
-function computePosition(data, no_minus_left) {
+function computePosition(data) {
 	var left = parseInt(($body[0].clientWidth - data.width) / 2, 10);
 	var top = parseInt(($body[0].clientHeight - data.height) / 2, 10);
 	data.left = left;
-	if (no_minus_left) {
+	if (data.noMinusLeft) {
 		data.left = Math.max(0, left);
 	}
 	data.top = Math.max(0, top);
@@ -1426,7 +1426,6 @@ function showPicture(img_url) {
 	$picture.hide().removeClass('run-animation').css({
 		'width': '',
 		'height': '',
-		'margin-left': '',
 		'transform': '',
 		'left': '',
 		'top': ''
@@ -1458,8 +1457,9 @@ function showPicture(img_url) {
 		var height = $picture.height();
 		$picture.css(computePosition({
 			width: width / 1.5,
-			height: height / 1.5
-		}, true)).
+			height: height / 1.5,
+			noMinusLeft: true
+		})).
 		css({
 			opacity: .05,
 			display: 'block'
@@ -1468,8 +1468,9 @@ function showPicture(img_url) {
 		addClass('run-animation').
 		css(computePosition({
 			width: width,
-			height: height
-		}, true)).
+			height: height,
+			noMinusLeft: true
+		})).
 		css({
 			opacity: 1
 		});
@@ -1500,13 +1501,13 @@ function hidePicture() {
 	}
 	var style = computePosition({
 		width: width / 1.5,
-		height: height / 1.5
+		height: height / 1.5,
+		reverse: rotate_deg % 180
 	});
 	style.left = (400 - ($picture.width() / 1.5)) / 2 + 'px';
 	style.width = $picture.width() / 1.5 + 'px';
 	style.height = $picture.height() / 1.5 + 'px';
 	style.opacity = .05;
-	style['margin-left'] = 0;
 	$picture.css(style);
 	$('#picture-wrapper').css({
 		animation: 'pictureSlideOut 225ms both',
@@ -1532,9 +1533,7 @@ function rotatePicture() {
 		rotate_deg += 90;
 	}
 	var rotate_value = 'rotateZ(' + rotate_deg + 'deg)';
-	var style = {
-		'margin-left': 0
-	};
+	var style = { };
 	var width, height;
 	waitFor(function() {
 		return $picture_copy.width();
@@ -1547,9 +1546,6 @@ function rotatePicture() {
 			if ($picture[0].naturalHeight > 400) {
 				$picture_copy.css('height', '400px');
 			}
-			if ($picture[0].naturalWidth > 400) {
-				style['margin-left'] = (400 - $picture_copy.width()) / 2 + 'px';
-			}
 		}
 		width = $picture_copy.width();
 		height = $picture_copy.height();
@@ -1560,7 +1556,8 @@ function rotatePicture() {
 		});
 		$.extend(style, computePosition({
 			width: width,
-			height: height
+			height: height,
+			reverse: rotate_deg % 180
 		}));
 		style.transform = rotate_value;
 		$picture.css(style);
