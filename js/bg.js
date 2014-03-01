@@ -259,6 +259,7 @@ function updateDetails(flag) {
 		}
 		is_first_run = false;
 		PREFiX.account = details;
+		clearInterval(birthday_interval);
 		birthday_interval = setInterval(checkBirthday, 60000);
 		checkBirthday();
 	});
@@ -1806,9 +1807,11 @@ function showNotification(options) {
 	notifications.push(notification);
 
 	if (options.timeout !== false) {
-		notification.timeout = setTimeout(function() {
-			hideNotification(notification);
-		}, options.timeout || 30000);
+		notification.addEventListener('show', function() {
+			notification.timeout = setTimeout(function() {
+				hideNotification(notification);
+			}, options.timeout || 30000);
+		}, false);
 	}
 
 	return notification;
@@ -2162,6 +2165,7 @@ var PREFiX = this.PREFiX = {
 };
 
 initialize();
+setInterval(updateDetails, 30 * 60 * 1000);
 var is_first_run = lscache.get('is_first_run') !== false;
 lscache.set('is_first_run', false);
 
