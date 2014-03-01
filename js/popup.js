@@ -692,9 +692,9 @@ function hideFollowingTip() {
 }
 
 function showRatingPage() {
+	hideRatingTip();
 	var url = 'https://chrome.google.com/webstore/detail/prefix/gjpcbbbopajjjnkbkeaflldnocoppcpc/reviews';
 	createTab(url, true);
-	hideRatingTip();
 }
 
 function showRatingTip() {
@@ -702,12 +702,12 @@ function showRatingTip() {
 }
 
 function hideRatingTip() {
+	lscache.set('hide-rating-tip', true);
 	$('#rating-tip').css({
 		'animation-name': 'wobbleOut',
 		'animation-duration': 400
 	}).delay(400).hide(0, function() {
 		$(this).remove();
-		lscache.set('hide-rating-tip', true);
 	});
 }
 
