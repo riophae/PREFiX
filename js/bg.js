@@ -655,6 +655,10 @@ function initStreamingAPI() {
 							options.icon = data.source.profile_image_url_large;
 						}
 						if (! options.type) return;
+						if (! settings.current.webFirst) {
+							notify(options);
+							return;
+						}
 						chrome.tabs.query({
 							active: true,
 							currentWindow: true
@@ -2038,7 +2042,8 @@ var settings = {
 		filters: [
 			{ pattern: '街旁', type: 'client' }
 		],
-		flushCacheWhenTop: true
+		flushCacheWhenTop: true,
+		webFirst: true
 	},
 	load: function() {
 		var local_settings = lscache.get('settings') || { };
