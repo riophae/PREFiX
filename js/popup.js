@@ -1703,7 +1703,7 @@ function autoScroll(model, list) {
 				}
 			}
 		});
-	}, 100);
+	});
 }
 
 function loadOldder() {
