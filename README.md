@@ -70,4 +70,8 @@ PREFiX
 * 自定义转发格式
 * 全自动展开短链接、应用内预览第三方内容
 
+**ver 0.8.0**
+* 增加虾米封面显示和一键打开虾米播放器功能
+* 大幅优化滚动性能, 解决消息较多时滚动卡顿的问题
+
 基于开源项目 [Ripple](https://github.com/riophae/Ripple), [Avalon](https://github.com/RubyLouvre/avalon), [jQuery](https://github.com/jquery/jquery) 开发.
