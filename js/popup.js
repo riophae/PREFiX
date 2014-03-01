@@ -1681,6 +1681,8 @@ function autoScroll(model, list) {
 			$breakpoint = $item.next('.breakpoint');
 			if ($breakpoint.length) {
 				$item = $breakpoint;
+			} else if (list.length >= 50) {
+				return;
 			}
 			var offset = $item.offset().top + $item.height();
 			var height = $body.height();
@@ -1691,7 +1693,11 @@ function autoScroll(model, list) {
 			setCurrent(model, target > 0 ? last_item.id : first_item.id);
 			if ($scrolling_elem === $main) {
 				if ($breakpoint && $breakpoint.length) {
-					$main.scrollTop(target);
+					waitFor(function() {
+						return $main[0].scrollHeight >= target;
+					}, function() {
+						$main.scrollTop(target);
+					});
 				} else {
 					smoothScrollTo(target);
 				}
