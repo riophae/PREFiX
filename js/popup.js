@@ -1845,9 +1845,6 @@ function remove(e) {
 				setCurrent(current_model, current_model.statuses[index].id);
 			}
 		});
-		if (self.$vmodel.status.is_self && PREFiX.count.mentions) {
-			PREFiX.update();
-		}
 	});
 }
 

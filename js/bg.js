@@ -668,6 +668,9 @@ function initStreamingAPI() {
 			}, 500);
 		} else if (data.event === 'message.delete') {
 			if (object.is_self) {
+				if (PREFiX.count.mentions) {
+					PREFiX.update();
+				}
 				batchProcess(function(view) {
 					setTimeout(function() {
 						view.deleteStatusFromAllLists && view.deleteStatusFromAllLists(object.id);
