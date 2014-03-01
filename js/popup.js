@@ -1407,6 +1407,7 @@ function cutStream() {
 function computePosition(data, no_minus_left) {
 	var left = parseInt(($body[0].clientWidth - data.width) / 2, 10);
 	var top = parseInt(($body[0].clientHeight - data.height) / 2, 10);
+	data.left = left;
 	if (no_minus_left) {
 		data.left = Math.max(0, left);
 	}
