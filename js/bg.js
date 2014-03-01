@@ -444,7 +444,7 @@ function getDataSince(method, since_id, lock, extra_data, timeout) {
 		}
 		lock.timeout = setTimeout(function() {
 			d.fail({
-				exceptionType: 'timeout'
+				exceptionType: 'ontimeout'
 			});
 			d = new Deferred;
 		}, timeout * 1000);
