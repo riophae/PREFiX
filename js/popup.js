@@ -87,11 +87,21 @@ ScrollHandler.prototype = {
 	}
 };
 
+var registered_destination_handlers = [];
+function setDestination(delta) {
+	registered_destination_handlers.forEach(function(handler) {
+		handler(delta);
+	});
+};
+
 var goTop = (function() {
 	var s = 0;
 	var current;
 	var id;
 	var stop = function() { };
+	registered_destination_handlers.push(function(delta) {
+		s += delta;
+	});
 	return function(e) {
 		stopSmoothScrolling();
 		stop();
@@ -105,7 +115,7 @@ var goTop = (function() {
 		}
 		var breakpoint;
 		id = requestAnimationFrame(function(timestamp) {
-			if (breakpoint) {
+			if (breakpoint && ! smoothscroll_paused) {
 				var diff = (timestamp - breakpoint) * 1.2;
 				current = $main[0].scrollTop;
 				if (s != current) {
@@ -129,11 +139,11 @@ function initSmoothScroll($target) {
 	var is_scrolling = false;
 	var destination = null;
 	if ($target === $main) {
-		window.setDestination = function(delta) {
+		registered_destination_handlers.push(function(delta) {
 			if (destination !== null) {
 				destination += delta;
 			}
-		}
+		});
 	}
 	var _stop = function() { };
 	function runAnimation(dest) {
