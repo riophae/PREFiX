@@ -123,10 +123,18 @@ var goTop = (function() {
 })();
 
 var registered_smooth_scroll_data = [];
+var smoothscroll_paused = false;
 function initSmoothScroll($target) {
 	var id;
 	var is_scrolling = false;
 	var destination = null;
+	if ($target === $main) {
+		window.setDestination = function(delta) {
+			if (destination !== null) {
+				destination += delta;
+			}
+		}
+	}
 	var _stop = function() { };
 	function runAnimation(dest) {
 		if (dest !== undefined) {
@@ -134,8 +142,7 @@ function initSmoothScroll($target) {
 		}
 		function renderFrame(timestamp) {
 			if (! is_scrolling) return;
-
-			if (breakpoint) {
+			if (breakpoint && ! smoothscroll_paused) {
 				var progress = (timestamp - breakpoint) * 1.2;
 
 				var pos = $target.scrollTop();
@@ -155,7 +162,6 @@ function initSmoothScroll($target) {
 					return _stop();
 				}
 			}
-
 
 			breakpoint = timestamp;
 			id = requestAnimationFrame(renderFrame);
@@ -1627,10 +1633,16 @@ function resetLoadingEffect() {
 function insertKeepScrollTop(insert, after_scroll) {
 	var scroll_top = $main[0].scrollTop;
 	var scroll_height = $main[0].scrollHeight;
+	smoothscroll_paused = true;
 	insert();
 	setTimeout(function() {
-		$main.scrollTop(scroll_top + $main[0].scrollHeight - scroll_height);
-		setTimeout(after_scroll, 0);
+		var delta = $main[0].scrollHeight - scroll_height;
+		$main.scrollTop(scroll_top + delta);
+		setDestination(delta)
+		setTimeout(function() {
+			after_scroll();
+			smoothscroll_paused = false;
+		});
 	}, 50);
 }
 
