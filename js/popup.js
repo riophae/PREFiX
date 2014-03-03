@@ -2887,22 +2887,22 @@ $(function() {
 			initKeyboardControlEvents();
 			setTimeout(showUsageTip, 100);
 		}, 100);
-		var $tip = $('#uploading-photo-tip');
-		var shown = lscache.get('uploading_photo_tip');
-		if (! shown && lscache.get('hide-following-tip')) {
-			$('#hide-uploading-photo-tip').click(function(e) {
-				$tip.css({
-					'animation-name': 'wobbleOut',
-					'animation-duration': 400
-				}).delay(400).hide(0, function() {
-					$(this).remove();
-					lscache.set('uploading_photo_tip', true);
-				});
-			});
-		} else {
-			$tip.remove();
-		}
 	});
+	var $tip = $('#uploading-photo-tip');
+	var shown = lscache.get('uploading_photo_tip');
+	if (! shown && lscache.get('hide-following-tip')) {
+		$('#hide-uploading-photo-tip').click(function(e) {
+			$tip.css({
+				'animation-name': 'wobbleOut',
+				'animation-duration': 400
+			}).delay(400).hide(0, function() {
+				$(this).remove();
+				lscache.set('uploading_photo_tip', true);
+			});
+		});
+	} else {
+		$tip.remove();
+	}
 });
 
 onunload = function() {
