@@ -2305,13 +2305,15 @@ tl_model.initialize = function() {
 	$('#title h2').text('Timeline');
 	$('#home-timeline').addClass('current');
 
+	var init_timeout;
+
 	var tl = PREFiX.homeTimeline;
 	waitFor(function() {
 		return tl.statuses.length;
 	}, function() {
 		tl_model.statuses = tl.statuses;
 		markBreakpoint();
-		setTimeout(function() {
+		init_timeout = setTimeout(function() {
 			$main.scrollTop(PREFiX.homeTimeline.scrollTop);
 			initKeyboardControl();
 		}, 50);
@@ -2351,7 +2353,7 @@ tl_model.initialize = function() {
 						}
 					}
 					unshift(tl_model.statuses, buffered);
-					if (scroll_top <= 30) {
+					if (! scroll_top) {
 						autoScroll(tl_model, buffered);
 					}
 				});
