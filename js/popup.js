@@ -2362,7 +2362,8 @@ tl_model.initialize = function() {
 		}
 		if (tl.buffered.length !== pre_count.timeline) {
 			if (PREFiX.settings.current.drawAttention)
-				drawAttention();
+				// test
+				setTimeout(drawAttention);
 			pre_count.timeline = tl.buffered.length;
 		}
 		if (! PREFiX.is_popup_focused || $main[0].scrollTop > $body.height() / 2)
