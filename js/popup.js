@@ -2666,6 +2666,7 @@ searches_model.initialize = function() {
 			statuses = JSON.parse(JSON.stringify(item.statuses));
 			lscache.set('saved-search-' + keyword + '-rawid', statuses[0].rawid);
 			item.unread_count = 0;
+			bg_win.updateTitle();
 			item.check();
 			return true;
 		});
