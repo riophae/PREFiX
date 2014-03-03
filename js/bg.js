@@ -723,6 +723,10 @@ function initStreamingAPI() {
 				url: 'http://fanfou.com/friend.request',
 				icon: data.source.profile_image_url_large
 			});
+		} else if (data.event === 'user.updateprofile') {
+			if (data.source.id === PREFiX.account.id) {
+				updateDetails();
+			}
 		} else {
 			console.log('streaming event', data)
 		}
@@ -2175,7 +2179,6 @@ var PREFiX = this.PREFiX = {
 };
 
 initialize();
-setInterval(updateDetails, 30 * 60 * 1000);
 var is_first_run = lscache.get('is_first_run') !== false;
 lscache.set('is_first_run', false);
 
