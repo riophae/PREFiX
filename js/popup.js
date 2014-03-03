@@ -1624,12 +1624,13 @@ function resetLoadingEffect() {
 	}, 0);
 }
 
-function insertKeepScrollTop(insert) {
+function insertKeepScrollTop(insert, after_scroll) {
 	var scroll_top = $main[0].scrollTop;
 	var scroll_height = $main[0].scrollHeight;
 	insert();
 	setTimeout(function() {
 		$main.scrollTop(scroll_top + $main[0].scrollHeight - scroll_height);
+		setTimeout(after_scroll, 0);
 	}, 50);
 }
 
@@ -1696,6 +1697,7 @@ function autoScroll(model, list) {
 						$main.scrollTop(target);
 					});
 				} else {
+					stopSmoothScrolling();
 					smoothScrollTo(target);
 				}
 			}
@@ -2305,7 +2307,8 @@ tl_model.initialize = function() {
 	$('#title h2').text('Timeline');
 	$('#home-timeline').addClass('current');
 
-	var init_timeout;
+	var init_scroll_cancelled = false;
+	var scroll_initialized = false;
 
 	var tl = PREFiX.homeTimeline;
 	waitFor(function() {
@@ -2316,8 +2319,15 @@ tl_model.initialize = function() {
 			tl_model.statuses = tl.statuses;
 		}
 		markBreakpoint();
-		init_timeout = setTimeout(function() {
-			$main.scrollTop(PREFiX.homeTimeline.scrollTop);
+		waitFor(function() {
+			return $main[0].scrollHeight >= PREFiX.homeTimeline.scrollTop;
+		}, function() {
+			if (! init_scroll_cancelled) {
+				$main.scrollTop(PREFiX.homeTimeline.scrollTop);
+			}
+			scroll_initialized = true;
+		});
+		setTimeout(function() {
 			initKeyboardControl();
 		}, 50);
 		updateRelativeTime();
@@ -2340,7 +2350,9 @@ tl_model.initialize = function() {
 		if (! tl.statuses.length) {
 			unshift(tl_model.statuses, buffered);
 		} else {
-			setTimeout(function() {
+			waitFor(function() {
+				return scroll_initialized;
+			}, function() {
 				var scroll_top = $main.scrollTop();
 				insertKeepScrollTop(function() {
 					if (buffered.length >= 50) {
@@ -2356,11 +2368,12 @@ tl_model.initialize = function() {
 						}
 					}
 					unshift(tl_model.statuses, buffered);
+				}, function() {
 					if (! scroll_top) {
 						autoScroll(tl_model, buffered);
 					}
 				});
-			}, 50);
+			});
 		}
 		bg_win.updateTitle();
 	}, 16);
@@ -2433,6 +2446,7 @@ mentions_model.initialize = function() {
 					var scroll_top = $main.scrollTop();
 					insertKeepScrollTop(function() {
 						unshift(mentions_model.statuses, statuses);
+					}, function() {
 						if (scroll_top <= 30) {
 							autoScroll(mentions_model, statuses);
 						}
@@ -2569,6 +2583,7 @@ privatemsgs_model.initialize = function() {
 					var scroll_top = $main.scrollTop();
 					insertKeepScrollTop(function() {
 						unshift(privatemsgs_model.messages, messages);
+					}, function() {
 						if (scroll_top <= 30) {
 							autoScroll(privatemsgs_model, messages);
 						}
