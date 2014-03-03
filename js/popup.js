@@ -2311,7 +2311,10 @@ tl_model.initialize = function() {
 	waitFor(function() {
 		return tl.statuses.length;
 	}, function() {
-		tl_model.statuses = tl.statuses;
+		if (tl_model.statuses.length !== tl.statuses.length ||
+			tl_model.statuses[0].id !== tl.statuses[0].id) {
+			tl_model.statuses = tl.statuses;
+		}
 		markBreakpoint();
 		init_timeout = setTimeout(function() {
 			$main.scrollTop(PREFiX.homeTimeline.scrollTop);
