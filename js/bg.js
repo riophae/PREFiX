@@ -250,6 +250,7 @@ function expandUrl(url) {
 
 var birthday_interval;
 function updateDetails(flag) {
+	if (! PREFiX.accessToken) return;
 	var user = Ripple(PREFiX.accessToken);
 	var verify = user.verify().next(function(details) {
 		lscache.set('account_details', details);
