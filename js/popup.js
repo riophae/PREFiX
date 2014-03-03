@@ -1411,12 +1411,11 @@ function initMainUI() {
 
 function cutStream() {
 	var current = getCurrent();
-	if (current.statuses) {
-		current.statuses = current.statuses.slice(0, 20);
-		current.current = current.statuses[0].id;
-	} else {
-		current.messages = current.messages.slice(0, 20);
-		current.current = current.messages[0].id;
+	var list = current.statuses || current.messages;
+	if (list.length > 20) {
+		list.splice(20, 9999);
+		list.current = list[0].id;
+		initKeyboardControl();
 	}
 }
 
