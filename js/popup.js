@@ -2310,6 +2310,10 @@ var tl_model = avalon.define('home-timeline', function(vm) {
 
 	vm.showContextTimeline = showContextTimeline;
 
+	vm.debug = function() {
+		console.log(this.$vmodel.$model.status);
+	}
+
 	vm.blockUser = blockUser;
 
 	vm.statuses = [];
@@ -2957,6 +2961,16 @@ $(function() {
 		$tip.remove();
 	}
 });
+
+function searchStatus(id) {
+	tl_model.statuses.some(function(status) {
+		if (status.id === id) {
+			window.s = status;
+			console.log(status.$model);
+			return true;
+		}
+	});
+}
 
 onunload = function() {
 	PREFiX.popupActive = false;
