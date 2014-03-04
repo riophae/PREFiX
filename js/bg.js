@@ -932,7 +932,9 @@ function processPhoto(status, photo) {
 		if (status.photo.url && photo.thumburl !== status.photo.thumburl) {
 			return;
 		}
-		$.extend(true, status.photo, photo);
+		if (status.photo !== photo) {
+			$.extend(true, status.photo, photo);
+		}
 	});
 }
 
@@ -1877,6 +1879,8 @@ var playSound = (function() {
 
 Ripple.events.observe('process_status', function(status) {
 	if (! status) return;
+
+	status.inserted = false;
 
 	if (status.user) {
 		status.is_self = status.user.id === PREFiX.account.id;
