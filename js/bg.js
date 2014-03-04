@@ -400,6 +400,7 @@ function initSavedSearches() {
 		clearInterval(this.interval);
 	}
 	PREFiX.user.getSavedSearches().next(function(data) {
+		if (saved_searches_items.length) return;
 		data.forEach(function(saved_search) {
 			saved_search = new SavedSearchItem(saved_search.query);
 			saved_searches_items.push(saved_search);
