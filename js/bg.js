@@ -935,7 +935,31 @@ function processPhoto(status, photo) {
 		if (status.photo !== photo) {
 			$.extend(true, status.photo, photo);
 		}
+		photo = status.photo;
+		status.photo = {
+			largeurl: '',
+			imageurl: '',
+			thumburl: '',
+			url: '',
+			thumb_height: '',
+			thumb_width: ''
+		};
+		setTimeout(function() {
+			status.photo = photo;
+		});
 	});
+}
+
+function setText(status, text) {
+	status.fixedText = text + ' ';
+	setTimeout(function() {
+		status.fixedText = text;
+	}, 100);
+}
+
+function isShortUrl(url) {
+	short_url_re = PREFiX.shortUrlRe || short_url_re;
+	return short_url_re.test(url);
 }
 
 var enrichStatus = (function() {
@@ -959,8 +983,7 @@ var enrichStatus = (function() {
 			lscache.set('url-' + self.url, self);
 		}
 
-		short_url_re = PREFiX.shortUrlRe || short_url_re;
-		if (short_url_re.test(url)) {
+		if (isShortUrl(url)) {
 			if (! isPhotoLink(url)) {
 				expandUrl(url).next(function(long_url) {
 					if (self.longUrl && self.longUrl === long_url)
@@ -1335,7 +1358,7 @@ var enrichStatus = (function() {
 					var href = $music_link.prop('href');
 					$music_link.prop('href', href + '#processed');
 					$item.find('.xiami-player + .xiami-player').remove();
-					status.fixedText = $item.html();
+					setText(status, $item.html());
 					$item.length = 0;
 					$item = null;
 				});
@@ -1435,7 +1458,6 @@ var enrichStatus = (function() {
 	return function(status) {
 		if (status.urlProcessed)
 			return;
-		short_url_re = PREFiX.shortUrlRe || short_url_re;
 		var urls = [];
 		var result;
 		while (result = url_re.exec(status.text)) {
@@ -1453,7 +1475,7 @@ var enrichStatus = (function() {
 					var text = $link.text();
 					if (/^http:\/\//.test(text)) {
 						setLink($link, url)
-						status.fixedText = $temp.html();
+						setText(status, $temp.html());
 					}
 				}
 				if (! fanfou_re.test(url))
@@ -1484,7 +1506,7 @@ var enrichStatus = (function() {
 					process(status, url_item);
 				});
 			}
-			if (is_url) {
+			if (isShortUrl(url)) {
 				setTimeout(function() {
 					waitFor(function() {
 						return url_item.longUrl;
@@ -1493,7 +1515,7 @@ var enrichStatus = (function() {
 						$temp.html(text);
 						var $link = $temp.find('[href="' + url_item.url + '"]');
 						setLink($link, url_item.longUrl)
-						status.fixedText = $temp.html();
+						setText(status, $temp.html());
 					});
 				});
 			}
@@ -1971,7 +1993,6 @@ Ripple.events.observe('process_status', function(status) {
 			thumb_height: '',
 			thumb_width: ''
 		};
-
 	}
 
 	enrichStatus(status);

@@ -2050,6 +2050,7 @@ function onNewStatusInserted() {
 	var d;
 	this.forEach(function(s, i) {
 		if (! s.inserted) {
+			s = findModel(getCurrent(), s.id);
 			s.inserted = true;
 			function enrich() {
 				bg_win.enrichStatus(s);
