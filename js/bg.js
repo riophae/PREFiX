@@ -1995,7 +1995,9 @@ Ripple.events.observe('process_status', function(status) {
 		};
 	}
 
-	enrichStatus(status);
+	if (! PREFiX.popupActive) {
+		enrichStatus(status);
+	}
 
 	if (status.repost_status) {
 		arguments.callee.call(this, status.repost_status);
