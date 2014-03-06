@@ -2483,7 +2483,7 @@ mentions_model.initialize = function() {
 					insertKeepScrollTop(function() {
 						unshift(mentions_model.statuses, statuses);
 					}, function() {
-						if (scroll_top <= 30) {
+						if (! scroll_top) {
 							autoScroll(mentions_model, statuses);
 						}
 					});
@@ -2497,7 +2497,10 @@ mentions_model.initialize = function() {
 	}
 
 	var mentions = PREFiX.mentions;
-	mentions_model.statuses = mentions.statuses;
+	if (mentions_model.statuses.length !== mentions.statuses.length ||
+		mentions_model.statuses[0].id !== mentions.statuses[0].id) {
+		mentions_model.statuses = mentions.statuses;
+	}
 	$main.scrollTop(mentions.scrollTop);
 	initKeyboardControl();
 	updateRelativeTime();
@@ -2620,7 +2623,7 @@ privatemsgs_model.initialize = function() {
 					insertKeepScrollTop(function() {
 						unshift(privatemsgs_model.messages, messages);
 					}, function() {
-						if (scroll_top <= 30) {
+						if (! scroll_top) {
 							autoScroll(privatemsgs_model, messages);
 						}
 					});
@@ -2634,7 +2637,10 @@ privatemsgs_model.initialize = function() {
 	}
 
 	var privatemsgs = PREFiX.privatemsgs;
-	privatemsgs_model.messages = privatemsgs.messages;
+	if (privatemsgs_model.statuses.length !== privatemsgs.statuses.length ||
+		privatemsgs_model.statuses[0].id !== privatemsgs.statuses[0].id) {
+		privatemsgs_model.statuses = privatemsgs.statuses;
+	}
 	$main.scrollTop(privatemsgs.scrollTop);
 	initKeyboardControl();
 	updateRelativeTime();
