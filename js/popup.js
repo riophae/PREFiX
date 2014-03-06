@@ -2376,7 +2376,6 @@ tl_model.initialize = function() {
 		}
 		if (tl.buffered.length !== pre_count.timeline) {
 			if (PREFiX.settings.current.drawAttention)
-				// test
 				setTimeout(drawAttention);
 			pre_count.timeline = tl.buffered.length;
 		}
