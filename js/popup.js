@@ -2497,7 +2497,8 @@ mentions_model.initialize = function() {
 	}
 
 	var mentions = PREFiX.mentions;
-	if (mentions_model.statuses.length !== mentions.statuses.length ||
+	if (! mentions_model.statuses.length ||
+		mentions_model.statuses.length !== mentions.statuses.length ||
 		mentions_model.statuses[0].id !== mentions.statuses[0].id) {
 		mentions_model.statuses = mentions.statuses;
 	}
@@ -2637,9 +2638,10 @@ privatemsgs_model.initialize = function() {
 	}
 
 	var privatemsgs = PREFiX.privatemsgs;
-	if (privatemsgs_model.statuses.length !== privatemsgs.statuses.length ||
-		privatemsgs_model.statuses[0].id !== privatemsgs.statuses[0].id) {
-		privatemsgs_model.statuses = privatemsgs.statuses;
+	if (! privatemsgs_model.messages.length ||
+		privatemsgs_model.messages.length !== privatemsgs.messages.length ||
+		privatemsgs_model.messages[0].id !== privatemsgs.messages[0].id) {
+		privatemsgs_model.messages = privatemsgs.messages;
 	}
 	$main.scrollTop(privatemsgs.scrollTop);
 	initKeyboardControl();
