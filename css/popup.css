@@ -834,6 +834,11 @@ div {
 	margin: 0;
 	padding: 0;
 }
+html,
+body,
+#app {
+	overflow: hidden !important;
+}
 .fix::after {
 	display: block;
 	content: 'clear';
@@ -847,7 +852,6 @@ body {
 	width: 400px;
 	height: 600px;
 	margin: 0 auto;
-	overflow: hidden;
 	word-break: break-word;
 	-webkit-font-smoothing: antialiased;
 	font-smoothing: antialiased;
