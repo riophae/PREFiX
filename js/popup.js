@@ -1831,8 +1831,8 @@ function remove(e) {
 	var current_model = getCurrent();
 	var current = current_model.current;
 	var next;
+	var index = -1;
 	if (current) {
-		var index;
 		current_model.statuses.some(function(status, i) {
 			if (status.id === current) {
 				index = i;
@@ -1861,10 +1861,12 @@ function remove(e) {
 		$item.parents('li').
 		slideUp(function() {
 			self.$vmodel.$remove();
-			deleteStatusFromAllLists(status_id);
-			if (index >= 0) {
-				setCurrent(current_model, current_model.statuses[index].id);
-			}
+			setTimeout(function() {
+				deleteStatusFromAllLists(status_id);
+				if (index >= 0) {
+					setCurrent(current_model, current_model.statuses[index].id);
+				}
+			});
 		});
 	});
 }
@@ -2522,8 +2524,8 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 		var current_model = privatemsgs_model;
 		var current = current_model.current;
 		var next;
+		var index = -1;
 		if (current) {
-			var index;
 			current_model.messages.some(function(message, i) {
 				if (message.id === current) {
 					index = i;
@@ -2552,9 +2554,11 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 			$item.parents('li').
 			slideUp(function() {
 				self.$vmodel.$remove();
-				if (index >= 0) {
-					setCurrent(current_model, current_model.messages[index].id);
-				}
+				setTimeout(function() {
+					if (index >= 0) {
+						setCurrent(current_model, current_model.messages[index].id);
+					}
+				});
 			});
 		});
 	}
