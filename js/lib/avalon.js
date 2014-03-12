@@ -1,5 +1,5 @@
 //==================================================
-// avalon.mobile 1.2.2 2014.2.28，mobile 注意： 只能用于IE10及高版本的标准浏览器
+// avalon.mobile 1.2.3 2014.3.4，mobile 注意： 只能用于IE10及高版本的标准浏览器
 //==================================================
 (function(DOC) {
     var Registry = {} //将函数曝光到此对象上，方便访问器收集依赖
@@ -35,7 +35,7 @@
     /*********************************************************************
      *                 命名空间与工具函数                                 *
      **********************************************************************/
-    avalon = function(el) { //创建jQuery式的无new 实例化结构
+    window.avalon = function(el) { //创建jQuery式的无new 实例化结构
         return new avalon.init(el)
     }
     avalon.init = function(el) {
@@ -61,7 +61,7 @@
     //判定是否是一个朴素的javascript对象（Object），不是DOM对象，不是BOM对象，不是自定义类的实例
 
     avalon.isPlainObject = function(obj) {
-        return obj && typeof obj === "object" && Object.getPrototypeOf(obj) === oproto
+        return !!obj && typeof obj === "object" && Object.getPrototypeOf(obj) === oproto
     }
 
     avalon.mix = avalon.fn.mix = function() {
@@ -128,7 +128,7 @@
                 a = a > n ? n : a
             }
         } else {
-            a = 0
+            a = end ? n : 0
         }
         return a
     }
@@ -815,13 +815,13 @@
             }
         }
     }
+    var rbrace = /(?:\{[\s\S]*\}|\[[\s\S]*\])$/
     function parseData(data) {
         try {
             data = data === "true" ? true :
                     data === "false" ? false :
                     data === "null" ? null :
-                    data === "NaN" ? NaN :
-                    +data + "" === data ? +data : eval("0," + data)
+                    +data + "" === data ? +data : rbrace.test(data) ? JSON.parse(data) : data
         } catch (e) {
         }
         return data
@@ -1267,7 +1267,7 @@
             var nextNode = node.nextSibling
             if (node.nodeType === 1) {
                 scanTag(node, vmodels) //扫描元素节点
-            } else if (node.nodeType === 3 && rexpr.test(node.nodeValue)) {
+            } else if (node.nodeType === 3 && rexpr.test(node.data)) {
                 scanText(node, vmodels) //扫描文本节点
             }
             node = nextNode
@@ -1276,7 +1276,7 @@
 
     function scanText(textNode, vmodels) {
         var bindings = [],
-                tokens = scanExpr(textNode.nodeValue)
+                tokens = scanExpr(textNode.data)
         if (tokens.length) {
             for (var i = 0, token; token = tokens[i++]; ) {
                 var node = DOC.createTextNode(token.value) //将文本转换为文本节点，并替换原来的文本节点
@@ -1332,7 +1332,7 @@
                             param: param,
                             element: elem,
                             name: match[0],
-                            value: attr.nodeValue,
+                            value: attr.value,
                             priority: type in priorityMap ? priorityMap[type] : type.charCodeAt(0) * 10 + (Number(param) || 0)
                         }
                         if (type === "if" && param === "loop") {
@@ -1528,7 +1528,7 @@
     }
     var cacheExpr = createCache(256)
     //根据一段文本与一堆VM，转换为对应的求值函数及匹配的VM(解释器模式)
-
+    var rduplex = /\w\[.*\]|\w\.\w/
     function parseExpr(code, scopes, data, four) {
         var exprId = scopes.map(function(el) {
             return el.$id
@@ -1570,7 +1570,7 @@
                     prefix +
                     ";\n\tif(!arguments.length){\n\t\treturn " +
                     code +
-                    "\n\t}\n\t" + (code.indexOf(".") === -1 ? vars.get : code) +
+                    "\n\t}\n\t" + (!rduplex.test(code) ? vars.get : code) +
                     "= vvv;\n} "
             try {
                 fn = Function.apply(Function, names.concat(_body))
@@ -1705,6 +1705,18 @@
         "attr": function(val, elem, data) {
             var method = data.type,
                     attrName = data.param
+
+            function scanTemplate(text) {
+                if (loaded) {
+                    text = loaded.apply(elem, [text].concat(vmodels))
+                }
+                avalon.innerHTML(elem, text)
+                scanNodes(elem, vmodels)
+                rendered && checkScan(elem, function() {
+                    rendered.call(elem)
+                })
+            }
+
             if (method === "css") {
                 avalon(elem).css(attrName, val)
             } else if (method === "attr") {
@@ -1722,16 +1734,7 @@
                 var rendered = getBindingCallback(elem, "data-include-rendered", vmodels)
                 var loaded = getBindingCallback(elem, "data-include-loaded", vmodels)
 
-                function scanTemplate(text) {
-                    if (loaded) {
-                        text = loaded.apply(elem, [text].concat(vmodels))
-                    }
-                    avalon.innerHTML(elem, text)
-                    scanNodes(elem, vmodels)
-                    rendered && checkScan(elem, function() {
-                        rendered.call(elem)
-                    })
-                }
+
                 if (data.param === "src") {
                     if (includeContents[val]) {
                         scanTemplate(includeContents[val])
@@ -1821,10 +1824,11 @@
         "each": function(method, pos, el) {
             var data = this
             var group = data.group
-            var parent = data.parent
-            if (data.startRepeat) {//https://github.com/RubyLouvre/avalon/issues/300
-                parent = data.parent = data.startRepeat.parentNode
+            var pp = data.startRepeat && data.startRepeat.parentNode
+            if (pp) {//fix  #300 #307
+                data.parent = pp
             }
+            var parent = data.parent
             var proxies = data.proxies
             if (method == "del" || method == "move") {
                 var locatedNode = getLocatedNode(parent, data, pos)
@@ -1843,6 +1847,7 @@
                         shimController(data, transation, spans, proxy)
                     }
                     locatedNode = getLocatedNode(parent, data, pos)
+                    console.log(parent)
                     parent.insertBefore(transation, locatedNode)
                     for (var i = 0, el; el = spans[i++]; ) {
                         scanTag(el, data.vmodels)
@@ -1919,7 +1924,7 @@
                     spans = null
                     break
             }
-            iteratorCallback.call(data, method)
+            iteratorCallback.call(data, arguments)
         },
         "html": function(val, elem, data) {
             val = val == null ? "" : val
@@ -2004,7 +2009,7 @@
         "text": function(val, elem, data) {
             val = val == null ? "" : val //不在页面上显示undefined null
             if (data.nodeType === 3) { //绑定在文本节点上
-                data.node.nodeValue = val
+                data.node.data = val
             } else { //绑定在特性节点上
                 if (!elem) {
                     elem = data.element = data.node.parentNode
@@ -2078,10 +2083,7 @@
             var elem = data.element,
                     tagName = elem.tagName
             if (typeof modelBinding[tagName] === "function") {
-                var callback = getBindingCallback(elem, "data-duplex-changed", vmodels)
-                if (!/radio|checkbox|select/.test(elem.type)) {
-                    data.changed = callback
-                }
+                data.changed = getBindingCallback(elem, "data-duplex-changed", vmodels)
                 //由于情况特殊，不再经过parseExprProxy
                 parseExpr(data.value, vmodels, data, "duplex")
                 if (data.evaluator && data.args) {
@@ -2153,7 +2155,12 @@
                     pool = withProxyPool[list.$id] = {}
                     for (var key in list) {
                         if (list.hasOwnProperty(key)) {
-                            pool[key] = createWithProxy(key, list[key], data.$outer)
+                            (function(k, v) {
+                                pool[k] = createWithProxy(k, v, data.$outer)
+                                pool[k].$watch("$val", function(val) {
+                                    list[k] = val//#303
+                                })
+                            })(key, list[key])
                         }
                     }
                 }
@@ -2371,7 +2378,7 @@
     function ticker() {
         for (var n = ribbon.length - 1; n >= 0; n--) {
             var el = ribbon[n]
-            if (el.parentNode) {
+            if (avalon.contains(root, el)) {
                 if (el.oldValue !== el.value) {
                     avalon.fire(el, "input")
                 }
@@ -2390,14 +2397,14 @@
     }
     //http://msdn.microsoft.com/en-us/library/dd229916(VS.85).aspx
     //https://docs.google.com/document/d/1jwA8mtClwxI-QJuHT7872Z0pxpZz8PBkf2bGAbsUtqs/edit?pli=1
+    function newSetter(newValue) {
+        oldSetter.call(this, newValue)
+        if (newValue !== this.oldValue) {
+            avalon.fire(this, "input")
+        }
+    }
     try {
         var inputProto = HTMLInputElement.prototype, oldSetter
-        function newSetter(newValue) {
-            oldSetter.call(this, newValue)
-            if (newValue !== this.oldValue) {
-                avalon.fire(this, "input")
-            }
-        }
         oldSetter = Object.getOwnPropertyDescriptor(inputProto, "value").set//屏蔽chrome, safari,opera
         Object.defineProperty(inputProto, "value", {
             set: newSetter
@@ -2711,10 +2718,10 @@
         parent.textContent = ""
     }
 
-    function iteratorCallback() {
+    function iteratorCallback(args) {
         var callback = getBindingCallback(this.callbackElement, this.callbackName, this.vmodels)
         if (callback) {
-            var parent = this.parent, args = arguments
+            var parent = this.parent
             checkScan(parent, function() {
                 callback.apply(parent, args)
             })
@@ -2826,10 +2833,10 @@
         },
         number: function(number, decimals, dec_point, thousands_sep) {
             //与PHP的number_format完全兼容
-            //number	必需，要格式化的数字
-            //decimals	可选，规定多少个小数位。
-            //dec_point	可选，规定用作小数点的字符串（默认为 . ）。
-            //thousands_sep	可选，规定用作千位分隔符的字符串（默认为 , ），如果设置了该参数，那么所有其他参数都是必需的。
+            //number    必需，要格式化的数字
+            //decimals  可选，规定多少个小数位。
+            //dec_point 可选，规定用作小数点的字符串（默认为 . ）。
+            //thousands_sep 可选，规定用作千位分隔符的字符串（默认为 , ），如果设置了该参数，那么所有其他参数都是必需的。
             // http://kevin.vanzonneveld.net
             number = (number + "").replace(/[^0-9+\-Ee.]/g, "")
             var n = !isFinite(+number) ? 0 : +number,
