@@ -22,6 +22,10 @@ var loading = false;
 var is_on_top = true;
 PREFiX.popupActive = true;
 PREFiX.is_popup_focused = true;
+setTimeout(function() {
+	// 修正弹出窗口后的 bug
+	PREFiX.is_popup_focused = true;
+}, 500);
 
 var lyric;
 
