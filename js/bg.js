@@ -939,10 +939,7 @@ function processPhoto(status, photo) {
 }
 
 function setText(status, text) {
-	status.fixedText = text + ' ';
-	setTimeout(function() {
-		status.fixedText = text;
-	}, 100);
+	status.fixedText = text;
 }
 
 function isShortUrl(url) {
