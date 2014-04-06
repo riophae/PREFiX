@@ -2165,6 +2165,9 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 			vm.user = '';
 			vm.username = '';
 			vm.birthdayGreeting = false;
+			if (nav_model.current === 'privatemsgs_model') {
+				cancelReply();
+			}
 		}
 		var is_sending_pm = [ 'send-pm', 'reply-pm' ].indexOf(vm.type) > -1;
 		$('#compose-bar').toggleClass('uploading-not-supported', is_sending_pm);
