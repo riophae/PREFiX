@@ -407,13 +407,12 @@
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/favorites
 	N({
 		name: 'getFavorites',
-		action: 'favorites/{:id}',
+		action: 'favorites/id',
 		method: 'GET',
 		argsProcessor: function(params) {
 			params.id = params.id || this.id;
 			return completeStatusParams(params);
-		},
-		urlProcessor: idReplacer
+		}
 	}, { success: _processStatuses });
 
 	// https://github.com/FanfouAPI/FanFouAPIDoc/wiki/favorites.create
