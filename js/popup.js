@@ -2282,7 +2282,8 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 		}
 	}
 	vm.$watch('text', function(value) {
-		if (! value && nav_model.current != 'privatemsgs_model') {
+		if (! value && nav_model.current != 'privatemsgs_model' &&
+			vm.type != 'send-pm') {
 			vm.type = '';
 			vm.id = '';
 			vm.user = '';
