@@ -296,21 +296,49 @@ h1 {
 #page-container {
 	padding-bottom: 100px;
 }
+@-webkit-keyframes leftSlideIn {
+	0% {
+		opacity: 0;
+		-webkit-transform: translateX(-50px);
+		transform: translateX(-50px);
+	}
+	100% {
+		opacity: 1;
+		-webkit-transform: translateX(0);
+		transform: translateX(0);
+	}
+}
+@keyframes leftSlideIn {
+	0% {
+		opacity: 0;
+		-webkit-transform: translateX(-50px);
+		transform: translateX(-50px);
+	}
+	100% {
+		opacity: 1;
+		-webkit-transform: translateX(0);
+		transform: translateX(0);
+	}
+}
 #mainview .page {
 	display: none;
+	-webkit-animation: leftSlideIn ease-in-out .2s;
+	animation: leftSlideIn ease-in-out .2s;
 }
 #mainview .current {
 	display: block;
 }
 #mainview header {
-	position: fixed;
 	top: 0;
 	left: 155px;
 	right: 0;
 	max-width: 718px;
 	min-width: 420px;
+	height: 27px;
+	overflow: hidden;
 	border-bottom: 1px solid #eee;
 	padding: 15px 0 10px;
+	margin-top: -53px;
 	z-index: 3;
 	background-image: 
 		-webkit-linear-gradient(
@@ -318,6 +346,10 @@ h1 {
 			white 40%,
 			rgba(255, 255, 255, 0.92)
 		);
+}
+#mainview .page:not(.loading) header {
+	position: fixed;
+	margin-top: 0;
 }
 #mainview h2 {
 	font-size: 1.5em !important;

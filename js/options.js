@@ -74,14 +74,20 @@ $(function() {
 	}
 
 	var last_used_page = lscache.get('last_used_page') || 0;
+	var page_loading_timeout;
 	$('#navbar li').each(function(i) {
 		var $item = $(this);
 		$item.click(function(e) {
 			$('#navbar li').removeClass('current');
-			$('.page').removeClass('current');
+			$('.page').removeClass('current loading');
 			$item.addClass('current');
 			var page = $item.prop('id') + '-page';
-			$('#' + page).addClass('current');
+			var $page = $('#' + page);
+			$page.addClass('current loading');
+			clearTimeout(page_loading_timeout);
+			page_loading_timeout = setTimeout(function() {
+				$page.removeClass('loading');
+			}, 300);
 			$('body').scrollTop(0);
 			lscache.set('last_used_page', i);
 		});
