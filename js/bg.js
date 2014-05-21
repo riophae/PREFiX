@@ -219,6 +219,12 @@ function expandUrl(url) {
 		});
 	} else {
 		function cb(long_url) {
+			if (long_url.indexOf('http') !== 0) {
+				setTimeout(function() {
+					expandUrl(url).next(cb);
+				}, 5000);
+				return;
+			}
 			cached_short_urls[url] = long_url;
 			d.call(long_url);
 		}
@@ -982,6 +988,7 @@ var enrichStatus = (function() {
 			! self.longUrl) {
 			setTimeout(function() {
 				self.longUrl = self.url;
+				markAsIgnored();
 			});
 		}
 
