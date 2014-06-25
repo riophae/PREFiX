@@ -1814,8 +1814,20 @@ window.Notifications = window.Notifications || window.webkitNotifications;
 var notifications = [];
 
 function showNotification(options) {
-	var notification = Notifications.createNotification(options.icon || '/icons/40.png',
-		options.title || 'PREFiX', options.content);
+	var notification;
+
+	options.icon = options.icon || '/icons/40.png';
+	options.title = options.title || 'PREFiX';
+
+	if (Notifications) {
+		notification = Notifications.createNotification(options.icon,
+			options.title, options.content);
+	} else {
+		notification = new Notification(options.title, {
+			icon: options.icon,
+			body: options.content
+		});
+	}
 
 	if (options.id) {
 		notification.id = options.id;
@@ -1832,7 +1844,8 @@ function showNotification(options) {
 		hideNotification(notification);
 	}, false);
 
-	notification.show();
+	notification.show && notification.show();
+	notification.cancel = notification.cancel || notification.close;
 	notifications.push(notification);
 
 	if (options.timeout !== false) {
