@@ -1028,7 +1028,11 @@ var enrichStatus = (function() {
 
 		var result = url.match(instagram_re);
 		if (result) {
-			var image_url = result[0] + 'media/';
+			var res_url = result[0];
+			if (! res_url.match(/\/$/)) {
+				res_url += '/';
+			}
+			var image_url = res_url + 'media/';
 			image_url = image_url.replace('instagr.am', 'instagram.com');
 			loadImage({
 				url: self.url,
@@ -1391,7 +1395,7 @@ var enrichStatus = (function() {
 		});
 	}
 
-	var instagram_re = /https?:\/\/(instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_\-]+\//;
+	var instagram_re = /https?:\/\/(instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_\-]+\/?/;
 	var pinsta_re = /https?:\/\/pinsta\.me\/p\/([a-zA-Z0-9_\-]+)/;
 	var weibo_re = /https?:\/\/[w0-9]+\.sinaimg\.cn\/\S+\.jpg/;
 	var imgly_re = /https?:\/\/img\.ly\//;
