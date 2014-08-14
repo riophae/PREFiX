@@ -910,8 +910,8 @@ function getNaturalDimentions(url, callback) {
 function processPhoto(status, photo) {
 	var img = new Image;
 	img.src = photo.thumburl = photo.thumburl || photo.largeurl;
-	photo.thumb_width = 'auto';
-	photo.thumb_height = 'auto';
+	photo.thumb_width = photo.thumb_width || 'auto';
+	photo.thumb_height = photo.thumb_height || 'auto';
 	var width = photo.width;
 	var height = photo.height;
 	waitFor(function() {
