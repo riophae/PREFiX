@@ -1502,19 +1502,17 @@ var enrichStatus = (function() {
 					process(status, url_item);
 				});
 			}
-			if (isShortUrl(url)) {
-				setTimeout(function() {
-					waitFor(function() {
-						return url_item.longUrl;
-					}, function() {
-						var text = status.fixedText;
-						$temp.html(text);
-						var $link = $temp.find('[href="' + url_item.url + '"]');
-						setLink($link, url_item.longUrl)
-						setText(status, $temp.html());
-					});
+			setTimeout(function() {
+				waitFor(function() {
+					return url_item.longUrl;
+				}, function() {
+					var text = status.fixedText;
+					$temp.html(text);
+					var $link = $temp.find('[href="' + url_item.url + '"]');
+					setLink($link, url_item.longUrl)
+					setText(status, $temp.html());
 				});
-			}
+			});
 		});
 	}
 })();
