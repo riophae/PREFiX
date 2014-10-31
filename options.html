@@ -114,7 +114,10 @@
 								<label><input type="checkbox" key="newlineAfterMyName" />发送消息时自动在自己的名字后面添加回车, 避免 @ 到自己</label>
 							</li>
 							<li>
-								<label><input type="checkbox" key="createPopAtStartup" />浏览器启动时自动以独立窗口模式打开 PREFiX</label>
+								<label><input type="checkbox" key="createPopAtStartup" foldable-src="autoStartup" />浏览器启动时自动以独立窗口模式打开 PREFiX</label>
+							</li>
+							<li foldable-tgt="autoStartup">
+								<label style="padding-left: 15px;"><input type="checkbox" key="autoMinimize" foldable-tgt="autoStartup" />自动以独立窗口模式打开后将其最小化</label>
 							</li>
 						</ul>
 					</div>

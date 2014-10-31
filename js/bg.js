@@ -1618,7 +1618,13 @@ function load() {
 	chrome.omnibox.onInputChanged.addListener(onInputChanged);
 	chrome.omnibox.onInputEntered.addListener(onInputEntered);
 	if (startup && settings.current.createPopAtStartup) {
-		createPopup();
+		createPopup(function(win) {
+			if (settings.current.autoMinimize) {
+				chrome.windows.update(win.id, {
+					state: 'minimized'
+				});
+			}
+		});
 	}
 	startup = false;
 }
@@ -2069,6 +2075,7 @@ var settings = {
 		drawAttention: ! is_mac,
 		showSavedSearchCount: true,
 		createPopAtStartup: false,
+		autoMinimize: false,
 		volume: .75,
 		holdCtrlToSubmit: false,
 		notification: true,

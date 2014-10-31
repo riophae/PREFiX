@@ -26,7 +26,7 @@ function getViewHeight() {
 	return lscache.get('popup_view_height') || 600;
 }
 
-function createPopup() {
+function createPopup(callback) {
 	var width = 400;
 	var height = getViewHeight();
 	var url = '/popup.html?new_window=true';
@@ -44,7 +44,7 @@ function createPopup() {
 		left: pos.x,
 		top: pos.y
 	};
-	chrome.windows.create(options);
+	chrome.windows.create(options, callback || function() {});
 }
 
 function createXiamiPlayerPopup(id) {
