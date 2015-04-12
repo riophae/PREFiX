@@ -10,11 +10,20 @@
 			"js/lib/avalon.js",
 			"js/common.js",
 			"js/bg.js",
-			"js/versions.js"
+			"js/versions.js",
+			"js/shortening-url.js"
 		]
 	},
+	"content_scripts": [ {
+		"js": [ "js/lib/jquery-min.js", "js/consumer-helper.js" ],
+		"matches": [ "http://fanfou.com/apps.details/*" ],
+		"run_at": "document_end"
+	} ],
 	"browser_action": {
-		"default_icon": "icons/19.png",
+		"default_icon": {
+			"38": "icons/38.png",
+			"19": "icons/19.png"
+		},
 		"default_popup": "popup.html",
 		"default_title": "PREFiX"
 	},
@@ -27,6 +36,8 @@
 		"256": "icons/256.png",
 		"128": "icons/128.png",
 		"48": "icons/48.png",
+		"40": "icons/40.png",
+		"38": "icons/38.png",
 		"19": "icons/19.png",
 		"16": "icons/16.png"
 	},
@@ -34,7 +45,7 @@
 	"manifest_version": 2,
 	"name": "PREFiX",
 	"options_page": "options.html",
-	"permissions": [ "tabs", "contextMenus", "notifications", "http://*.fanfou.com/*", "http://is.gd/*" ],
-	"version": "0.3.1",
+	"permissions": [ "tabs", "contextMenus", "notifications", "*://*/*" ],
+	"version": "0.9.0",
 	"minimum_chrome_version": "28"
 }

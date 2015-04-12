@@ -212,7 +212,7 @@ Deferred.call = function (fun) {
 
 Deferred.parallel = function (dl) {
 	if (arguments.length > 1) dl = Array.prototype.slice.call(arguments);
-	var ret = new Deferred(), values = {}, num = 0;
+	var ret = new Deferred(), values = {}, num = 0, failed = false;
 	for (var i in dl) if (dl.hasOwnProperty(i)) (function (d, i) {
 		if (typeof d == "function") d = Deferred.next(d);
 		d.next(function (v) {
@@ -222,10 +222,18 @@ Deferred.parallel = function (dl) {
 					values.length = dl.length;
 					values = Array.prototype.slice.call(values, 0);
 				}
-				ret.call(values);
+				if (failed) {
+					ret.fail(values);
+				} else {
+					ret.call(values);
+				}
 			}
 		}).error(function (e) {
-			ret.fail(e);
+			values[i] = e;
+			failed = true;
+			if (--num <= 0) {
+				ret.fail();
+			}
 		});
 		num++;
 	})(dl[i], i);
@@ -1379,7 +1387,7 @@ OAuth.setProperties = function(into, from) {
 // Utility Functions
 OAuth.setProperties(OAuth, {
 	percentEncode: function(s) {
-		if (! s) {
+		if (s == null) {
 			return '';
 		}
 		if (s instanceof Array) {
@@ -1412,7 +1420,7 @@ OAuth.setProperties(OAuth, {
 	},
 	/** Convert the given parameters to an Array of name-value pairs. */
 	getParameterList: function(parameters) {
-		if (! parameters) {
+		if (parameters == null) {
 			return [];
 		}
 		if (typeof parameters != 'object') {
@@ -1429,7 +1437,7 @@ OAuth.setProperties(OAuth, {
 	},
 	/** Convert the given parameters to a map from name to value. */
 	getParameterMap: function(parameters) {
-		if (! parameters) {
+		if (parameters == null) {
 			return {};
 		}
 		if (typeof parameters != 'object') {
@@ -1464,7 +1472,7 @@ OAuth.setProperties(OAuth, {
 		var list = OAuth.getParameterList(parameters);
 		for (var p = 0, len = list.length; p < len; ++p) {
 			var value = list[p][1];
-			if (value == null) value = '';
+			if ([null, undefined].indexOf(value) > -1 || value !== value) value = '';
 			if (form != '') form += '&';
 			form += OAuth.percentEncode(list[p][0])
 				+ '=' + OAuth.percentEncode(value);
@@ -1669,7 +1677,7 @@ OAuth.setProperties(OAuth.SignatureMethod.prototype, {
 OAuth.setProperties(OAuth.SignatureMethod, {
 	sign: function sign(message, accessor) {
 		var name = OAuth.getParameterMap(message.parameters).oauth_signature_method;
-		if (! name || name == '') {
+		if (name == null || name == '') {
 			name = 'HMAC-SHA1';
 			OAuth.setParameter(message, 'oauth_signature_method', name);
 		}
@@ -1774,7 +1782,7 @@ OAuth.setProperties(OAuth.SignatureMethod, {
 		return uri;
 	},
 	normalizeParameters: function(parameters) {
-		if (! parameters) {
+		if (parameters == null) {
 			return '';
 		}
 		var list = OAuth.getParameterList(parameters);

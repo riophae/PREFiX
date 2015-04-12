@@ -233,7 +233,9 @@
 			onabort: noop,
 			ontimeout: noop,
 			noCache: false
-		}
+		},
+		streamMaxStaleTime: 90 * 1000,
+		maxStreamingLength: 10 * 1024 * 1024
 	};
 
 
@@ -1484,32 +1486,6 @@
 					// url 和 options 可以在全局监听器中修改
 					var url = event.url;
 					var options = event.ajaxOptions;
-					xhr.open(method, url, options.async);
-
-					xhr.timeout = options.timeout;
-
-					// 监听 XMLHttpRequest Level 2 事件
-					Object.keys(constants.normalAjaxEventTypes).
-					forEach(function(formal_type) {
-						var local_type = constants.normalAjaxEventTypes[formal_type];
-						xhr[formal_type] = function(e) {
-							var event_type = local_type;
-							if (formal_type == 'onload' && ! request.isSuccessful()) {
-								event_type = 'error';
-							}
-							ajax_one_time_events[event_type].triggerWith(
-								event_type == 'success' ? (options.context || request) : request,
-								undefined, event);
-						}
-					});
-
-					// 监听与上传相关的事件
-					constants.uploadingAjaxEventTypes.
-					forEach(function(event_type) {
-						if (options[event_type] !== noop) {
-							xhr.upload[event_type] = options[event_type];
-						}
-					});
 
 					// 处理参数
 					var params = options.params;
@@ -1544,6 +1520,33 @@
 					// 可以得到这些最终使用的参数
 					options.params = params;
 					event.url = url;
+
+					xhr.open(method, url, options.async);
+
+					xhr.timeout = options.timeout;
+
+					// 监听 XMLHttpRequest Level 2 事件
+					Object.keys(constants.normalAjaxEventTypes).
+					forEach(function(formal_type) {
+						var local_type = constants.normalAjaxEventTypes[formal_type];
+						xhr[formal_type] = function(e) {
+							var event_type = local_type;
+							if (formal_type == 'onload' && ! request.isSuccessful()) {
+								event_type = 'error';
+							}
+							ajax_one_time_events[event_type].triggerWith(
+								event_type == 'success' ? (options.context || request) : request,
+								undefined, event);
+						}
+					});
+
+					// 监听与上传相关的事件
+					constants.uploadingAjaxEventTypes.
+					forEach(function(event_type) {
+						if (options[event_type] !== noop) {
+							xhr.upload[event_type] = options[event_type];
+						}
+					});
 
 					headers['Accept'] = constants.responseTypes[options.accepts] || constants.responseTypes['*'];
 					try {
@@ -1974,6 +1977,101 @@
 		}
 
 		return true;
+	}
+
+	Account.prototype.streamingAPI = function(options) {
+
+		var action = options.action;
+		var method = options.method = options.method.toUpperCase();
+
+		var ajax_options = options.ajaxOptions || {};
+
+		helpers.fastExtend(ajax_options, {
+			method: method,
+			accepts: 'json',
+			urlEncoded: true,
+			processData: true,
+			timeout: false
+		});
+
+		var self = this;
+		var parameters = options.parameters || {};
+
+		var message = {
+			action: action,
+			method: method,
+			parameters: {
+				oauth_consumer_key: consumer.consumer_key,
+				oauth_token: self.accessToken.oauth_token,
+				oauth_signature_method: constants.signMethod,
+				oauth_version: config.OAuthVersion
+			}
+		};
+		var accessor = {
+			consumerSecret: consumer.consumer_secret,
+			tokenSecret: this.accessor.tokenSecret
+		};
+
+		Ripple.OAuth.setTimestampAndNonce(message);
+
+		helpers.fastExtend(ajax_options, {
+			params: parameters,
+			context: self
+		});
+
+		var headers = ajax_options.headers = {};
+
+		if (method == 'GET' || ajax_options.urlEncoded === true) {
+			message.parameters = helpers.fastExtend({}, parameters, message.parameters);
+			Ripple.OAuth.SignatureMethod.sign(message, accessor);
+			if (method == 'GET') {
+				var params = helpers.param(parameters);
+				message.action += params ? ('?' + params) : '';
+				ajax_options.params = null;
+				ajax_options.processData = false;
+			}
+		} else {
+			Ripple.OAuth.SignatureMethod.sign(message, accessor);
+			helpers.fastExtend(parameters, message.parameters);
+		}
+
+		headers['Authorization'] = Ripple.OAuth.getAuthorizationHeader(action, message.parameters);
+		headers['Cache-Control'] = 'no-cache';
+
+		var ajax = Ripple.ajax(message.action, ajax_options)
+
+		var xhr = ajax.xhr;
+
+		var timeout = setTimeout(function() {
+			ajax.cancel();
+			console.log('waited too long connecting to server, abort it');
+		}, config.streamMaxStaleTime);
+
+		var last_progress_time;
+		xhr.addEventListener('progress', function(e) {
+			if (e.loaded >= config.maxStreamingLength) {
+				ajax.cancel();
+				xhr = ajax.xhr = null;
+				console.log('reached max streaming length, disconnect from server')
+				return;
+			}
+			clearTimeout(timeout);
+			last_progress_time = Date.now();
+			return options.callback.apply(this, arguments);
+		}, false);
+
+		var onreadystatechange = function(e) {
+			if (xhr && xhr.readyState === 3) {
+				if (Date.now() - last_progress_time > config.streamMaxStaleTime) {
+					xhr.removeEventListener('readystatechange', onreadystatechange, false);
+					ajax.cancel();
+					console.log('waited too long connecting to server, abort it');
+				}
+			}
+		}
+		xhr.addEventListener('readystatechange', onreadystatechange, false);
+
+		return ajax;
 	}
 
 

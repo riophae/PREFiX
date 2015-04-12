@@ -1,0 +1,157 @@
+@-webkit-keyframes btnBlinking {
+	from {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+	50% {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, .2) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+	to {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+}
+@keyframes btnBlinking {
+	from {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+	50% {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, .2) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+	to {
+		box-shadow:
+			0 999px 0 rgba(172, 172, 172, 0) inset,
+			0 .5px 0 rgba(255, 255, 255, 1) inset,
+			0 .5px 0 rgba(255, 255, 255, 1);
+	}
+}
+div.notify-box .confirm-btn,
+div.notify-box .reject-btn {
+	box-shadow:
+		0 .5px 0 #fff inset,
+		0 .5px 0 #fff;
+	text-shadow: 0 .5px 0 #fff;
+}
+div.notify-box .confirm-btn:active,
+div.notify-box .reject-btn:active {
+	box-shadow:
+		0 999px 0 rgba(0, 115, 215, .3) inset,
+		0 .5px 0 rgba(255, 255, 255, 1) inset,
+		0 .5px 0 rgba(0, 0, 0, .09);
+}
+#context-timeline .close {
+	background-image: url('/images/close@2x.png');
+	background-size: 32px 32px;
+}
+#birthday-cake span {
+	background-image: url('/images/birthday-cake@2x.png');
+	background-size: 256px;
+}
+#author-avator a {
+	background-image: url('/images/avatar@2x.png');
+	background-size: 48px;
+}
+#birthday-tip p {
+	background-image: url('/images/birthday-gift@2x.png');
+	background-size: 48px;
+}
+#context-timeline ul li .status-content a[href^="https"]::before,
+.status-list .status-content a[href^="https"]::before {
+	content: url('/images/protected@2x.png');
+	zoom: .5;
+}
+#header {
+	background-image: url('/images/header-bg@2x.png');
+	background-size: 400px 45px;
+}
+#back {
+	background-image: url('/images/back@2x.png');
+	background-size: 13px 20px;
+}
+h1 b {
+	background-image: url('/images/logo@2x.png');
+	background-size: 92px 24px;
+}
+#back-to-top {
+	background-image: url('/images/back-to-top@2x.png');
+	background-size: 16px;
+	margin-bottom: -9px;
+}
+#new-window {
+	background-image: url('/images/new-window@2x.png');
+	background-size: 16px;
+}
+#navigation-bar li.home-timeline {
+	background-image: url('/images/home@2x.png');
+	background-size: 24px;
+}
+#navigation-bar li.mentions {
+	background-image: url('/images/mentions@2x.png');
+	background-size: 24px;
+}
+#navigation-bar li.privatemsgs {
+	background-image: url('/images/privatemsg@2x.png');
+	background-size: 24px;
+}
+#navigation-bar li.saved-searches {
+	background-image: url('/images/list@2x.png');
+	background-size: 24px;
+}
+#uploading-photo {
+	background-size: 25px 38px;
+	background-image: url('/images/uploading-photo@2x.png');
+}
+#compose-bar textarea {
+	box-shadow: 0 0 3px rgba(0, 0, 0, .15);
+}
+#compose-bar textarea:focus {
+	box-shadow: 0 0 3px rgba(83, 186, 237, .5);
+}
+.status-list li:hover {
+	background-image: url('/images/status-bg@2x.png');
+	background-size: 60px;
+}
+.status-list li:hover,
+.status-list li.current {
+	box-shadow: 0 1px 0 rgba(255, 255, 255, .75) inset;
+}
+.status-list li .action-icons .remove {
+	background-image: url('/images/remove@2x.png');
+	background-size: 36px 68px;
+}
+.status-list li .action-icons .reply {
+	background-image: url('/images/reply@2x.png');
+	background-size: 36px 68px;
+}
+.status-list li .action-icons .repost {
+	background-image: url('/images/repost@2x.png');
+	background-size: 36px 68px;
+}
+.status-list li .action-icons .favourite {
+	background-image: url('/images/favourite@2x.png');
+	background-size: 36px 102px;
+}
+.status-list .avatar {
+	border-width: .5px;
+}
+.status-list .context {
+	background-image: url('/images/conversation@2x.png');
+	background-size: 16px 32px;
+}
+.status-list li.protected .timestamp-client {
+	background-image: url('/images/protected@2x.png');
+	background-size: 9px 10px;
+}

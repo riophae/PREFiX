@@ -24,7 +24,8 @@
 			function e() {
 				a ||
 				(a = d(f), $("body").append(a));
-				var e = f.val();
+				a.css('text-indent', f.css('text-indent'));
+				var e = f.val() || f.prop('placeholder') || '';
 				e != j && (j = e, a.text(e), f.height(a.height()))
 			}
 			var f = $(this),
@@ -33,6 +34,7 @@
 				clearInterval(h);
 				h = setInterval(e, 30)
 			}).on("blur", function () {
+				setTimeout(e, 30);
 				clearInterval(h);
 				e()
 			});
@@ -40,3 +42,103 @@
 		})
 	};
 })();
+
+/*
+ *  Iphone unlock Animate menu version 0.1
+ */
+
+$(function(){
+
+        var selectedClass=".slide-effect";
+
+        /*
+         * Increase that for faster animation
+         */
+        var animationStep=1;
+
+        /*
+         * Hold the dom and if is animating
+         */
+        function animatingText(){
+                this.isAnimating;
+                this.dom;
+        }
+
+        var itemArr= new Array();
+
+        /*
+         * Where the animation actually happens
+         */
+        function animateOption(animatingText,progress,color){
+
+                if(progress>100){
+                        progress = 0;
+                }
+
+                var highlightColor = "rgba(255, 255, 255, .4)";
+
+                function getColor(progress) {
+                	progress = parseInt(progress, 10);
+                	return (progress < 0 ? color : highlightColor) + progress + "%";
+                }
+
+                /*
+                 * move the animation
+                 */
+                progress+=animationStep;
+                $(animatingText.dom).children().first().css({
+                        "background-image": "-webkit-linear-gradient(left,"+ getColor(progress-40) + ',' +color+ " " + parseInt(progress) +"%, rgba(255, 255, 255, .4)  "+ parseInt(36+progress) + "%,  "+ color + " " + parseInt(80+progress) +"%)",
+                        "background-position": "-5px center",
+                        "-webkit-background-clip": "text",
+                        "-webkit-text-fill-color": "transparent"
+                });
+
+                /*
+                 * Run recursive at 60fps ... hopefully.
+                 */
+                setTimeout(function(){animateOption(animatingText,progress,color)}, 10);
+        }
+
+        /*
+         *        On mouse enter toggle the effect
+         */
+        $(selectedClass).each(function(){
+
+                /*
+                 * Get the id from data-id to identify the animation
+                 */
+                var id = $(this).data('id');
+
+                /*
+                 * Create a new object or retreive it if already
+                 * created
+                 */
+                var thisItem =itemArr[id];
+
+                if(thisItem!=undefined){
+
+                        /*
+                         * if is already animating exit
+                         */
+                        if(thisItem.isAnimating){
+                                return;
+                        }
+                }else{
+                        thisItem = new animatingText();
+                        itemArr[id]=thisItem;
+                        thisItem.dom=this;
+                }
+
+                /*
+                 * Set that is animating
+                 */
+                thisItem.isAnimating=true;
+
+                /*
+                 * Start animation
+                 */
+                animateOption(thisItem,-70,$(thisItem.dom).children().first().css('color'));
+
+        });
+
+});

@@ -4,53 +4,259 @@
 		<meta charset="utf-8">
 		<title>PREFiX - 选项</title>
 		<link id="favicon" rel="shortcut icon" type="image/png" sizes="16x16" href="/icons/16.png" />
-		<link rel="stylesheet" href="css/fonts.css"/>
 		<link rel="stylesheet" href="css/options.css"/>
+		<link rel="stylesheet" href="css/chrome-shared.css"/>
 		<script src="js/lib/jquery-min.js"></script>
+		<script src="js/lib/avalon.js"></script>
 		<script src="js/options.js"></script>
 	</head>
 	<body>
 	<div id="wrapper">
-		<div id="settings">
-			<div id="account">
-				<div id="avatar">
-					<img />
-				</div>
-				<div>
-					<button id="switchAccount">切换账号</button>
-					<button id="setCustomConsumer">自定义尾巴</button>
-				</div>
-			</div>
-			<ul>
-				<li><label><input type="checkbox" key="playSound" />有新的未读 @ 消息或未读私信时播放提示音</label></li>
-				<li>
-					<label>
-						<input type="checkbox" key="birthdayNotice" />好友生日提醒
-					</label>
-					<select key="birthdayNoticeType" type="select">
-						<option value="only_friends">仅我关注的人</option>
-						<option value="friends_and_followers">我关注的人和粉丝</option>
-					</select>
-				</li>
-				<li><label><input type="checkbox" key="autoFlushCache" />自动抛弃较旧的消息 (改善性能, 当关注的人较多时建议启用)</label></li>
-				<li><label><input type="checkbox" key="drawAttention" />TL 有新消息时闪烁任务栏图标 (关闭后有新@时仍会闪烁)</label></li>
-				<li><label><input type="checkbox" key="smoothScroll" />启用平滑滚动</label></li>
-				<li>
-					<label>放大比率
-						<select key="zoomRatio" type="select">
-							<option value="1">100%</option>
-							<option value="1.11">110%</option><!-- 放大 111% 解决放大 110% 时页面元素抖动的 bug -->
-							<option value="1.25">125%</option>
-							<option value="1.5">150%</option>
-						</select>
-						(仅独立窗口模式有效)
-					</label>
-				</li>
+		<div id="navbar-container">
+			<h1>PREFiX</h1>
+			<ul id="navbar">
+				<li id="basics" class="navbar-item navbar-item-selected">基本设置</li>
+				<li id="advanced" class="navbar-item">高级设置</li>
+				<li id="about" class="navbar-item">关于</li>
+				<li id="usage-tip" style="margin-top: 26px;">使用技巧</li>
 			</ul>
 		</div>
-		<div id="about">
-			PREFiX v<span id="version"></span>. Powered by <a href="https://github.com/riophae/Ripple" target="_blank">Ripple</a>.<br />
-			Logo designed by <a href="http://fanfou.com/anegie" target="_blank">@Kevin</a>.
+		<div id="mainview">
+			<div id="mainview-content">
+				<div id="page-container">
+					<div id="basics-page" class="page">
+						<header>
+							<h2>基本设置</h2>
+						</header>
+						<ul>
+							<h3>账号</h3>
+							<li><span id="user-info">您已以 <a target="_blank" id="username"></a> 的身份登录. </span><br /><button id="switch-account">切换到另一个账号...</button></li>
+						</ul>
+						<ul>
+							<h3>界面</h3>
+							<li>
+								<label><input type="checkbox" key="smoothScroll" />启用平滑滚动</label>
+							</li>
+							<li>
+								<label>放大比率
+									<select key="zoomRatio" type="select">
+										<option value="1">100%</option>
+										<option value="1.125">110%</option><!-- 放大 111% 解决放大 110% 时页面元素抖动的 bug -->
+										<option value="1.25">125%</option>
+										<option value="1.5">150%</option>
+									</select>
+									仅独立窗口模式有效
+								</label>
+							</li>
+							<li><b>请一定关闭 Chrome 原生的缩放功能, 否则会出现严重的错误. </b></li>
+						</ul>
+						<ul>
+							<h3>提醒</h3>
+							<li>
+								提示音音量
+								<input key="volume" type="range" min=".25" max="1" step=".05" style="width: 75px" />
+								<span id="volume"></span>
+								<span id="playSound"></span>
+							</li>
+							<li>
+								<label><input type="checkbox" key="playSound" />有新的未读 @ 消息或未读私信时播放提示音</label>
+							</li>
+							<li>
+								<label><input type="checkbox" key="drawAttention" />Timeline 上有新消息时闪烁任务栏图标 (禁用后有新@和私信时仍会闪烁)</label>
+							</li>
+							<li>
+								<label><input type="checkbox" key="showSavedSearchCount" />关注的话题有新消息时在图标上显示统计数字</label>
+							</li>
+							<li>
+								<label>
+									<input type="checkbox" key="birthdayNotice" />好友生日提醒
+								</label>
+								<select key="birthdayNoticeType" type="select">
+									<option value="only_friends">仅我关注的人</option>
+									<option value="friends_and_followers">我关注的人和粉丝</option>
+								</select>
+								<select key="birthdayGreetingType" type="select">
+									<option value="post_status">发送消息</option>
+									<option value="send_pm">发送私信</option>
+								</select>
+							</li>
+						</ul>
+						<ul>
+							<h3>桌面通知</h3>
+							<li>
+								<label><input type="checkbox" key="notification" foldable-src="notification" />启用桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_mention" foldable-tgt="notification" />当我被 @ 时显示桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_privatemsg" foldable-tgt="notification" />当收到私信时显示桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="webFirst" foldable-tgt="notification" />当我使用网页版饭否时不要显示 @ 和私信通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_follower" foldable-tgt="notification" />当有新关注者时显示桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_friendreq" foldable-tgt="notification" />当有新的关注请求时显示桌面通知</label>
+							</li>
+							<li foldable-tgt="notification">
+								<label><input type="checkbox" key="notif_favourite" foldable-tgt="notification" />当我的消息被收藏时显示桌面通知</label>
+							</li>
+						</ul>
+						<ul>
+							<h3>功能</h3>
+							<li>
+								<label><input type="checkbox" key="holdCtrlToSubmit" />只有按住 Ctrl / Command 键才能双击输入框发送消息</label>
+							</li>
+							<li>
+								<label><input type="checkbox" key="newlineAfterMyName" />发送消息时自动在自己的名字后面添加回车, 避免 @ 到自己</label>
+							</li>
+							<li>
+								<label><input type="checkbox" key="createPopAtStartup" foldable-src="autoStartup" />浏览器启动时自动以独立窗口模式打开 PREFiX</label>
+							</li>
+							<li foldable-tgt="autoStartup">
+								<label style="padding-left: 15px;"><input type="checkbox" key="autoMinimize" foldable-tgt="autoStartup" />自动以独立窗口模式打开后将其最小化</label>
+							</li>
+						</ul>
+					</div>
+					<div id="advanced-page" class="page">
+						<header>
+							<h2>高级设置</h2>
+						</header>
+						<ul>
+							<h3>内部处理规则</h3>
+							<li>
+								<label><input type="checkbox" key="flushCacheWhenTop" />滑动页面到顶端自动清理旧消息</lable>
+							</li>
+							<li>
+								<label><input type="checkbox" key="autoFlushCache" />自动抛弃缓存中较旧的数据</lable>
+								<input type="range" key="cacheAmount" min=20 max=200 step=5 />
+								只在缓存中保留最新的 <span id="cacheAmount"></span> 条消息
+							</li>
+							<li>可以改善性能, 但仅建议当关注的人较多时启用. </li>
+						</ul>
+						<ul>
+							<h3>自定义转发格式</h3>
+							<li>您可以自由定义转发时消息的格式. $name$ 代表原消息的作者名字, $text$ 代表原消息的文本内容. </li>
+							<li><input type="text" key="repostFormat" id="repostFormat" /></li>
+						</ul>
+						<ul>
+							<h3>过滤消息</h3>
+							<li>您可以添加过滤规则来屏蔽不希望看到的消息. <br /><button id="show-filters">管理过滤规则</button></li>
+						</ul>
+						<ul id="custom-consumer">
+							<h3>自定义尾巴 (修改 "通过...发送" 字样)</h3>
+							<li>关于设置尾巴的详细步骤请参考<a href="https://github.com/riophae/PREFiX/wiki/PREFiX-自定义尾巴的详细步骤" target="_blank">这里</a>. </li>
+							<li>您可以直接在 <a href="http://fanfou.com/apps" target="_blank">应用管理页面</a> 设置尾巴, 前提是您已经成功创建了应用. </li>
+							<li><span>Consumer Key:</span><input type="text" id="key" /></li>
+							<li><span>Consumer Secret:</span><input type="text" id="secret" /></li>
+							<li><button id="set-consumer">设置尾巴</button> <button id="reset-consumer">恢复默认尾巴</button></li>
+						</ul>
+					</div>
+					<div id="about-page" class="page">
+						<header>
+							<h2>关于</h2>
+						</header>
+						<ul id="about-prefix">
+							<h4>PREFiX</h4>
+							<li>简洁、易用的 Chrome 饭否客户端</li>
+						</ul>
+						<ul>
+							<li>从 <span id="install-time"></span> 到现在, 您一共使用 PREFiX 发送了 <span id="status-count"></span> 条消息和 <span id="photo-count"></span> 张照片. </li>
+							<li></li>
+						</ul>
+						<ul>
+							<li>版本 <span id="version"></span> (<a id="show-updates">查看更新历史</a>)</li>
+							<li>作者 <a href="http://fanfou.com/ruif" target="_blank">@锐风</a></li>
+							<li>基于开源项目 <a href="https://github.com/riophae/Ripple" target="_blank">Ripple</a> 开发. </li>
+							<li>感谢 <a href="http://fanfou.com/anegie" target="_blank">@太空小孩</a> 为 <a href="https://github.com/riophae/PREFiX" target="_blank">PREFiX</a> 设计了精致的 Logo. </li>
+						</ul>
+						<ul>
+							<li>如果您喜欢 PREFiX, 请考虑 <a href="https://me.alipay.com/riophae" target="_blank" title="感谢你的点击! :)">捐助作者</a> 让它变得更好更强大!</li>
+						</ul>
+					</div>
+					<div id="usage-tip-page" class="page">
+						<header>
+							<h2>使用技巧</h2>
+						</header>
+						<ol>
+							<h3>指南</h3>
+						</ol>
+						<ol>
+							<h3>快捷键说明</h3>
+							<li>1/2/3/4 键切换 首页/提到我的/私信/随便看看和关注的话题 页面</li>
+							<li>5 键显示自己的消息页面</li>
+							<li>J 键选中下一条消息, K 键选中上一条消息</li>
+							<li>H 键回到页首 (或刷新), L 键滑至底端</li>
+							<li>R 键回复 (Reply) 消息, Q 键转发 (Quote) 消息</li>
+							<li>Shift + D 键删除 (Delete) 消息</li>
+							<li>F 键收藏 (Favorite), Shift + F 取消收藏</li>
+							<li>S 键在应用内查看用户信息 (Space), 按 Shift + S 键在前台标签打开该用户个人空间</li>
+							<li>U 键在后台标签打开该消息的饭否页面, 按 Shift + U 键在前台标签打开</li>
+							<li>按空格键使输入框得到焦点, 再按空格键使输入框失去焦点</li>
+							<li>V 键放大图片或缩小图片 (View), Shift + V 键在前台标签打开原图</li>
+							<li>R 键旋转图片</li>
+							<li>C 键展开回复和转发消息 (Conversation), Shift + C 键查看消息上下文, 再按一次 C 键隐藏上下文界面</li>
+							<li>N 键选择消息中下一个链接, M 键选择消息中上一个链接, 按 Enter 键在后台标签打开选中的链接, 按 Shift + Enter 键在前台标签打开链接</li>
+							<li>P 键以独立窗口模式打开 PREFiX</li>
+							<li>按空格键隐藏上下文界面或大图界面</li>
+							<li>按退格键返回之前的页面</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="filters-overlay" class="overlay" style="display: none;">
+			<div id="filters-area" class="page" style="max-height: 640px;">
+				<div class="close-button"></div>
+				<h4>过滤规则</h4>
+				<div class="content-area">
+					<table id="filter-column-headers">
+						<tbody>
+							<tr>
+								<td>关键字或正则表达式</td>
+								<td>过滤项目</td>
+							</tr>
+						</tbody>
+					</table>
+					<table id="filters-list">
+						<tbody ms-controller="filters">
+							<tr class="filter-item" ms-repeat-item="items">
+								<td>
+									<input type="text" class="filter-pattern" placeholder="example*" ms-duplex="item.pattern" ms-blur="blur" />
+								</td>
+								<td>
+									<select class="filter-type" ms-duplex="item.type">
+										<option value="id">用户 ID</option>
+										<option value="name">用户名</option>
+										<option value="content">消息内容</option>
+										<option value="client">客户端</option>
+									</select>
+									<span class="delete" ms-click="remove">删除</span>
+								</td>
+							</tr>
+							<tr class="filter-item last">
+								<td>
+									<input type="text" class="filter-pattern" placeholder="example*" />
+								</td>
+								<td>
+									<select class="filter-type">
+										<option value="id">用户 ID</option>
+										<option value="name">用户名</option>
+										<option value="content">消息内容</option>
+										<option value="client">客户端</option>
+									</select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="action-area">
+					&nbsp;<button id="filters-overlay-confirm">完成</button>
+				</div>
+			</div>
 		</div>
 	</div>
 	</body>
