@@ -698,38 +698,6 @@ function createTab(url, active) {
 	});
 }
 
-function showRatingPage() {
-	hideRatingTip();
-	var url = 'https://chrome.google.com/webstore/detail/prefix/gjpcbbbopajjjnkbkeaflldnocoppcpc/reviews';
-	createTab(url, true);
-}
-
-function showRatingTip() {
-	$('#rating-tip').show();
-}
-
-function hideRatingTip() {
-	lscache.set('hide-rating-tip', true);
-	$('#rating-tip').css({
-		'animation-name': 'wobbleOut',
-		'animation-duration': 400
-	}).delay(400).hide(0, function() {
-		$(this).remove();
-	});
-}
-
-function accumulateTime() {
-	var time = lscache.get('timer') || 0;
-	time++;
-
-	if (time >= 600) {
-		clearInterval(rating_interval);
-		showRatingTip();
-	}
-
-	lscache.set('timer', time);
-}
-
 function sendBirthdayMessage() {
 	var type = PREFiX.settings.current.birthdayGreetingType;
 	if (PREFiX.birthdayFriends.length > 1)
@@ -1379,15 +1347,6 @@ function initMainUI() {
 
 	setInterval(updateRelativeTime, 15000);
 	setInterval(checkCount, 100);
-
-	if (! lscache.get('hide-rating-tip')) {
-		window.rating_interval = setInterval(accumulateTime, 60000);
-		accumulateTime();
-		$('#show-rating-page').click(showRatingPage);
-		$('#hide-rating-tip').click(hideRatingTip);
-	} else {
-		$('#rating-tip').remove();
-	}
 }
 
 function cutStream() {

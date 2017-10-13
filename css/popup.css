@@ -461,44 +461,6 @@ div.notify-box .reject-btn:active {
 	width: 238px;
 	float: left;
 }
-#follow-author {
-	padding: 6px;
-	animation: wobbleIn both .25s;
-	transform-origin: center top;
-}
-#author-avator {
-	float: left;
-	width: 48px;
-	height: 48px;
-}
-#author-avator a {
-	display: inline-block;
-	width: 48px;
-	height: 48px;
-	background: url('/images/avatar.png') no-repeat;
-}
-#follow-tip {
-	float: left;
-	margin-left: 4px;
-}
-#follow-tip p {
-	width: 182px;
-}
-#follow-tip p a {
-	text-decoration: underline !important;
-}
-#follow-tip .buttons {
-	margin-left: 9px;
-}
-#rating-tip {
-	display: none;
-	padding: 6px;
-	animation: wobbleIn both .25s;
-	transform-origin: center top;
-}
-#rating-tip p {
-	padding: 2px 0;
-}
 #birthday-tip {
 	display: none;
 	animation: wobbleIn both .25s;
