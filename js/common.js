@@ -5,6 +5,15 @@ var default_consumer = {
 var custom_consumer = lscache.get('custom_consumer');
 Ripple.setupConsumer(custom_consumer || default_consumer);
 
+Ripple.shorten['t.cn'] = function(long_url) {
+	return Ripple.ajax.get('http://api.t.sina.com.cn/short_url/shorten.json', {
+		params: {
+			source: 850454853,
+			url_long: long_url
+		}
+	});
+}
+
 function enableCustomConsumer(key, secret) {
 	custom_consumer = {
 		key: key,

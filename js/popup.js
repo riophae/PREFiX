@@ -630,9 +630,12 @@ function shorten(links, force) {
 			}
 			if (! force) return;
 		}
-		var d = Ripple.shorten['is.gd'](link).
-			next(function(short_url) {
-				setContent(composebar_model.text.replace(link, short_url));
+		var d = Ripple.shorten['t.cn'](link).
+			next(function(res) {
+				var short_url = res && res[0] && res[0].url_short;
+				if (short_url) {
+					setContent(composebar_model.text.replace(link, short_url));
+				}
 			}).
 			error(function(e) {
 				if (e && ! e.status) {
