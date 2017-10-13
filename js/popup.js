@@ -692,27 +692,6 @@ function createTab(url, active) {
 	chrome.tabs.create({
 		url: url,
 		active: active === true || is_panel_mode
-	});	
-}
-
-function confirmFollowing() {
-	r.addFriend({ id: 'ruif' }).next(function() {
-		showNotification('感谢关注 :)');
-	});
-	hideFollowingTip();
-}
-
-function denyFollowing() {
-	hideFollowingTip();
-}
-
-function hideFollowingTip() {
-	$('#follow-author').css({
-		'animation-name': 'wobbleOut',
-		'animation-duration': 400
-	}).delay(400).hide(0, function() {
-		$(this).remove();
-		lscache.set('hide-following-tip', true);
 	});
 }
 
@@ -1003,16 +982,6 @@ function initMainUI() {
 		}
 	} else {
 		$birthday_tip.remove();
-	}
-
-	if (! lscache.get('hide-following-tip')) {
-		$('#confirm-following').click(confirmFollowing);
-		$('#deny-following').click(denyFollowing);
-		r.isFollowing(PREFiX.account.id, 'ruif').next(function(result) {
-			if (result) denyFollowing();
-		});
-	} else {
-		$('#follow-author').remove();
 	}
 
 	$(window).on('focus', function(e) {
@@ -1310,7 +1279,7 @@ function initMainUI() {
 			}
 		}
 	});
-	
+
 	$('#context-timeline ul').click(function(e) {
 		if (! $(e.target).is('a') && ! $(e.target).is('img'))
 			e.stopPropagation();
@@ -1854,8 +1823,8 @@ function remove(e) {
 	}
 	var self = this;
 	var status_id = self.$vmodel.status.id;
-	r.destroyStatus({ 
-		id: status_id 
+	r.destroyStatus({
+		id: status_id
 	}).setupAjax({
 		lock: self
 	}).error(function(e) {
@@ -2142,8 +2111,8 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 	vm.onfocus = function(e) {
 		var placeholder;
 		if (PREFiX.isTodayFanfouBirthday) {
-			placeholder = '还记得今天是什么日子吗? 祝你饭否 ' + 
-				Math.floor(PREFiX.fanfouYears) + 
+			placeholder = '还记得今天是什么日子吗? 祝你饭否 ' +
+				Math.floor(PREFiX.fanfouYears) +
 				' 周岁生日快乐! :)';
 		} else {
 			placeholder = lyric = lyric || getLyric();
@@ -2551,8 +2520,8 @@ var privatemsgs_model = avalon.define('privatemsgs', function(vm) {
 		}
 		var self = this;
 		var message_id = self.$vmodel.message.id;
-		r.destroyDirectMessage({ 
-			id: message_id 
+		r.destroyDirectMessage({
+			id: message_id
 		}).setupAjax({
 			lock: self
 		}).error(function(e) {
@@ -2647,7 +2616,7 @@ privatemsgs_model.initialize = function() {
 					});
 				}
 			} else {
-				privatemsgs_model.messages = fixStatusList(messages);	
+				privatemsgs_model.messages = fixStatusList(messages);
 				resetLoadingEffect();
 			}
 			PREFiX.update();
@@ -2972,7 +2941,7 @@ $(function() {
 	});
 	var $tip = $('#uploading-photo-tip');
 	var shown = lscache.get('uploading_photo_tip');
-	if (! shown && lscache.get('hide-following-tip')) {
+	if (! shown) {
 		$('#hide-uploading-photo-tip').click(function(e) {
 			$tip.css({
 				'animation-name': 'wobbleOut',
