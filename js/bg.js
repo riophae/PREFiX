@@ -3,7 +3,7 @@ var ct = chrome.tabs;
 var root_url = ce.getURL('');
 var popup_url = ce.getURL('popup.html');
 
-var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp)\//;
+var short_url_re = /https?:\/\/(?:bit\.ly|goo\.gl|v\.gd|is\.gd|tinyurl\.com|to\.ly|yep\.it|j\.mp|t\.cn)\//;
 var status_url_re = /<a href="([^"]+)" title="([^"]+)" rel="nofollow" target="_blank">([^<]+)<\/a>/g;
 var fanfou_url_re = /^http:\/\/(?:\S+\.)?fanfou\.com\//;
 
@@ -184,32 +184,6 @@ function onInputEntered(text) {
 	});
 }
 
-function initUrlExpand() {
-	var short_url_services = lscache.get('short_url_services');
-	if (short_url_services) {
-		// 识别更多短链接
-		short_url_services['[a-z0-9]{1,5}\\.[a-z]{2,3}'] = true;
-		var re = '^https?:\\/\\/';
-		re += '(?:' + Object.keys(short_url_services).join('|') + ')';
-		re += '\\/\\S+';
-		re = re.replace(/\./g, '\\.');
-		PREFiX.shortUrlRe = new RegExp(re);
-		return;
-	}
-	Ripple.ajax.get('http://api.longurl.org/v2/services', {
-		params: {
-			format: 'json'
-		},
-		success: function(data) {
-			lscache.set('short_url_services', data);
-			initUrlExpand();
-		},
-		error: function(e) {
-			setTimeout(initUrlExpand, 60000);
-		}
-	});
-}
-
 var cached_short_urls = { };
 function expandUrl(url) {
 	var d = new Deferred;
@@ -228,28 +202,14 @@ function expandUrl(url) {
 			cached_short_urls[url] = long_url;
 			d.call(long_url);
 		}
-		var is_gd_re = /https?:\/\/is\.gd\/([a-zA-Z0-9\-\_]+)/;
-		if (is_gd_re.test(url)) {
-			Ripple.ajax.get('http://is.gd/forward.php', {
-				params: {
-					shorturl: url.match(is_gd_re)[1],
-					format: 'simple'
-				},
-				success: function(data) {
-					var url = $temp.html(data).text();
-					return cb(url);
-				}
-			});
-		} else {
-			Ripple.ajax.get('http://api.longurl.org/v2/expand', {
-				params: {
-					url: url,
-					format: 'json'
-				}
-			}).next(function(data) {
-				cb(data['long-url']);
-			});
-		}
+		Ripple.ajax.get('http://setq.me/url_expand.json?url_short=' + url, {
+			params: {
+				url: url,
+				format: 'json'
+			}
+		}).next(function(data) {
+			cb(data.url_long);
+		});
 	}
 	return d;
 }
@@ -305,7 +265,7 @@ function detectFanfouBirthday() {
 	delta = now - ff_birthday;
 	PREFiX.isTodayFanfouBirthday = delta >= 0 && delta < 24 * 60 * 60 * 1000;
 	if (PREFiX.isTodayFanfouBirthday) {
-		PREFiX.fanfouYears = (now - (new Date(Date.parse(PREFiX.account.created_at)))) 
+		PREFiX.fanfouYears = (now - (new Date(Date.parse(PREFiX.account.created_at))))
 			/ 365 / 24 / 60 / 60 / 1000;
 	}
 }
@@ -949,7 +909,6 @@ function setText(status, text) {
 }
 
 function isShortUrl(url) {
-	short_url_re = PREFiX.shortUrlRe || short_url_re;
 	return short_url_re.test(url);
 }
 
@@ -1656,13 +1615,13 @@ function unload() {
 		current: '',
 		is_replying: false
 	};
-	PREFiX.mentions = { 
+	PREFiX.mentions = {
 		statuses: [],
 		scrollTop: 0,
 		current: '',
 		is_replying: false
 	};
-	PREFiX.privatemsgs = { 
+	PREFiX.privatemsgs = {
 		messages: [],
 		scrollTop: 0,
 		current: '',
@@ -1684,8 +1643,6 @@ function unload() {
 
 function initialize() {
 	settings.load();
-
-	initUrlExpand();
 
 	if (PREFiX.accessToken) {
 		// 更新账户信息
@@ -2198,13 +2155,13 @@ var PREFiX = this.PREFiX = {
 		current: '',
 		is_replying: false
 	},
-	mentions: { 
+	mentions: {
 		statuses: [],
 		scrollTop: 0,
 		current: '',
 		is_replying: false
 	},
-	privatemsgs: { 
+	privatemsgs: {
 		messages: [],
 		scrollTop: 0,
 		current: '',
