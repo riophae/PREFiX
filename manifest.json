@@ -30,7 +30,7 @@
 	"web_accessible_resources": [
 		"manifest.json"
 	],
-	"content_security_policy": "default_src 'self'; object-src 'self'; script-src 'self' 'unsafe-eval'",
+	"content_security_policy": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://fanfou.com https://api.fanfou.com",
 	"description": "\u7b80\u6d01\u3001\u6613\u7528\u7684\u996d\u5426\u5ba2\u6237\u7aef.",
 	"icons": {
 		"256": "icons/256.png",
