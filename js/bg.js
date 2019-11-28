@@ -867,43 +867,6 @@ function getNaturalDimentions(url, callback) {
 	});
 }
 
-function processPhoto(status, photo) {
-	var img = new Image;
-	img.src = photo.thumburl = photo.thumburl || photo.largeurl;
-	photo.thumb_width = photo.thumb_width || 'auto';
-	photo.thumb_height = photo.thumb_height || 'auto';
-	var width = photo.width;
-	var height = photo.height;
-	waitFor(function() {
-		return width || img.naturalWidth;
-	}, function() {
-		width = width || img.naturalWidth;
-		height = height || img.naturalHeight;
-		if (width > height) {
-			if (width > 120) {
-				var k = width / 120;
-				width = 120;
-				height /= k;
-			}
-		} else {
-			if (height > 120) {
-				var k = height / 120;
-				height = 120;
-				width /= k;
-			}
-		}
-		if (img.src != status.photo.largeurl) {
-			img.src = status.photo.largeurl;
-		}
-		photo.thumb_width = Math.round(width) + 'px';
-		photo.thumb_height = Math.round(height) + 'px';
-		if (status.photo.url && photo.thumburl !== status.photo.thumburl) {
-			return;
-		}
-		status.photo = $.extend({ }, status.photo, photo);
-	});
-}
-
 function setText(status, text) {
 	status.fixedText = text;
 }
@@ -1325,14 +1288,6 @@ function isShortUrl(url) {
 // 				data.height = data.cover_height;
 // 			}
 // 		}
-// 		if (data.type !== 'photo')
-// 			return;
-// 		processPhoto(status, {
-// 			largeurl: data.url,
-// 			thumburl: data.thumbnail_url,
-// 			width: data.width,
-// 			height: data.height
-// 		});
 // 	}
 //
 // 	function loadImage(options) {
@@ -1961,15 +1916,13 @@ Ripple.events.observe('process_status', function(status) {
 	status.current_replied = false;
 
 	if (status.photo) {
-		processPhoto(status, status.photo);
+		status.photo.largeurl = status.photo.largeurl.replace('@596w_1l.jpg', '');
 	} else {
 		status.photo = {
 			largeurl: '',
 			imageurl: '',
 			thumburl: '',
-			url: '',
-			thumb_height: '',
-			thumb_width: ''
+			url: ''
 		};
 	}
 
