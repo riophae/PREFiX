@@ -3,11 +3,11 @@ PREFiX
 
 **简洁、易用的饭否客户端**
 
-**作者:** @锐风 http://fanfou.com/ruif
+**作者:** @锐风 https://fanfou.com/ruif
 
 安装
 --
-**Chrome 应用商店地址:** http://is.gd/PREFiX
+**Chrome 应用商店地址:** https://is.gd/PREFiX
 
 版本历史
 ----
