@@ -912,569 +912,569 @@ function isShortUrl(url) {
 	return short_url_re.test(url);
 }
 
-var enrichStatus = (function() {
-	this.lib = [];
-
-	function UrlItem(url) {
-		this.url = url;
-		this.status = 'initialized';
-		this.callbacks = [];
-		this.fetch();
-		lib.push(this);
-	}
-
-	UrlItem.prototype.fetch = function fetch() {
-		var self = this;
-		var url = this.longUrl || this.url;
-		this.status = 'loading';
-
-		function markAsIgnored() {
-			self.status = 'ignored';
-			lscache.set('url-' + self.url, self);
-		}
-
-		if (isShortUrl(url)) {
-			if (! isPhotoLink(url)) {
-				expandUrl(url).next(function(long_url) {
-					if (self.longUrl && self.longUrl === long_url)
-						return;
-					self.longUrl = long_url;
-					fetch.call(self);
-				});
-				return;
-			}
-		} else if (self.url.indexOf('fanfou.com') === -1 &&
-			! self.longUrl) {
-			setTimeout(function() {
-				self.longUrl = self.url;
-				markAsIgnored();
-			});
-		}
-
-		if (! isPhotoLink(url) && ! isMusicLink(url)) {
-			markAsIgnored();
-			return;
-		}
-
-		var result = url.match(xiami_song_re);
-		if (result) {
-			var music_url = result[0];
-			self.data = {
-				type: 'music',
-				url: music_url,
-				id: music_url.match(/\d+$/)[0]
-			};
-			Ripple.ajax.get(music_url).
-			next(function(html) {
-				var re = /<img class="cdCDcover185" src="(\S+)" \/>/;
-				var cover_url = (html.match(re) || [])[1];
-				self.data.cover_url = cover_url || '';
-				self.data.cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
-				if (cover_url) {
-					getNaturalDimentions(cover_url, function(dimentions) {
-						self.cover_width = dimentions.width;
-						self.cover_height = dimentions.height;
-						self.status = 'completed';
-						lscache.set('url-' + self.url, self);
-						setTimeout(function() {
-							self.call();
-						});
-					});
-				}
-			});
-			return;
-		}
-
-		var result = url.match(instagram_re);
-		if (result) {
-			var res_url = result[0];
-			if (! res_url.match(/\/$/)) {
-				res_url += '/';
-			}
-			var image_url = res_url + 'media/';
-			image_url = image_url.replace('instagr.am', 'instagram.com');
-			loadImage({
-				url: self.url,
-				large_url: image_url + '?size=l',
-				thumbnail_url: image_url + '?size=t',
-				urlItem: self
-			});
-			return;
-		}
-
-		var result = url.match(pinsta_re);
-		if (result) {
-			var id = result[1];
-			Ripple.ajax.get(url).
-			next(function(html) {
-				var $html = $(html);
-				var large_url;
-				var thumbnail_url;
-				[].some.call($html.find('script'), function(script) {
-					var code = script.textContent;
-					if (code.indexOf('var mediaJson') > -1) {
-						code = (code.match(/var mediaJson = ([^;]+);/) || [ null, '[]' ])[1];
-						var media_json = JSON.parse(code);
-						media_json.some(function(item) {
-							if (item.id === id) {
-								large_url = item.images.standard_resolution;
-								thumbnail_url = item.images.thumbnail;
-								return true;
-							}
-						});
-						return true;
-					}
-				});
-				$html.length = 0;
-				$html = null;
-				if (large_url) {
-					loadImage({
-						url: self.url,
-						large_url: large_url,
-						thumbnail_url: thumbnail_url,
-						urlItem: self
-					});
-				} else {
-					markAsIgnored();
-				}
-			});
-			return;
-		}
-
-		var result = url.match(weibo_re);
-		if (result) {
-			var large_url = url.replace(/\/(?:mw1024|bmiddle|thumbnail)\//, '/large/');
-			loadImage({
-				url: self.url,
-				large_url: large_url,
-				thumbnail_url: large_url.replace('/large/', '/thumbnail/'),
-				urlItem: self
-			});
-			return;
-		}
-
-		var result = url.match(imgly_re);
-		if (result) {
-			Ripple.ajax.get(url).
-			next(function(html) {
-				var $html = $(html);
-				var full_url = $html.find('#button-fullview a').attr('href') || '';
-				$html.length = 0;
-				$html = null;
-				if (full_url) {
-					if (! /^http/.test(full_url)) {
-						full_url = 'http://img.ly' + full_url;
-					}
-					Ripple.ajax.get(full_url).next(function(html) {
-						var $html = $(html);
-						var large_url = $html.find('#image-full img').attr('src');
-						$html.length = 0;
-						$html = null;
-						if (large_url) {
-							loadImage({
-								url: self.url,
-								large_url: large_url,
-								urlItem: self
-							});
-						} else {
-							markAsIgnored();
-						}
-					});
-				} else {
-					markAsIgnored();
-				}
-			});
-			return;
-		}
-
-		var result = url.match(lofter_re);
-		if (result) {
-			Ripple.ajax.get(url).
-			next(function(html) {
-				var $html = $(html);
-				var large_url = $html.find('[bigimgsrc]').attr('bigimgsrc');
-				$html.length = 0;
-				$html = null;
-				if (large_url) {
-					loadImage({
-						url: self.url,
-						large_url: large_url,
-						urlItem: self
-					});
-				} else {
-					markAsIgnored();
-				}
-			});
-			return;
-		}
-
-		var result = url.match(imgur_re);
-		if (result) {
-			Ripple.ajax.get(url).
-			next(function(html) {
-				html = html.replace(/(src|href)="\/\//g, function(_, $1) {
-					return $1 + '="http://';
-				});
-				var $html = $(html);
-				var large_url = $html.find('#image a').prop('href');
-				large_url = large_url || $html.find('#image img').prop('src');
-				$html.length = 0;
-				$html = null;
-				if (large_url) {
-					loadImage({
-						url: self.url,
-						large_url: large_url,
-						urlItem: self
-					});
-				} else {
-					markAsIgnored();
-				}
-			});
-			return;
-		}
-
-		var result = url.match(tinypic_re);
-		if (result) {
-			Ripple.ajax.get(url).
-			next(function(html) {
-				var $html = $(html);
-				var large_url = $html.find('#imgFrame a').prop('href');
-				$html.length = 0;
-				$html = null;
-				if (large_url) {
-					loadImage({
-						url: self.url,
-						large_url: large_url,
-						urlItem: self
-					});
-				} else {
-					markAsIgnored();
-				}
-			});
-			return;
-		}
-
-		var result = url.match(fanfou_re);
-		if (result) {
-			Ripple.ajax.get(url).
-			next(function(html) {
-				var $html = $(html);
-				var large_url = $html.find('#photo img').attr('src') || '';
-				var thumbnail_url = large_url.replace('/n0/', '/m0/');
-				$html.length = 0;
-				$html = null;
-				if (large_url) {
-					loadImage({
-						url: self.url,
-						large_url: large_url,
-						thumbnail_url: thumbnail_url,
-						urlItem: self
-					});
-				} else {
-					markAsIgnored();
-				}
-			});
-			return;
-		}
-
-		var result = url.match(flickr_re);
-		if (result) {
-			Ripple.ajax.get(url).
-			next(function(html) {
-				function createPhotoURL(size) {
-					var url;
-					if (size.secret) {
-						url = base_url.replace(/_.*\.jpg$/, '_' + size.secret + size.fileExtension + '.jpg');
-					} else {
-						url = base_url.replace(/\.jpg$/, size.fileExtension + '.jpg');
-					}
-					if (size.queryString) {
-						url += size.queryString;
-					}
-					return url;
-				}
-				var result = html.match(/baseURL: '(\S+)',/);
-				var base_url = result && result[1];
-				var result = html.match(/sizeMap: (\[[^\]]+\])/);
-				var size_map = result && JSON.parse(result[1]);
-				if (size_map) {
-					var size_t = size_map[0];
-					var size_l = size_map.reverse()[0];
-					var large_url = createPhotoURL(size_l);
-					var thumbnail_url = createPhotoURL(size_t);
-				}
-				if (large_url) {
-					loadImage({
-						url: self.url,
-						large_url: large_url,
-						thumbnail_url: thumbnail_url,
-						urlItem: self
-					});
-				} else {
-					markAsIgnored();
-				}
-			});
-			return;
-		}
-
-		var result = url.match(xiami_album_re);
-		if (result) {
-			var album_url = result[0];
-			Ripple.ajax.get(album_url).
-			next(function(html) {
-				var re = /<img class="cdCover185"\s+src="(\S+)"\s+rel="v:photo"\s+alt="/;
-				var cover_url = (html.match(re) || [])[1] || '';
-				var cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
-				if (cover_url_large) {
-					loadImage({
-						url: self.url,
-						large_url: cover_url_large,
-						thumbnail_url: cover_url,
-						urlItem: self
-					});
-				}
-			});
-			return;
-		}
-
-		var result = url.match(xiami_collection_re);
-		if (result) {
-			var collection_url = result[0];
-			Ripple.ajax.get(collection_url).
-			next(function(html) {
-				var $html = $(html);
-				var cover_url = $html.find('#cover_logo .bigImgCover img').attr('src') || '';
-				var cover_url_large = $html.find('#cover_logo .bigImgCover').attr('href') || '';
-				$html.length = 0;
-				$html = null;
-				if (cover_url_large) {
-					loadImage({
-						url: self.url,
-						large_url: cover_url_large,
-						thumbnail_url: cover_url,
-						urlItem: self
-					});
-				}
-			});
-			return;
-		}
-
-		var result = picture_re.test(url);
-		if (result) {
-			loadImage({
-				url: self.url,
-				large_url: url,
-				urlItem: self
-			});
-		}
-	}
-
-	UrlItem.prototype.call = function() {
-		var callback;
-		while (callback = this.callbacks.shift()) {
-			callback();
-		}
-	}
-
-	UrlItem.prototype.done = function(callback) {
-		if (this.status === 'ignored')
-			return;
-		if (this.status === 'error') {
-			this.fetch();
-		}
-		if (this.status === 'loading') {
-			this.callbacks.push(callback);
-		} else if (this.status === 'completed') {
-			setTimeout(callback);
-		}
-	}
-
-	function process(status, url_item) {
-		status.urlProcessed = true;
-		if (! url_item.data) return;
-		var data = url_item.data;
-		if (data.type === 'music') {
-			var url = data.url;
-			if (url.indexOf('xiami.com') > -1) {
-				var $item = $('<div>');
-				$item.html(status.fixedText);
-				var $same_player = $item.find('.xiami-player[song-id="' + data.id + '"]');
-				if ($same_player.length) return;
-				var $player = $('<span>');
-				$player.addClass('xiami-player');
-				$player.attr('song-id', data.id);
-				var $music_link;
-				waitFor(function() {
-					$item.html(status.fixedText);
-					$music_link = $item.find('[href^="' + url + '"]');
-					return $music_link.length;
-				}, function() {
-					$music_link.after($player);
-					var href = $music_link.prop('href');
-					$music_link.prop('href', href + '#processed');
-					$item.find('.xiami-player + .xiami-player').remove();
-					setText(status, $item.html());
-					$item.length = 0;
-					$item = null;
-				});
-				data = $.extend({ }, data);
-				data.type = 'photo';
-				data.url = data.cover_url_large;
-				data.thumbnail_url = data.cover_url;
-				data.width = data.cover_width;
-				data.height = data.cover_height;
-			}
-		}
-		if (data.type !== 'photo')
-			return;
-		processPhoto(status, {
-			largeurl: data.url,
-			thumburl: data.thumbnail_url,
-			width: data.width,
-			height: data.height
-		});
-	}
-
-	function loadImage(options) {
-		var url_item = options.urlItem;
-		var url = options.thumbnail_url || options.large_url;
-		getNaturalDimentions(url, function(dimentions) {
-			url_item.data = {
-				url: options.large_url,
-				width: dimentions.width,
-				height: dimentions.height,
-				type: 'photo',
-				thumbnail_url: options.thumbnail_url
-			};
-			url_item.status = 'completed';
-			lscache.set('url-' + options.url, url_item);
-			setTimeout(function() {
-				url_item.call();
-			});
-		});
-	}
-
-	var instagram_re = /https?:\/\/(?:instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_\-]+\/?/;
-	var pinsta_re = /https?:\/\/pinsta\.me\/p\/([a-zA-Z0-9_\-]+)/;
-	var weibo_re = /https?:\/\/[w0-9]+\.sinaimg\.cn\/\S+\.jpg/;
-	var imgly_re = /https?:\/\/img\.ly\//;
-	var lofter_re = /\.lofter\.com\/post\/[a-zA-Z0-9_\-]+/;
-	var imgur_re = /imgur\.com\//;
-	var tinypic_re = /tinypic\.com\//;
-	var fanfou_re = /https?:\/\/fanfou\.com\/photo\//;
-	var flickr_re = /https?:\/\/(?:www\.)?flickr\.com\/photos\//;
-	var xiami_album_re = /https?:\/\/(?:www\.)?xiami\.com\/album\/(\d+)/;
-	var xiami_collection_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/showcollect\/id\/(\d+)/;
-	var picture_re = /\.(?:jpg|jpeg|png|gif|webp)(?:\??\S*)?$/i;
-
-	var photo_res = [
-		instagram_re,
-		pinsta_re,
-		weibo_re,
-		imgly_re,
-		lofter_re,
-		imgur_re,
-		tinypic_re,
-		fanfou_re,
-		flickr_re,
-		xiami_album_re,
-		xiami_collection_re,
-		picture_re
-	];
-
-	function isPhotoLink(url) {
-		return photo_res.some(function(re) {
-				return re.test(url);
-			});
-	}
-
-	var xiami_song_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/(\d+)/;
-
-	var music_res = [
-		xiami_song_re
-	];
-
-	function isMusicLink(url) {
-		return music_res.some(function(re) {
-				return re.test(url);
-			});
-	}
-
-	function setLink($link, url) {
-		$link.prop('title', url);
-		$link.prop('href', url);
-		var display_url = url.replace(/^https?:\/\/(?:www\.)?/, '');
-		if (display_url.length > 25) {
-			display_url = display_url.substring(0, 25) + '...';
-		}
-		$link.text(display_url);
-	}
-
-	return function(status) {
-		if (status.urlProcessed)
-			return;
-		var urls = [];
-		var result;
-		while (result = url_re.exec(status.text)) {
-			urls.push(result[1]);
-		}
-		if (! urls.length)
-			return;
-		urls.forEach(function(url) {
-			if (! url.split('/')[3]) return;
-			if (fanfou_url_re.test(url)) {
-				var text = status.fixedText;
-				$temp.html(text);
-				var $link = $temp.find('[href="' + url + '"]');
-				if ($link.length) {
-					var text = $link.text();
-					if (/^http:\/\//.test(text)) {
-						setLink($link, url)
-						setText(status, $temp.html());
-					}
-				}
-				if (! fanfou_re.test(url))
-					return;
-			}
-			var is_url = url_re.test(url);
-			var is_photo_link = isPhotoLink(url) || is_url;
-			var is_music_link = isMusicLink(url) || is_url;
-			if (! is_photo_link && ! is_music_link) return;
-			var cached, url_item;
-			lib.some(function(url_item) {
-				if (url_item.url === url) {
-					cached = url_item;
-					return true;
-				}
-			});
-			var ls_cached = lscache.get('url-' + url);
-			cached = cached || ls_cached;
-			if (cached) {
-				cached.__proto__ = UrlItem.prototype;
-				cached.done(function() {
-					process(status, cached);
-				});
-				url_item = cached;
-			} else {
-				url_item = new UrlItem(url);
-				url_item.done(function() {
-					process(status, url_item);
-				});
-			}
-			setTimeout(function() {
-				waitFor(function() {
-					return url_item.longUrl;
-				}, function() {
-					var text = status.fixedText;
-					$temp.html(text);
-					var $link = $temp.find('[href="' + url_item.url + '"]');
-					setLink($link, url_item.longUrl)
-					setText(status, $temp.html());
-				});
-			});
-		});
-	}
-})();
+// var enrichStatus = (function() {
+// 	this.lib = [];
+//
+// 	function UrlItem(url) {
+// 		this.url = url;
+// 		this.status = 'initialized';
+// 		this.callbacks = [];
+// 		this.fetch();
+// 		lib.push(this);
+// 	}
+//
+// 	UrlItem.prototype.fetch = function fetch() {
+// 		var self = this;
+// 		var url = this.longUrl || this.url;
+// 		this.status = 'loading';
+//
+// 		function markAsIgnored() {
+// 			self.status = 'ignored';
+// 			lscache.set('url-' + self.url, self);
+// 		}
+//
+// 		if (isShortUrl(url)) {
+// 			if (! isPhotoLink(url)) {
+// 				expandUrl(url).next(function(long_url) {
+// 					if (self.longUrl && self.longUrl === long_url)
+// 						return;
+// 					self.longUrl = long_url;
+// 					fetch.call(self);
+// 				});
+// 				return;
+// 			}
+// 		} else if (self.url.indexOf('fanfou.com') === -1 &&
+// 			! self.longUrl) {
+// 			setTimeout(function() {
+// 				self.longUrl = self.url;
+// 				markAsIgnored();
+// 			});
+// 		}
+//
+// 		if (! isPhotoLink(url) && ! isMusicLink(url)) {
+// 			markAsIgnored();
+// 			return;
+// 		}
+//
+// 		var result = url.match(xiami_song_re);
+// 		if (result) {
+// 			var music_url = result[0];
+// 			self.data = {
+// 				type: 'music',
+// 				url: music_url,
+// 				id: music_url.match(/\d+$/)[0]
+// 			};
+// 			Ripple.ajax.get(music_url).
+// 			next(function(html) {
+// 				var re = /<img class="cdCDcover185" src="(\S+)" \/>/;
+// 				var cover_url = (html.match(re) || [])[1];
+// 				self.data.cover_url = cover_url || '';
+// 				self.data.cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
+// 				if (cover_url) {
+// 					getNaturalDimentions(cover_url, function(dimentions) {
+// 						self.cover_width = dimentions.width;
+// 						self.cover_height = dimentions.height;
+// 						self.status = 'completed';
+// 						lscache.set('url-' + self.url, self);
+// 						setTimeout(function() {
+// 							self.call();
+// 						});
+// 					});
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(instagram_re);
+// 		if (result) {
+// 			var res_url = result[0];
+// 			if (! res_url.match(/\/$/)) {
+// 				res_url += '/';
+// 			}
+// 			var image_url = res_url + 'media/';
+// 			image_url = image_url.replace('instagr.am', 'instagram.com');
+// 			loadImage({
+// 				url: self.url,
+// 				large_url: image_url + '?size=l',
+// 				thumbnail_url: image_url + '?size=t',
+// 				urlItem: self
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(pinsta_re);
+// 		if (result) {
+// 			var id = result[1];
+// 			Ripple.ajax.get(url).
+// 			next(function(html) {
+// 				var $html = $(html);
+// 				var large_url;
+// 				var thumbnail_url;
+// 				[].some.call($html.find('script'), function(script) {
+// 					var code = script.textContent;
+// 					if (code.indexOf('var mediaJson') > -1) {
+// 						code = (code.match(/var mediaJson = ([^;]+);/) || [ null, '[]' ])[1];
+// 						var media_json = JSON.parse(code);
+// 						media_json.some(function(item) {
+// 							if (item.id === id) {
+// 								large_url = item.images.standard_resolution;
+// 								thumbnail_url = item.images.thumbnail;
+// 								return true;
+// 							}
+// 						});
+// 						return true;
+// 					}
+// 				});
+// 				$html.length = 0;
+// 				$html = null;
+// 				if (large_url) {
+// 					loadImage({
+// 						url: self.url,
+// 						large_url: large_url,
+// 						thumbnail_url: thumbnail_url,
+// 						urlItem: self
+// 					});
+// 				} else {
+// 					markAsIgnored();
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(weibo_re);
+// 		if (result) {
+// 			var large_url = url.replace(/\/(?:mw1024|bmiddle|thumbnail)\//, '/large/');
+// 			loadImage({
+// 				url: self.url,
+// 				large_url: large_url,
+// 				thumbnail_url: large_url.replace('/large/', '/thumbnail/'),
+// 				urlItem: self
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(imgly_re);
+// 		if (result) {
+// 			Ripple.ajax.get(url).
+// 			next(function(html) {
+// 				var $html = $(html);
+// 				var full_url = $html.find('#button-fullview a').attr('href') || '';
+// 				$html.length = 0;
+// 				$html = null;
+// 				if (full_url) {
+// 					if (! /^http/.test(full_url)) {
+// 						full_url = 'http://img.ly' + full_url;
+// 					}
+// 					Ripple.ajax.get(full_url).next(function(html) {
+// 						var $html = $(html);
+// 						var large_url = $html.find('#image-full img').attr('src');
+// 						$html.length = 0;
+// 						$html = null;
+// 						if (large_url) {
+// 							loadImage({
+// 								url: self.url,
+// 								large_url: large_url,
+// 								urlItem: self
+// 							});
+// 						} else {
+// 							markAsIgnored();
+// 						}
+// 					});
+// 				} else {
+// 					markAsIgnored();
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(lofter_re);
+// 		if (result) {
+// 			Ripple.ajax.get(url).
+// 			next(function(html) {
+// 				var $html = $(html);
+// 				var large_url = $html.find('[bigimgsrc]').attr('bigimgsrc');
+// 				$html.length = 0;
+// 				$html = null;
+// 				if (large_url) {
+// 					loadImage({
+// 						url: self.url,
+// 						large_url: large_url,
+// 						urlItem: self
+// 					});
+// 				} else {
+// 					markAsIgnored();
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(imgur_re);
+// 		if (result) {
+// 			Ripple.ajax.get(url).
+// 			next(function(html) {
+// 				html = html.replace(/(src|href)="\/\//g, function(_, $1) {
+// 					return $1 + '="http://';
+// 				});
+// 				var $html = $(html);
+// 				var large_url = $html.find('#image a').prop('href');
+// 				large_url = large_url || $html.find('#image img').prop('src');
+// 				$html.length = 0;
+// 				$html = null;
+// 				if (large_url) {
+// 					loadImage({
+// 						url: self.url,
+// 						large_url: large_url,
+// 						urlItem: self
+// 					});
+// 				} else {
+// 					markAsIgnored();
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(tinypic_re);
+// 		if (result) {
+// 			Ripple.ajax.get(url).
+// 			next(function(html) {
+// 				var $html = $(html);
+// 				var large_url = $html.find('#imgFrame a').prop('href');
+// 				$html.length = 0;
+// 				$html = null;
+// 				if (large_url) {
+// 					loadImage({
+// 						url: self.url,
+// 						large_url: large_url,
+// 						urlItem: self
+// 					});
+// 				} else {
+// 					markAsIgnored();
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(fanfou_re);
+// 		if (result) {
+// 			Ripple.ajax.get(url).
+// 			next(function(html) {
+// 				var $html = $(html);
+// 				var large_url = $html.find('#photo img').attr('src') || '';
+// 				var thumbnail_url = large_url.replace('/n0/', '/m0/');
+// 				$html.length = 0;
+// 				$html = null;
+// 				if (large_url) {
+// 					loadImage({
+// 						url: self.url,
+// 						large_url: large_url,
+// 						thumbnail_url: thumbnail_url,
+// 						urlItem: self
+// 					});
+// 				} else {
+// 					markAsIgnored();
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(flickr_re);
+// 		if (result) {
+// 			Ripple.ajax.get(url).
+// 			next(function(html) {
+// 				function createPhotoURL(size) {
+// 					var url;
+// 					if (size.secret) {
+// 						url = base_url.replace(/_.*\.jpg$/, '_' + size.secret + size.fileExtension + '.jpg');
+// 					} else {
+// 						url = base_url.replace(/\.jpg$/, size.fileExtension + '.jpg');
+// 					}
+// 					if (size.queryString) {
+// 						url += size.queryString;
+// 					}
+// 					return url;
+// 				}
+// 				var result = html.match(/baseURL: '(\S+)',/);
+// 				var base_url = result && result[1];
+// 				var result = html.match(/sizeMap: (\[[^\]]+\])/);
+// 				var size_map = result && JSON.parse(result[1]);
+// 				if (size_map) {
+// 					var size_t = size_map[0];
+// 					var size_l = size_map.reverse()[0];
+// 					var large_url = createPhotoURL(size_l);
+// 					var thumbnail_url = createPhotoURL(size_t);
+// 				}
+// 				if (large_url) {
+// 					loadImage({
+// 						url: self.url,
+// 						large_url: large_url,
+// 						thumbnail_url: thumbnail_url,
+// 						urlItem: self
+// 					});
+// 				} else {
+// 					markAsIgnored();
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(xiami_album_re);
+// 		if (result) {
+// 			var album_url = result[0];
+// 			Ripple.ajax.get(album_url).
+// 			next(function(html) {
+// 				var re = /<img class="cdCover185"\s+src="(\S+)"\s+rel="v:photo"\s+alt="/;
+// 				var cover_url = (html.match(re) || [])[1] || '';
+// 				var cover_url_large = cover_url.replace(/_2\.jpg/, '.jpg');
+// 				if (cover_url_large) {
+// 					loadImage({
+// 						url: self.url,
+// 						large_url: cover_url_large,
+// 						thumbnail_url: cover_url,
+// 						urlItem: self
+// 					});
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = url.match(xiami_collection_re);
+// 		if (result) {
+// 			var collection_url = result[0];
+// 			Ripple.ajax.get(collection_url).
+// 			next(function(html) {
+// 				var $html = $(html);
+// 				var cover_url = $html.find('#cover_logo .bigImgCover img').attr('src') || '';
+// 				var cover_url_large = $html.find('#cover_logo .bigImgCover').attr('href') || '';
+// 				$html.length = 0;
+// 				$html = null;
+// 				if (cover_url_large) {
+// 					loadImage({
+// 						url: self.url,
+// 						large_url: cover_url_large,
+// 						thumbnail_url: cover_url,
+// 						urlItem: self
+// 					});
+// 				}
+// 			});
+// 			return;
+// 		}
+//
+// 		var result = picture_re.test(url);
+// 		if (result) {
+// 			loadImage({
+// 				url: self.url,
+// 				large_url: url,
+// 				urlItem: self
+// 			});
+// 		}
+// 	}
+//
+// 	UrlItem.prototype.call = function() {
+// 		var callback;
+// 		while (callback = this.callbacks.shift()) {
+// 			callback();
+// 		}
+// 	}
+//
+// 	UrlItem.prototype.done = function(callback) {
+// 		if (this.status === 'ignored')
+// 			return;
+// 		if (this.status === 'error') {
+// 			this.fetch();
+// 		}
+// 		if (this.status === 'loading') {
+// 			this.callbacks.push(callback);
+// 		} else if (this.status === 'completed') {
+// 			setTimeout(callback);
+// 		}
+// 	}
+//
+// 	function process(status, url_item) {
+// 		status.urlProcessed = true;
+// 		if (! url_item.data) return;
+// 		var data = url_item.data;
+// 		if (data.type === 'music') {
+// 			var url = data.url;
+// 			if (url.indexOf('xiami.com') > -1) {
+// 				var $item = $('<div>');
+// 				$item.html(status.fixedText);
+// 				var $same_player = $item.find('.xiami-player[song-id="' + data.id + '"]');
+// 				if ($same_player.length) return;
+// 				var $player = $('<span>');
+// 				$player.addClass('xiami-player');
+// 				$player.attr('song-id', data.id);
+// 				var $music_link;
+// 				waitFor(function() {
+// 					$item.html(status.fixedText);
+// 					$music_link = $item.find('[href^="' + url + '"]');
+// 					return $music_link.length;
+// 				}, function() {
+// 					$music_link.after($player);
+// 					var href = $music_link.prop('href');
+// 					$music_link.prop('href', href + '#processed');
+// 					$item.find('.xiami-player + .xiami-player').remove();
+// 					setText(status, $item.html());
+// 					$item.length = 0;
+// 					$item = null;
+// 				});
+// 				data = $.extend({ }, data);
+// 				data.type = 'photo';
+// 				data.url = data.cover_url_large;
+// 				data.thumbnail_url = data.cover_url;
+// 				data.width = data.cover_width;
+// 				data.height = data.cover_height;
+// 			}
+// 		}
+// 		if (data.type !== 'photo')
+// 			return;
+// 		processPhoto(status, {
+// 			largeurl: data.url,
+// 			thumburl: data.thumbnail_url,
+// 			width: data.width,
+// 			height: data.height
+// 		});
+// 	}
+//
+// 	function loadImage(options) {
+// 		var url_item = options.urlItem;
+// 		var url = options.thumbnail_url || options.large_url;
+// 		getNaturalDimentions(url, function(dimentions) {
+// 			url_item.data = {
+// 				url: options.large_url,
+// 				width: dimentions.width,
+// 				height: dimentions.height,
+// 				type: 'photo',
+// 				thumbnail_url: options.thumbnail_url
+// 			};
+// 			url_item.status = 'completed';
+// 			lscache.set('url-' + options.url, url_item);
+// 			setTimeout(function() {
+// 				url_item.call();
+// 			});
+// 		});
+// 	}
+//
+// 	var instagram_re = /https?:\/\/(?:instagram\.com|instagr.am)\/p\/[a-zA-Z0-9_\-]+\/?/;
+// 	var pinsta_re = /https?:\/\/pinsta\.me\/p\/([a-zA-Z0-9_\-]+)/;
+// 	var weibo_re = /https?:\/\/[w0-9]+\.sinaimg\.cn\/\S+\.jpg/;
+// 	var imgly_re = /https?:\/\/img\.ly\//;
+// 	var lofter_re = /\.lofter\.com\/post\/[a-zA-Z0-9_\-]+/;
+// 	var imgur_re = /imgur\.com\//;
+// 	var tinypic_re = /tinypic\.com\//;
+// 	var fanfou_re = /https?:\/\/fanfou\.com\/photo\//;
+// 	var flickr_re = /https?:\/\/(?:www\.)?flickr\.com\/photos\//;
+// 	var xiami_album_re = /https?:\/\/(?:www\.)?xiami\.com\/album\/(\d+)/;
+// 	var xiami_collection_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/showcollect\/id\/(\d+)/;
+// 	var picture_re = /\.(?:jpg|jpeg|png|gif|webp)(?:\??\S*)?$/i;
+//
+// 	var photo_res = [
+// 		instagram_re,
+// 		pinsta_re,
+// 		weibo_re,
+// 		imgly_re,
+// 		lofter_re,
+// 		imgur_re,
+// 		tinypic_re,
+// 		fanfou_re,
+// 		flickr_re,
+// 		xiami_album_re,
+// 		xiami_collection_re,
+// 		picture_re
+// 	];
+//
+// 	function isPhotoLink(url) {
+// 		return photo_res.some(function(re) {
+// 				return re.test(url);
+// 			});
+// 	}
+//
+// 	var xiami_song_re = /https?:\/\/(?:www\.)?xiami\.com\/song\/(\d+)/;
+//
+// 	var music_res = [
+// 		xiami_song_re
+// 	];
+//
+// 	function isMusicLink(url) {
+// 		return music_res.some(function(re) {
+// 				return re.test(url);
+// 			});
+// 	}
+//
+// 	function setLink($link, url) {
+// 		$link.prop('title', url);
+// 		$link.prop('href', url);
+// 		var display_url = url.replace(/^https?:\/\/(?:www\.)?/, '');
+// 		if (display_url.length > 25) {
+// 			display_url = display_url.substring(0, 25) + '...';
+// 		}
+// 		$link.text(display_url);
+// 	}
+//
+// 	return function(status) {
+// 		if (status.urlProcessed)
+// 			return;
+// 		var urls = [];
+// 		var result;
+// 		while (result = url_re.exec(status.text)) {
+// 			urls.push(result[1]);
+// 		}
+// 		if (! urls.length)
+// 			return;
+// 		urls.forEach(function(url) {
+// 			if (! url.split('/')[3]) return;
+// 			if (fanfou_url_re.test(url)) {
+// 				var text = status.fixedText;
+// 				$temp.html(text);
+// 				var $link = $temp.find('[href="' + url + '"]');
+// 				if ($link.length) {
+// 					var text = $link.text();
+// 					if (/^http:\/\//.test(text)) {
+// 						setLink($link, url)
+// 						setText(status, $temp.html());
+// 					}
+// 				}
+// 				if (! fanfou_re.test(url))
+// 					return;
+// 			}
+// 			var is_url = url_re.test(url);
+// 			var is_photo_link = isPhotoLink(url) || is_url;
+// 			var is_music_link = isMusicLink(url) || is_url;
+// 			if (! is_photo_link && ! is_music_link) return;
+// 			var cached, url_item;
+// 			lib.some(function(url_item) {
+// 				if (url_item.url === url) {
+// 					cached = url_item;
+// 					return true;
+// 				}
+// 			});
+// 			var ls_cached = lscache.get('url-' + url);
+// 			cached = cached || ls_cached;
+// 			if (cached) {
+// 				cached.__proto__ = UrlItem.prototype;
+// 				cached.done(function() {
+// 					process(status, cached);
+// 				});
+// 				url_item = cached;
+// 			} else {
+// 				url_item = new UrlItem(url);
+// 				url_item.done(function() {
+// 					process(status, url_item);
+// 				});
+// 			}
+// 			setTimeout(function() {
+// 				waitFor(function() {
+// 					return url_item.longUrl;
+// 				}, function() {
+// 					var text = status.fixedText;
+// 					$temp.html(text);
+// 					var $link = $temp.find('[href="' + url_item.url + '"]');
+// 					setLink($link, url_item.longUrl)
+// 					setText(status, $temp.html());
+// 				});
+// 			});
+// 		});
+// 	}
+// })();
 
 var cached_res = { };
 function prepareRE(str) {
