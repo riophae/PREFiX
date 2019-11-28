@@ -1942,9 +1942,9 @@ Ripple.events.addGlobalObserver('after', function(data, e) {
 		return;
 	e = e.srcEvent;
 	if (! e) return;
-	if (e.url === 'http://api.fanfou.com/statuses/update.json') {
+	if (e.url === 'https://api.fanfou.com/statuses/update.json') {
 		lscache.set('status_count', getStatusCount() + 1);
-	} else if (e.url === 'http://api.fanfou.com/photos/upload.json') {
+	} else if (e.url === 'https://api.fanfou.com/photos/upload.json') {
 		lscache.set('photo_count', getPhotoCount() + 1);
 	}
 });
@@ -1954,7 +1954,7 @@ Ripple.events.addGlobalObserver('after', function(data, e) {
 		return;
 	e = e.srcEvent;
 	if (! e) return;
-	if (e.url.indexOf('http://api.fanfou.com/') === 0) {
+	if (e.url.indexOf('https://api.fanfou.com/') === 0) {
 		PREFiX.rateLimitRemaining--;
 		var now = Date.now() + Ripple.OAuth.timeCorrectionMsec;
 		if (PREFiX.rateLimitReset <= now) {

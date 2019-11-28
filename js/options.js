@@ -67,7 +67,7 @@ $(function() {
 	if (PREFiX.account) {
 		$('#username').
 		text('@' + PREFiX.account.name + ' (' + PREFiX.account.id + ')').
-		prop('href', 'http://fanfou.com/' + PREFiX.account.id);
+		prop('href', 'https://fanfou.com/' + PREFiX.account.id);
 	} else {
 		$('#user-info').text('您还没有登录饭否账号，请点击下面的按钮继续。')
 		$('#switch-account').text('登入账号');

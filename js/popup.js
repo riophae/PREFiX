@@ -914,7 +914,7 @@ function initMainUI() {
 		if (! lscache.get(today + '-friends-birthday')) {
 			function getHTML(friends) {
 				return friends.map(function(friend) {
-					return '<a href="http://fanfou.com/' +
+					return '<a href="https://fanfou.com/' +
 						friend.id + '" send-birthday-message-to="' +
 						friend.id + ':' + friend.name +
 						'">@' + friend.name + '</a>';
@@ -1980,7 +1980,7 @@ function blockUser(e) {
 		});
 		if (real_id) {
 			filters.push({
-				pattern: 'http://fanfou.com/' + real_id,
+				pattern: 'https://fanfou.com/' + real_id,
 				type: 'content'
 			});
 		}
