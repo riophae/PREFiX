@@ -1846,7 +1846,7 @@ function stripTagsInsideAnchorElements(html) {
 	return html;
 }
 
-Ripple.events.observe('process_status', function(status) {
+Ripple.events.observe('process_status', function processStatus(status) {
 	if (! status) return;
 
 	status.inserted = false;
@@ -1931,7 +1931,7 @@ Ripple.events.observe('process_status', function(status) {
 	// }
 
 	if (status.repost_status) {
-		arguments.callee.call(this, status.repost_status);
+		processStatus(status.repost_status);
 	}
 
 	filterOut(status);
