@@ -3,7 +3,6 @@ var bg_win = ce.getBackgroundPage();
 var Ripple = bg_win.Ripple;
 var Deferred = bg_win.Deferred;
 var lscache = bg_win.lscache;
-var jEmoji = bg_win.jEmoji;
 var PREFiX = bg_win.PREFiX;
 
 var $body;
