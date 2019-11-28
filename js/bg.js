@@ -700,7 +700,7 @@ function initStreamingAPI() {
 	}
 	PREFiX.streamingAjax = PREFiX.user.streamingAPI({
 		method: 'GET',
-		action: 'http://stream.fanfou.com/1/user.json',
+		action: 'https://stream.fanfou.com/1/user.json',
 		callback: function(e) {
 			var data = this.responseText;
 			if (! data) return;
