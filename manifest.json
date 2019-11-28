@@ -15,7 +15,7 @@
 	},
 	"content_scripts": [ {
 		"js": [ "js/lib/jquery-min.js", "js/consumer-helper.js" ],
-		"matches": [ "http://fanfou.com/apps.details/*" ],
+		"matches": [ "https://fanfou.com/apps.details/*" ],
 		"run_at": "document_end"
 	} ],
 	"browser_action": {

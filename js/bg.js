@@ -678,7 +678,7 @@ function initStreamingAPI() {
 				title: data.source.name + ' (' + data.source.id + ') ' +
 					'关注了你',
 				content: data.source.description,
-				url: 'http://fanfou.com/' + data.source.id,
+				url: 'https://fanfou.com/' + data.source.id,
 				icon: data.source.profile_image_url_large
 			});
 		} else if (data.event === 'friends.request') {
@@ -687,7 +687,7 @@ function initStreamingAPI() {
 				title: data.source.name + ' (' + data.source.id + ') ' +
 					'请求关注你',
 				content: data.source.description,
-				url: 'http://fanfou.com/friend.request',
+				url: 'https://fanfou.com/friend.request',
 				icon: data.source.profile_image_url_large
 			});
 		} else if (data.event === 'user.updateprofile') {
@@ -1891,7 +1891,7 @@ Ripple.events.observe('process_status', function processStatus(status) {
 
 	var mention_re = /<a href="http:\/\/fanfou\.com\/([^"]+)" class="former">([^<]+)<\/a>/gi;
 	html = html.replace(mention_re, function(_, id, name) {
-		return '<a href="http://fanfou.com/' + id +
+		return '<a href="https://fanfou.com/' + id +
 			'" title="@' + name + ' (' + id +
 			')" data-userid="' + id + '">' + name + '</a>';
 	});
