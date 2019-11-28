@@ -701,11 +701,6 @@ body.show-drop-area #drop-area {
 #context-timeline ul li .status-content a {
 	text-decoration: underline !important;
 }
-#context-timeline ul li .status-content a[href^="https"]::before {
-	content: url('/images/protected.png');
-	margin: 0 5px;
-	pointer-events: none;
-}
 #context-timeline ul li .photo img {
 	margin-top: 3px;
 }
@@ -1165,11 +1160,6 @@ html.panel-mode #new-window {
 }
 .status-list .status-content a {
 	text-decoration: underline !important;
-}
-.status-list .status-content a[href^="https"]::before {
-	content: url('/images/protected.png');
-	margin: 0 5px;
-	pointer-events: none;
 }
 .status-list .status-content a.focused {
 	outline: 1px dotted rgba(82, 168, 236, .5) !important;
