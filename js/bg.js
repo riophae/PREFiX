@@ -1869,6 +1869,28 @@ var playSound = (function() {
 	}
 })();
 
+function stripTags(html) {
+	var parser = new DOMParser();
+	var document = parser.parseFromString(html, 'text/html');
+	var text = document.body.textContent;
+
+	return text;
+}
+
+function stripTagsInsideAnchorElements(html) {
+	var parser = new DOMParser();
+	var document = parser.parseFromString(html, 'text/html');
+
+	[].forEach.call(document.querySelectorAll('a > *'), element => {
+		if (element.matches('img')) return;
+		var textNode = document.createTextNode(element.innerHTML);
+		element.replaceWith(textNode);
+	});
+	var html = document.body.innerHTML;
+
+	return html;
+}
+
 Ripple.events.observe('process_status', function(status) {
 	if (! status) return;
 
@@ -1904,25 +1926,11 @@ Ripple.events.observe('process_status', function(status) {
 	}
 
 	var html = status.text;
-	$temp.html(html);
-	status.textWithoutTags = $temp.text();
+	status.textWithoutTags = stripTags(html);
 	// a 标签内可能含有 b 标签, 会影响到内容匹配
 	// (如搜索到的消息, 关键字会被加粗处理)
 	// 所以过滤掉 a 内的所有标签, 只留下纯文本
-	$temp.find('a').each(function() {
-		var $elem = $(this);
-		// 如果链接含有图片, 则忽略
-		if ($elem.find('img').length)
-			return;
-		$elem.html($elem.text());
-	});
-	html = $temp.html();
-	html = jEmoji.softbankToUnified(html);
-	html = jEmoji.googleToUnified(html);
-	html = jEmoji.docomoToUnified(html);
-	html = jEmoji.kddiToUnified(html);
-	html = jEmoji.unifiedToHTML(html);
-
+	html = stripTagsInsideAnchorElements(html);
 	html = html.replace(/@\n/g, '@');
 	html = html.replace(/\s*\n+\s*/g, '<br />');
 
