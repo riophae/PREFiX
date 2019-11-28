@@ -1846,6 +1846,22 @@ function stripTagsInsideAnchorElements(html) {
 	return html;
 }
 
+function processMentionLinks(html) {
+	var parser = new DOMParser();
+	var document = parser.parseFromString(html, 'text/html');
+
+	[].forEach.call(document.querySelectorAll('a.former'), anchor => {
+		var userid = decodeURIComponent(anchor.pathname.replace(/^\//, ''));
+		var nickname = anchor.textContent;
+		anchor.classList.remove('former');
+		anchor.title = `@${nickname} (${userid})`;
+		anchor.setAttribute('data-userid', userid);
+	});
+	html = document.body.innerHTML;
+
+	return html;
+}
+
 Ripple.events.observe('process_status', function processStatus(status) {
 	if (! status) return;
 
@@ -1888,13 +1904,7 @@ Ripple.events.observe('process_status', function processStatus(status) {
 	html = stripTagsInsideAnchorElements(html);
 	html = html.replace(/@\n/g, '@');
 	html = html.replace(/\s*\n+\s*/g, '<br />');
-
-	var mention_re = /<a href="http:\/\/fanfou\.com\/([^"]+)" class="former">([^<]+)<\/a>/gi;
-	html = html.replace(mention_re, function(_, id, name) {
-		return '<a href="https://fanfou.com/' + id +
-			'" title="@' + name + ' (' + id +
-			')" data-userid="' + id + '">' + name + '</a>';
-	});
+	html = processMentionLinks(html);
 
 	if (status.sender) {
 		// 私信, 由于饭否的 API 返回的 direct_message 对象没有
