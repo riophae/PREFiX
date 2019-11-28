@@ -778,7 +778,7 @@ Ripple.helpers.isExist = function(url) {
 }
 
 Ripple.helpers.isOnline = function() {
-	return Ripple.helpers.isExist('http://m.fanfou.com/?' + Date.now());
+	return Ripple.helpers.isExist('https://m.fanfou.com/?' + Date.now());
 }
 
 
@@ -851,7 +851,7 @@ Ripple.helpers.buildPhotoBlob = function(object) {
  * 根据参数, 生成可以把时间转换为特定格式的函数.
  * 同时会自动修复服务器和本地的时间差.
  *
- * @author 锐风(Lacc Riophae) http://fanfou.com/ruif
+ * @author 锐风(Lacc Riophae) https://fanfou.com/ruif
  * @version 0.1.0
  * @license the MIT license
  */
@@ -1727,6 +1727,8 @@ OAuth.setProperties(OAuth.SignatureMethod, {
 	},
 	getBaseString: function(message) {
 		var URL = message.action;
+		// 饭否 API 现在签名验证有问题，虽然是 https 服务，签名仍然是按照 http 来验证的
+		URL = URL.replace('https://', 'http://');
 		var q = URL.indexOf('?');
 		var parameters;
 		if (q < 0) {

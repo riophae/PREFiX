@@ -1,6 +1,6 @@
 /**
  * @fileOverview Ripple / 饭否 JavaScript 工具包
- * @author       锐风(Lacc Riophae) http://fanfou.com/ruif
+ * @author       锐风(Lacc Riophae) https://fanfou.com/ruif
  *
  * @description
  *   Ripple 是一个面向 Web 应用 / 浏览器扩展 的饭否开发工具包, 提供了 AJAX 类、
@@ -90,7 +90,7 @@
 
 	var constants = {};
 
-	constants.baseOAuthUrl = 'http://fanfou.com/oauth/';
+	constants.baseOAuthUrl = 'https://fanfou.com/oauth/';
 
 	constants.requestTokenStorage = '__Ripple_Request_Token__';
 
@@ -225,7 +225,7 @@
 
 	var config = {
 		dumpLevel: 0, // debug 模式
-		baseAPIUrl: 'http://api.fanfou.com/',
+		baseAPIUrl: 'https://api.fanfou.com/',
 		OAuthVersion: '1.0',
 		ajaxOptions: {
 			timeout: 30 * 1000, // 默认 AJAX 连接时限
@@ -1290,7 +1290,7 @@
 					delete ajax.pool[ajax_uid];
 				}
 				// 取消锁定
-				var lock = options.lock;				
+				var lock = options.lock;
 				if (lock) {
 					delete lock._ajax_active_;
 				}
@@ -1704,20 +1704,10 @@
 
 	shorten.register({
 		name: 'is.gd',
-		url: 'http://is.gd/create.php',
+		url: 'https://is.gd/create.php',
 		argsProcessor: function(long_url) {
 			return {
 				format: 'simple',
-				url: long_url
-			};
-		}
-	});
-
-	shorten.register({
-		name: 'yep.it',
-		url: 'http://yep.it/api.php',
-		argsProcessor: function(long_url) {
-			return {
 				url: long_url
 			};
 		}
@@ -1787,7 +1777,7 @@
 	/* 通过 Callback 获取 Access Token */
 	authorize.withCallbackUrl = function(callback_url) {
 		return authorize.
-			byPINCodeOrCallbackUrl(callback_url).
+			withPINCodeOrCallbackUrl(callback_url).
 			next(function(args) {
 				Ripple.cache.set(constants.requestTokenStorage, args.request_token);
 				return args.auth_url;
