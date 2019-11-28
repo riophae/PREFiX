@@ -1992,22 +1992,22 @@ function blockUser(e) {
 }
 
 function onNewStatusInserted() {
-	var d;
+	// var d;
 	this.forEach(function(s, i) {
 		if (! s.inserted) {
 			s = findModel(getCurrent(), s.id);
 			s.inserted = true;
-			function enrich() {
-				bg_win.enrichStatus(s);
-			}
-			if (d) {
-				d = d.always(enrich);
-			} else {
-				d = Deferred.next(enrich).error(function() {});
-			}
-			if (s.photo && s.photo.url) {
-				bg_win.processPhoto(s, s.photo);
-			}
+			// function enrich() {
+			// 	bg_win.enrichStatus(s);
+			// }
+			// if (d) {
+			// 	d = d.always(enrich);
+			// } else {
+			// 	d = Deferred.next(enrich).error(function() {});
+			// }
+			// if (s.photo && s.photo.url) {
+			// 	bg_win.processPhoto(s, s.photo);
+			// }
 		}
 	});
 }

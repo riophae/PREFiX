@@ -184,35 +184,35 @@ function onInputEntered(text) {
 	});
 }
 
-var cached_short_urls = { };
-function expandUrl(url) {
-	var d = new Deferred;
-	if (cached_short_urls[url]) {
-		setTimeout(function() {
-			d.call(cached_short_urls[url]);
-		});
-	} else {
-		function cb(long_url) {
-			if (long_url.indexOf('http') !== 0) {
-				setTimeout(function() {
-					expandUrl(url).next(cb);
-				}, 5000);
-				return;
-			}
-			cached_short_urls[url] = long_url;
-			d.call(long_url);
-		}
-		Ripple.ajax.get('http://setq.me/url_expand.json?url_short=' + url, {
-			params: {
-				url: url,
-				format: 'json'
-			}
-		}).next(function(data) {
-			cb(data.url_long);
-		});
-	}
-	return d;
-}
+// var cached_short_urls = { };
+// function expandUrl(url) {
+// 	var d = new Deferred;
+// 	if (cached_short_urls[url]) {
+// 		setTimeout(function() {
+// 			d.call(cached_short_urls[url]);
+// 		});
+// 	} else {
+// 		function cb(long_url) {
+// 			if (long_url.indexOf('http') !== 0) {
+// 				setTimeout(function() {
+// 					expandUrl(url).next(cb);
+// 				}, 5000);
+// 				return;
+// 			}
+// 			cached_short_urls[url] = long_url;
+// 			d.call(long_url);
+// 		}
+// 		Ripple.ajax.get('http://setq.me/url_expand.json?url_short=' + url, {
+// 			params: {
+// 				url: url,
+// 				format: 'json'
+// 			}
+// 		}).next(function(data) {
+// 			cb(data.url_long);
+// 		});
+// 	}
+// 	return d;
+// }
 
 var birthday_interval;
 function updateDetails(flag) {
