@@ -618,40 +618,43 @@ function setContent(content) {
 }
 
 function shorten(links, force) {
-	var result = links || composebar_model.text.match(url_re) || [];
-	var dl = [];
-	var ignored = [];
-
-	[].forEach.call(result, function(link) {
-		if (link.length <= url_max_len) {
-			if (! force && link.length > url_placeholder.length) {
-				ignored.push(link);
-				return;
-			}
-			if (! force) return;
-		}
-		var d = Ripple.shorten['t.cn'](link).
-			next(function(res) {
-				var short_url = res && res[0] && res[0].url_short;
-				if (short_url) {
-					setContent(composebar_model.text.replace(link, short_url));
-				}
-			}).
-			error(function(e) {
-				if (e && ! e.status) {
-					ignored.push(link);
-				}
-			});
-		dl.push(d);
-	});
-	dl = Deferred.parallel(dl);
-	dl = dl.next(function() {
-		if (composebar_model.text.length <= 140) return;
-		if (ignored.length) {
-			return shorten(ignored, true);
-		}
-	});
-	return dl;
+	var d = new Deferred();
+	setTimeout(() => d.call());
+	return d;
+	// var result = links || composebar_model.text.match(url_re) || [];
+	// var dl = [];
+	// var ignored = [];
+	//
+	// [].forEach.call(result, function(link) {
+	// 	if (link.length <= url_max_len) {
+	// 		if (! force && link.length > url_placeholder.length) {
+	// 			ignored.push(link);
+	// 			return;
+	// 		}
+	// 		if (! force) return;
+	// 	}
+	// 	var d = Ripple.shorten['t.cn'](link).
+	// 		next(function(res) {
+	// 			var short_url = res && res[0] && res[0].url_short;
+	// 			if (short_url) {
+	// 				setContent(composebar_model.text.replace(link, short_url));
+	// 			}
+	// 		}).
+	// 		error(function(e) {
+	// 			if (e && ! e.status) {
+	// 				ignored.push(link);
+	// 			}
+	// 		});
+	// 	dl.push(d);
+	// });
+	// dl = Deferred.parallel(dl);
+	// dl = dl.next(function() {
+	// 	if (composebar_model.text.length <= 140) return;
+	// 	if (ignored.length) {
+	// 		return shorten(ignored, true);
+	// 	}
+	// });
+	// return dl;
 }
 
 function getCurrent() {
