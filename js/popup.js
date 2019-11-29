@@ -857,14 +857,12 @@ function initMainUI() {
 		$('html').attr('platform', 'win');
 	}
 
-	var ratio = +PREFiX.settings.current.zoomRatio;
-	if (ratio !== 1 && is_panel_mode) {
-		$body.css('zoom', ratio);
+	if (devicePixelRatio > 1) {
 		$('<link />').
 		prop('rel', 'stylesheet').
 		prop('href', 'css/retina.css').
 		appendTo('head');
-		if (ratio > 1.4) {
+		if (devicePixelRatio > 1.4) {
 			$('h2').css('letter-spacing', '.5px');
 		}
 	}

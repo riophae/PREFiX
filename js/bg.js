@@ -1999,7 +1999,6 @@ var settings = {
 		birthdayGreetingType: 'post_status',
 		autoFlushCache: false,
 		cacheAmount: 75,
-		zoomRatio: '1',
 		drawAttention: ! is_mac,
 		showSavedSearchCount: true,
 		createPopAtStartup: false,
@@ -2027,10 +2026,6 @@ var settings = {
 			current[key] = local_settings[key] === undefined ?
 				settings.default[key] : local_settings[key];
 		}
-		if (current.zoomRatio === '1.11') {
-			current.zoomRatio = '1.125';
-			settings.save();
-		}
 	},
 	save: function() {
 		lscache.set('settings', settings.current);
@@ -2052,7 +2047,6 @@ var settings = {
 
 var usage_tips = [
 	'按 Ctrl + Enter 或双击输入框即可发送消息. ',
-	'如果您觉得字体太小, 可以在设置页启用<b>放大功能</b>. ',
 	'点击 PREFiX 回到页面顶部或刷新. ',
 	'在地址栏输入 f 按空格键, 然后输入内容按回车即可直接发送消息. ',
 	'按 1/2/3/4 键在 首页/提到我的/私信/随便看看和关注的话题 页面间切换. ',
