@@ -710,13 +710,12 @@ body.show-drop-area #drop-area {
 	left: 0;
 	top: 0;
 	width: 400px;
-	height: 45px;
-	background: url('/images/header-bg.png') repeat;
 }
 #top-bar {
 	display: block;
 	position: relative;
-	height: 35px;
+	height: 40px;
+	background: url('/images/header-bg.png') repeat;
 }
 body.show-back-button #back {
 	display: block;
@@ -732,7 +731,7 @@ body.show-back-button h1 {
 	height: 20px;
 	position: absolute;
 	left: 10px;
-	top: 8px;
+	top: 10px;
 	filter: brightness(.8);
 	transition: filter ease-in-out .2s;
 }
@@ -742,7 +741,7 @@ body.show-back-button h1 {
 }
 h1 {
 	float: left;
-	margin: 6px 0 0 10px;
+	margin: 8px 0 0 10px;
 	padding: 0;
 	cursor: pointer;
 }
@@ -756,7 +755,7 @@ h1 b {
 #back-to-top {
 	width: 16px;
 	height: 16px;
-	margin: 0 0 -7px 5px;
+	margin: 0 0 -7px 8px;
 	opacity: 0;
 	transition: opacity ease-in-out .2s;
 	border-radius: 8px;
@@ -795,7 +794,7 @@ html.panel-mode #new-window {
 #navigation-bar {
 	float: right;
 	padding: 0;
-	margin: 6px 10px 0 0;
+	margin: 8px 10px 0 0;
 }
 #navigation-bar li {
 	position: relative;
@@ -807,7 +806,7 @@ html.panel-mode #new-window {
 	background-position: right center;
 	background-repeat: no-repeat;
 	cursor: pointer;
-	transition: filter ease-in-out .2s;
+	transition: filter ease-in-out 100ms;
 	filter: brightness(.8);
 	transform: translateZ(0);
 }
@@ -847,16 +846,14 @@ html.panel-mode #new-window {
 	transform: scale(.75);
 }
 #compose-bar {
-	position: absolute;
-	left: 0;
-	top: 35px;
-	overflow: hidden;
+	position: relative;
 }
 #compose-bar textarea {
+	display: block;
 	width: 380px;
 	height: 18px;
 	min-height: 18px;
-	padding: 12px 10px;
+	padding: 11px 10px;
 	line-height: 18px;
 	border: 0;
 	outline: 0 !important;
@@ -895,16 +892,15 @@ html.panel-mode #new-window {
 #uploading-photo {
 	display: block;
 	position: absolute;
-	left: 5px;
-	top: 0;
+	left: 8px;
+	top: 8px;
 	width: 26px;
 	height: 19px;
-	border-width: 12px 4px 2px 6px;
-	border-style: solid;
-	border-color: white;
+	border: 3px solid transparent;
 	background-image: url('/images/uploading-photo.png');
 	background-position: top left;
 	background-repeat: no-repeat;
+	background-clip: content-box;
 	cursor: pointer;
 	transition: opacity ease-in-out .2s;
 	opacity: .6;
@@ -929,7 +925,7 @@ html.panel-mode #new-window {
 #main {
 	position: absolute;
 	left: 0;
-	top: 75px;
+	top: 80px;
 	width: 400px;
 	height: 525px;
 	overflow-y: auto;
@@ -941,16 +937,17 @@ html.panel-mode #new-window {
 	width: 2000px;
 }
 #title.show-usage-tip {
-	margin-left: -400px;
+	margin-left: -100vw;
 	width: 9999px;
 }
 #title h2 {
 	font: 18px "HelveticaNeueLT Pro for PERFiX", "Helvetica Neue LT Pro Light";
 	font-weight: 300;
-	padding: 10px 0 5px 10px;
+	padding: 12px 0 0 10px;
 	margin: 0;
 	border-bottom: 1px solid #ddd;
-	height: 21px;
+	height: 40px;
+	box-sizing: border-box;
 }
 #topic-selector {
 	position: absolute;
@@ -961,12 +958,12 @@ html.panel-mode #new-window {
 }
 #usage-tip {
 	position: absolute;
-	left: 400px;
+	left: 100vw;
 	top: 50%;
 	display: inline-block;
 	height: 21px;
 	line-height: 21px;
-	padding-left: 15px;
+	padding-left: 12px;
 	transition: margin-left .1s linear;
 	transform: translateY(-50%);
 }
@@ -1030,7 +1027,7 @@ html.panel-mode #new-window {
 }
 .status-list li .action-icons .remove:hover {
 	background-position: left bottom;
-	animation: shake ease-in-out .2s infinite;
+	animation: shake ease-in-out 300ms infinite;
 }
 .status-list li .action-icons .reply {
 	right: 68px;
@@ -1060,9 +1057,8 @@ html.panel-mode #new-window {
 .status-list li .action-icons .favourited {
 	background-position: left bottom;
 }
-.status-list li .timestamp-client,
-.status-list li .action-icons {
-	transition: opacity .2s ease-in-out;
+.status-list li .timestamp-client {
+	transition: opacity .2s ease;
 }
 .status-list li .timestamp-client {
 	margin-top: 1px;
@@ -1116,10 +1112,10 @@ html.panel-mode #new-window {
 .status-list .content {
 	float: right;
 	margin-right: 10px;
-	width: 316px;
+	width: 318px;
 }
-.status-list .content > * {
-	line-height: 150%;
+.status-list .content .info {
+	margin-bottom: 3px;
 }
 .status-list .content .name {
 	font-weight: bold;
@@ -1127,6 +1123,9 @@ html.panel-mode #new-window {
 .status-list .content .permanent-link {
 	opacity: 0;
 	transition: opacity ease-in-out .2s;
+}
+.status-list .content .status-content {
+	line-height: 1.4;
 }
 .xiami-player {
 	width: 18px;
