@@ -967,7 +967,7 @@ function initMainUI() {
 	});
 
 	$textarea = $('#compose-bar textarea');
-	$textarea.autosize().atwho({
+	$textarea.autosize({ append: '' }).atwho({
 		at: '@',
 		data: PREFiX.friends,
 		search_key: 'string',
@@ -1265,6 +1265,7 @@ function initMainUI() {
 	composebar_model.text = PREFiX.compose.text;
 	if (PREFiX.compose.text) {
 		focusToEnd();
+		$textarea.trigger('autosize.resize');
 	}
 
 	[ $main, $('#context-timeline'), $('#picture-overlay') ].forEach(initSmoothScroll);

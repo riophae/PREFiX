@@ -850,10 +850,11 @@ html.panel-mode #new-window {
 }
 #compose-bar textarea {
 	display: block;
-	width: 380px;
-	height: 18px;
-	min-height: 18px;
+	width: 100vw;
+	min-height: 40px;
+	height: 40px;
 	padding: 11px 10px;
+	box-sizing: border-box;
 	line-height: 18px;
 	border: 0;
 	outline: 0 !important;
