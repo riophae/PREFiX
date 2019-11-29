@@ -106,7 +106,7 @@ var goTop = (function() {
 			if (breakpoint && ! smoothscroll_paused) {
 				var diff = (timestamp - breakpoint) * 1.2;
 				current = $main[0].scrollTop;
-				if (s != current) {
+				if (Math.abs(s - current) > 1) {
 					return stop();
 				}
 				var to = Math.floor(s / 1.15 / Math.max(1, diff / 32));
@@ -160,7 +160,7 @@ function initSmoothScroll($target) {
 				$target.scrollTop(this_pos);
 
 				diff = destination - this_pos;
-				if (! diff || [ min_pos, max_pos ].indexOf(this_pos) > -1) {
+				if (Math.abs(diff) < 1 || [ min_pos, max_pos ].indexOf(this_pos) > -1) {
 					return _stop();
 				}
 			}
