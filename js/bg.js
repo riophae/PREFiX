@@ -494,7 +494,7 @@ function updateTitle() {
 		switchTo('mentions_model');
 		title.push('你被 @ 了 ' + PREFiX.count.mentions + ' 次');
 		chrome.browserAction.setBadgeBackgroundColor({
-			color: [ 113, 202, 224, 204 ]
+			color: '#89c3eb'
 		});
 		if (PREFiX.count.mentions > PREFiX.previous_count.mentions)
 			need_notify = true;
@@ -503,7 +503,7 @@ function updateTitle() {
 		switchTo('privatemsgs_model');
 		title.push('你有 ' + PREFiX.count.direct_messages + ' 条未读私信');
 		chrome.browserAction.setBadgeBackgroundColor({
-			color: [ 211, 0, 4, 204 ]
+			color: '#f8b862'
 		});
 		if (PREFiX.count.direct_messages > PREFiX.previous_count.direct_messages)
 			need_notify = true;
@@ -757,7 +757,7 @@ function update(retry_chances, new_status_id) {
 		text: '...'
 	});
 	chrome.browserAction.setBadgeBackgroundColor({
-		color: [ 255, 255, 255, 200 ]
+		color: '#c0c6c9'
 	});
 	chrome.browserAction.setTitle({
 		title: 'PREFiX - 正在刷新'
@@ -801,7 +801,7 @@ function update(retry_chances, new_status_id) {
 			text: ' '
 		});
 		chrome.browserAction.setBadgeBackgroundColor({
-			color: [ 255, 0, 0, 200 ]
+			color: '#e2041b'
 		});
 		chrome.browserAction.setTitle({
 			title: 'PREFiX - 网络连接断开或内部错误'
