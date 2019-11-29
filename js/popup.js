@@ -37,21 +37,6 @@ if (! r) {
 
 var usage_tips = bg_win.usage_tips;
 
-function setViewHeight(height) {
-	lscache.set('popup_view_height', Math.round(Math.max(600, height)));
-	applyViewHeight();
-}
-
-function applyViewHeight() {
-	waitFor(function() {
-		return $main && $main.length;
-	}, function() {
-		var height = getViewHeight();
-		$('body, #picture-overlay, #context-timeline, #drop-area').height(height);
-		$main.height(height - parseInt($main.css('top'), 10));
-	});
-}
-
 function ScrollHandler(elem) {
 	this.elem = elem;
 	this._listeners = [];
@@ -1363,8 +1348,8 @@ function cutStream() {
 }
 
 function computePosition(data) {
-	var left = parseInt(($body[0].clientWidth - data.width) / 2, 10);
-	var top = parseInt(($body[0].clientHeight - data.height) / 2, 10);
+	var left = parseInt((innerWidth - data.width) / 2, 10);
+	var top = parseInt((innerHeight - data.height) / 2, 10);
 	data.left = left;
 	if (data.noMinusLeft) {
 		data.left = Math.max(0, left);
@@ -1378,10 +1363,10 @@ function computePosition(data) {
 
 function showPicture(img_url) {
 	var $picture = $('#picture');
+	var $tempImg = new Image();
 	$body.addClass('show-picture');
-	if ($picture.prop('src') != img_url) {
-		$picture.prop('src', img_url);
-	}
+	$picture.prop('src', img_url);
+	$tempImg.src = img_url;
 	$picture.hide().removeClass('run-animation').css({
 		'width': '',
 		'height': '',
@@ -1398,19 +1383,19 @@ function showPicture(img_url) {
 	});
 	var canceled = false;
 	waitFor(function() {
-		var height = $picture[0].naturalHeight;
+		var height = $tempImg.naturalHeight;
 		if (height && height > $body.height() * 1.5) {
 			return true;
 		}
-		return $picture[0].complete || canceled;
+		return $tempImg.complete || canceled;
 	}, function() {
 		$('#picture-copy').remove();
 		var $picture_copy = $picture.clone();
 		$picture_copy.prop('id', 'picture-copy');
 		$picture.after($picture_copy);
 		$overlay.removeClass('loading');
-		if ($picture[0].naturalWidth > 400) {
-			$picture.css('width', '400px');
+		if ($picture[0].naturalWidth > window.innerWidth) {
+			$picture.css('width', '100vw');
 		}
 		var width = $picture.width();
 		var height = $picture.height();
@@ -1432,10 +1417,13 @@ function showPicture(img_url) {
 		})).
 		css({
 			opacity: 1
+		}).
+		on('transitionend', () => {
+			$picture.removeClass('run-animation');
 		});
 		$('#picture-wrapper').css({
 			animation: 'pictureSlideIn 225ms both',
-			width: 400 + 'px',
+			width: window.innerWidth + 'px',
 			height: height
 		});
 	});
@@ -1463,14 +1451,14 @@ function hidePicture() {
 		height: height / 1.5,
 		reverse: rotate_deg % 180
 	});
-	style.left = (400 - ($picture.width() / 1.5)) / 2 + 'px';
+	style.left = (innerWidth - ($picture.width() / 1.5)) / 2 + 'px';
 	style.width = $picture.width() / 1.5 + 'px';
 	style.height = $picture.height() / 1.5 + 'px';
 	style.opacity = .05;
-	$picture.css(style);
+	$picture.addClass('run-animation').css(style);
 	$('#picture-wrapper').css({
 		animation: 'pictureSlideOut 225ms both',
-		width: '400px',
+		width: window.innerWidth + 'px',
 		height: height
 	});
 	setTimeout(function() {
@@ -1498,12 +1486,12 @@ function rotatePicture() {
 		return $picture_copy.width();
 	}, function() {
 		if (rotate_deg % 180 === 0) {
-			if ($picture[0].naturalWidth > 400) {
-				$picture_copy.css('width', '400px');
+			if ($picture[0].naturalWidth > innerWidth) {
+				$picture_copy.css('width', innerWidth + 'px');
 			}
 		} else {
-			if ($picture[0].naturalHeight > 400) {
-				$picture_copy.css('height', '400px');
+			if ($picture[0].naturalHeight > innerWidth) {
+				$picture_copy.css('height', innerWidth + 'px');
 			}
 		}
 		width = $picture_copy.width();
@@ -2949,8 +2937,6 @@ onunload = function() {
 if (location.search == '?new_window=true') {
 	is_panel_mode = true;
 	$('html').addClass('panel-mode');
-	initFixSize(400, 600);
-	$(applyViewHeight);
 	PREFiX.panelMode = true;
 } else {
 	PREFiX.panelMode = false;

@@ -494,7 +494,6 @@ body.show-picture #main,
 body.show-context-timeline #main {
 	overflow: hidden;
 	padding-right: 5px;
-	width: 395px;
 }
 body.show-picture #picture-overlay,
 body.show-context-timeline #context-timeline,
@@ -504,9 +503,11 @@ body.show-picture #picture-copy {
 #picture-overlay {
 	z-index: 200;
 	position: fixed;
+	left: 0;
+	top: 0;
 	display: none;
-	width: 400px;
-	height: 600px;
+	width: 100vw;
+	height: 100vh;
 	overflow-x: hidden;
 	overflow-y: auto;
 	background: rgba(0, 0, 0, .85);
@@ -588,9 +589,11 @@ body.show-drop-area #drop-area {
 #context-timeline {
 	z-index: 100;
 	position: fixed;
+	left: 0;
+	top: 0;
 	display: none;
-	width: 400px;
-	height: 600px;
+	width: 100vw;
+	height: 100vh;
 	overflow-x: hidden;
 	overflow-y: auto;
 	background: rgba(0, 0, 0, .85);
@@ -647,7 +650,7 @@ body.show-drop-area #drop-area {
 #context-timeline ul li {
 	clear: both;
 	display: none;
-	width: 371px;
+	width: 100%;
 	animation: wobbleIn .2s ease-in-out;
 	margin-bottom: 9px;
 	border-bottom: 1px solid #333;
@@ -662,7 +665,7 @@ body.show-drop-area #drop-area {
 }
 #context-timeline ul li .content {
 	float: right;
-	width: 314px;
+	width: calc(100vw - 82px);
 }
 #context-timeline ul li a {
 	color: #fff !important;
@@ -709,7 +712,7 @@ body.show-drop-area #drop-area {
 	z-index: 10;
 	left: 0;
 	top: 0;
-	width: 400px;
+	width: 100vw;
 }
 #top-bar {
 	display: block;
@@ -927,8 +930,9 @@ html.panel-mode #new-window {
 	position: absolute;
 	left: 0;
 	top: 80px;
-	width: 400px;
-	height: 525px;
+	width: 100vw;
+	height: calc(100vh - 80px);
+	box-sizing: border-box;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -1113,7 +1117,7 @@ html.panel-mode #new-window {
 .status-list .content {
 	float: right;
 	margin-right: 10px;
-	width: 318px;
+	width: calc(100vw - 82px);
 }
 .status-list .content .info {
 	margin-bottom: 3px;
@@ -1223,7 +1227,7 @@ html.panel-mode #new-window {
 	cursor: pointer;
 }
 #loading {
-	width: 400px;
+	width: 100vw;
 	height: 60px;
 	position: relative;
 }

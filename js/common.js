@@ -48,8 +48,8 @@ function createPopup(callback) {
 		url: url,
 		focused: true,
 		type: 'panel',
-		width: Math.round(size.width),
-		height: Math.round(size.height),
+		width: size.width,
+		height: size.height,
 		left: pos.x,
 		top: pos.y
 	};
@@ -62,8 +62,8 @@ function createXiamiPlayerPopup(id) {
 		url: 'http://www.xiami.com/widget/0_' + id + '/singlePlayer.swf',
 		focused: true,
 		type: 'panel',
-		width: Math.round(size.width),
-		height: Math.round(size.height)
+		width: size.width,
+		height: size.height
 	};
 	chrome.windows.create(options);
 }
@@ -294,43 +294,10 @@ function fixTransparentPNG(file) {
 }
 
 function getDefaultWindowSize(width, height) {
-	var PREFiX = chrome.extension.getBackgroundPage().PREFiX;
-	var ratio = +PREFiX.settings.current.zoomRatio;
-	width = Math.round(width * ratio);
-	height = Math.round(height * ratio);
 	var delta_x = lscache.get('delta_x') || outerWidth - innerWidth;
 	var delta_y = lscache.get('delta_y') || outerHeight - innerHeight;
 	return {
 		width: Math.round(width + delta_x),
 		height: Math.round(height + delta_y)
 	};
-}
-
-var fixing_size = false;
-function initFixSize(width, height) {
-	var PREFiX = chrome.extension.getBackgroundPage().PREFiX;
-	var ratio = +PREFiX.settings.current.zoomRatio;
-	var target_width = Math.round(width * ratio);
-	var target_height = Math.round(height * ratio);
-	onresize = _.throttle(function() {
-		if (fixing_size) return;
-		fixing_size = true;
-		var size = getDefaultWindowSize(width, height);
-		size.height = Math.max(size.height, outerHeight);
-		resizeTo(size.width, size.height);
-		setTimeout(function() {
-			var _height = Math.max(innerHeight, target_height);
-			resizeBy(target_width - innerWidth, _height - innerHeight);
-			setTimeout(function() {
-				lscache.set('delta_x', outerWidth - innerWidth);
-				lscache.set('delta_y', outerHeight - innerHeight);
-				window.setViewHeight && setViewHeight(innerHeight / ratio);
-				fixing_size = false;
-			}, 48);
-		}, 36);
-	}, 24);
-	setInterval(function() {
-		if (innerWidth !== target_width || innerHeight < target_height)
-			onresize();
-	}, 250);
 }
