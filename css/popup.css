@@ -1096,18 +1096,7 @@ html.panel-mode #new-window {
 	float: left;
 	margin-left: 10px;
 	position: relative;
-	border: 1px solid rgba(255, 255, 255, .75);
-}
-.status-list .avatar::after {
-	position: absolute;
-	z-index: 2;
-	top: 0;
-	left: 0;
-	width: 48px;
-	height: 48px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, .5) inset;
-	content: " ";
-	pointer-events: none;
+	border: 1px solid #ddd;
 }
 .status-list .avatar img {
 	display: block;
