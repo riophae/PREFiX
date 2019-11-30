@@ -31,25 +31,22 @@ function disableCustomConsumer() {
 	PREFiX.reset();
 }
 
-function getViewHeight() {
-	return lscache.get('popup_view_height') || 600;
-}
-
 function createPopup(callback) {
-	var width = 400;
-	var height = getViewHeight();
 	var url = '/popup.html?new_window=true';
-	var size = getDefaultWindowSize(width, height);
+	var dimensions = lscache.get('popup_dimentions') || {
+		width: 400,
+		height: 600
+	};
 	var pos = lscache.get('popup_pos') || {
-		x: Math.round((screen.width - size.width) / 2),
-		y: Math.round((screen.height - size.height) / 2)
+		x: Math.round((screen.width - dimensions.width) / 2),
+		y: Math.round((screen.height - dimensions.height) / 2)
 	};
 	var options = {
 		url: url,
 		focused: true,
 		type: 'panel',
-		width: size.width,
-		height: size.height,
+		width: dimensions.width,
+		height: dimensions.height,
 		left: pos.x,
 		top: pos.y
 	};

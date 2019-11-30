@@ -2930,7 +2930,12 @@ onunload = function() {
 			x: screenX,
 			y: screenY
 		};
+		var dimensions = {
+			width: outerWidth,
+			height: outerHeight
+		};
 		lscache.set('popup_pos', pos);
+		lscache.set('popup_dimentions', dimensions);
 	}
 	PREFiX.panelMode = false;
 	PREFiX.is_popup_focused = false;
