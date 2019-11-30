@@ -729,6 +729,10 @@ function focusToEnd() {
 	$textarea[0].selectionStart = $textarea[0].selectionEnd = pos;
 }
 
+function resizeInput() {
+	$textarea.trigger('autosize.resize');
+}
+
 function resetHeader() {
 	$('#back').css('animation', 'leftOut .4s both');
 	$('h1').css('animation', 'topIn .4s both');
@@ -1248,7 +1252,6 @@ function initMainUI() {
 	composebar_model.text = PREFiX.compose.text;
 	if (PREFiX.compose.text) {
 		focusToEnd();
-		$textarea.trigger('autosize.resize');
 	}
 
 	[ $main, $('#context-timeline'), $('#picture-overlay') ].forEach(initSmoothScroll);
@@ -2217,6 +2220,7 @@ var composebar_model = avalon.define('composebar-textarea', function(vm) {
 		}
 		$textarea.toggleClass('filled', !! value);
 		count();
+		resizeInput();
 		PREFiX.compose.text = value;
 	});
 	vm.$watch('type', function(value) {
