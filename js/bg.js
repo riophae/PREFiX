@@ -520,7 +520,7 @@ function updateTitle() {
 }
 
 function initStreamingAPI() {
-	var processed_index = -1;
+	var processed_length = 0;
 	function notify(options) {
 		if (! settings.current.notification)
 			return;
@@ -704,21 +704,19 @@ function initStreamingAPI() {
 		callback: function(e) {
 			var data = this.responseText;
 			if (! data) return;
-			var parsed_data = data.split('\r\n');
-			for (var i = processed_index + 1; true; i++) {
-				if (parsed_data[i + 1] !== undefined) {
-					processed_index = i;
-					try {
-						process(parsed_data[i]);
-					} catch (e) { }
-				} else {
-					break;
-				}
+			var new_data = data.slice(processed_length);
+			processed_length = data.length;
+			var parsed_new_data = new_data.split('\r\n');
+			for (var i = 0, len = parsed_new_data.length; i < len; i++) {
+				try {
+					process(parsed_new_data[i]);
+				} catch (e) { }
 			}
+			resetRetryDelay();
 		}
 	}).hold(function(e) {
 		if (PREFiX.account) {
-			setTimeout(initStreamingAPI, 60 * 1000);
+			setTimeout(initStreamingAPI, getRetryDelay());
 		}
 	});
 }
@@ -1722,6 +1720,7 @@ function reset() {
 	PREFiX.accessToken = PREFiX.account = PREFiX.user = null;
 	lscache.remove('access_token');
 	lscache.remove('account_details');
+	resetRetryDelay();
 	initialize();
 }
 

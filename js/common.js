@@ -298,3 +298,15 @@ function getDefaultWindowSize(width, height) {
 		height: Math.round(height + delta_y)
 	};
 }
+
+var _retried;
+var _retryDelayBase = 60 * 1000;
+var _maxExponent = 5;
+function resetRetryDelay() {
+	_retried = 0;
+}
+resetRetryDelay();
+function getRetryDelay() {
+	_retried = Math.min(_retried, _maxExponent);
+	return 2 ** _retried++ * _retryDelayBase;
+}
