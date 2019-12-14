@@ -570,8 +570,8 @@ body.show-drop-area #drop-area {
 	z-index: 300;
 	position: fixed;
 	display: none;
-	width: 400px;
-	height: 600px;
+	width: 100vw;
+	height: 100vh;
 	background: rgba(0, 0, 0, .85);
 	color: #fff;
 }
