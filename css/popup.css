@@ -671,7 +671,8 @@ body.show-drop-area #drop-area {
 	color: #fff !important;
 }
 #context-timeline ul li .info {
-	margin-bottom: 3px;
+	height: 16px !important;
+	margin-bottom: 4px;
 }
 #context-timeline ul li .name {
 	font-weight: bold;
@@ -1079,15 +1080,13 @@ html.panel-mode #new-window {
 	opacity: 1;
 }
 .status-list li.protected .timestamp-client {
+	height: 16px !important;
 	padding-right: 12px;
 	background: url('/images/protected.png') right center no-repeat;
+	overflow: hidden;
 }
 [platform="linux"] .status-list li.protected .timestamp-client {
-	background-position: right 1px !important;
-}
-[platform="mac"] .status-list li .timestamp-client {
-	height: 18px;
-	margin: 0;
+	background-position: right 4px !important;
 }
 [platform="mac"] .status-list li.protected .timestamp-client {
 	background-position: right 5px !important;
@@ -1109,7 +1108,8 @@ html.panel-mode #new-window {
 	width: calc(100vw - 82px);
 }
 .status-list .content .info {
-	margin-bottom: 3px;
+	height: 16px !important;
+	margin-bottom: 4px;
 }
 .status-list .content .name {
 	font-weight: bold;
