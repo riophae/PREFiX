@@ -45,6 +45,6 @@
 	"name": "PREFiX",
 	"options_page": "options.html",
 	"permissions": [ "tabs", "contextMenus", "notifications", "*://*/*" ],
-	"version": "0.9.1",
+	"version": "0.9.2",
 	"minimum_chrome_version": "47"
 }
